@@ -2,9 +2,9 @@ import * as React from "react";
 
 function Argentina(props) {
   return (
-    <svg width="400" height="400" viewBox="0 0 1417.847 2411.723" {...props}>
+    <svg viewBox="0 0 1417.847 2411.723" {...props}>
       <defs>
-        <clipPath id="Mapa_de_Argentina_-_provincias_y_departamentos_svg__a">
+        <clipPath id="Mapa_de_Argentina">
           <path d="M0 0v389.168h314.164V0H0z" />
         </clipPath>
       </defs>

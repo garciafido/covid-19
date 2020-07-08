@@ -4,7 +4,7 @@ import Argentina from './argentina';
 function ArgentinaMap() {
   return (
     <div className="ArgentinaMap">
-        <Argentina />
+        <Argentina width="900" height="900" />
     </div>
   );
 }
