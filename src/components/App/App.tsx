@@ -10,8 +10,15 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   paper: {
-    height: 140,
-    width: 100,
+    padding: theme.spacing(2),
+    margin: 'auto',
+    maxWidth: 500,
+  },
+  img: {
+    margin: 'auto',
+    display: 'block',
+    maxWidth: '100%',
+    maxHeight: '100%',
   },
   control: {
     padding: theme.spacing(2),
@@ -19,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function App() {
-  const spacing = 2;
   const classes = useStyles();
 
   return (
@@ -27,13 +33,15 @@ function App() {
       <header>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
       </header>
-      <Grid container className={classes.root} spacing={2}>
-          <Grid item xs={2}>
-            <Grid container justify="center" spacing={spacing}>
+      <Grid container className={classes.root}
+            direction="row"
+            justify="flex-start"
+            alignItems="flex-start"
+            spacing={2}>
+          <Grid item xs={12}>
               <Paper className={classes.paper}>
-                  <ArgentinaMapMenu/>
+                  <ArgentinaMapMenu />
               </Paper>
-            </Grid>
           </Grid>
       </Grid>
     </div>
