@@ -6,9 +6,8 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend, Label
+  Legend, Label, ResponsiveContainer
 } from 'recharts';
-import { Grid } from "@material-ui/core";
 
 const data = [
   {
@@ -26,34 +25,27 @@ const data = [
 ];
 
 const BaseChart = (props: any) => (
-    <Grid container>
-      <Grid item xs={12}>
-        {props.title}
-      </Grid>
-      <Grid item xs={12}>
-        <LineChart
-          width={props.width}
-          height={props.height}
-          data={data}
-          margin={{
-            top: 5, right: 30, left: 20, bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name">
-            <Label value="Time" offset={0} position="insideBottom" />
-          </XAxis>
-          <YAxis label={{ value: 'Cases', angle: -90, position: 'insideLeft' }}
-                 scale="log" domain={['auto', 'auto']}
-          />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="Ens" stroke="#8884d8" activeDot={{ r: 8 }} />
-          <Line type="monotone" dataKey="Mean" stroke="#82ca9d" />
-          <Line type="monotone" dataKey="Obs" stroke="#ff0000" />
-        </LineChart>
-      </Grid>
-    </Grid>
+        <ResponsiveContainer minWidth={props.width} aspect={2} minHeight={props.height}>
+            <LineChart
+              data={data}
+              margin={{
+                top: 5, right: 30, left: 20, bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name">
+                <Label value="Time" offset={0} position="insideBottom" />
+              </XAxis>
+              <YAxis label={{ value: 'Cases', angle: -90, position: 'insideLeft' }}
+                     scale="log" domain={['auto', 'auto']}
+              />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="Ens" stroke="#8884d8" activeDot={{ r: 8 }} />
+              <Line type="monotone" dataKey="Mean" stroke="#82ca9d" />
+              <Line type="monotone" dataKey="Obs" stroke="#ff0000" />
+            </LineChart>
+        </ResponsiveContainer>
 );
 
 export { BaseChart };

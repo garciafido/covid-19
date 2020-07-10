@@ -3,10 +3,13 @@ import './App.css';
 import { Theme, makeStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import Box from "@material-ui/core/Box";
+import AppBar from "@material-ui/core/AppBar";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 import { store } from '../../store/';
 import { ArgentinaMapMenu } from '../ArgentinaMap';
 import { BaseChart } from '../BaseChart';
-import {Box} from "@material-ui/core";
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -19,13 +22,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
   },
+  box: {
+    alignItems: "center",
+  },
 }));
 
 const App = () => {
+  const [value, setValue] = React.useState(0);
   const classes = useStyles();
-  const chartWidth = 500;
-  const chartHeight = 300;
-  return (
+  const chartWidth = 300;
+  const chartHeight = 200;
+
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: any): void => {
+    setValue(newValue);
+  };
+
+ return (
     <div className="App">
       <header>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
@@ -39,41 +51,51 @@ const App = () => {
             spacing={2}>
           <Grid item xs={12}>
               <Paper className={classes.paper}>
-                  Sistema de monitoreo y prediccion del COVID-19 en la provincia de Corrientes
+                  <h3>Sistema de monitoreo y predicción del COVID-19 en la provincia de Corrientes</h3>
               </Paper>
           </Grid>
           <Grid container>
+            <AppBar position="static"  color="default">
+              <Tabs value={value}
+                    onChange={handleChange}
+                    indicatorColor="primary"
+                    textColor="primary"
+                    centered>
+                <Tab label="Monitoreo" />
+                <Tab label="Predicción" />
+              </Tabs>
+            </AppBar>
               <Grid item xs={3}>
-                  <Paper className={classes.paper}>
+                  <Box className={classes.box}>
                       <ArgentinaMapMenu store={store} />
-                  </Paper>
+                  </Box>
               </Grid>
-              <Grid item xs={9}>
+              <Grid item xs={8}>
                   <Grid container>
                       <Grid item xs={12}>
-                          Argentina
+                          <h3>Total Argentina</h3>
                       </Grid>
                       <Grid item xs={6}>
-                          <Box className={classes.paper}>
-                              <BaseChart width={chartWidth} height={chartHeight} title={"Titulo 1"} />
+                          <Box className={classes.box}>
+                              <BaseChart width={chartWidth} height={chartHeight} title={""} />
                           </Box>
                       </Grid>
                       <Grid item xs={6}>
-                          <Box className={classes.paper}>
-                              <BaseChart width={chartWidth} height={chartHeight} title={"Titulo 2"} />
+                          <Box className={classes.box}>
+                              <BaseChart width={chartWidth} height={chartHeight} title={""} />
                           </Box>
                       </Grid>
                       <Grid item xs={12}>
-                          Corrientes
+                          <h3>Provincia de Corrientes</h3>
                       </Grid>
                       <Grid item xs={6}>
-                          <Box className={classes.paper}>
-                              <BaseChart width={chartWidth} height={chartHeight} title={"Titulo 3"} />
+                          <Box className={classes.box}>
+                              <BaseChart width={chartWidth} height={chartHeight} title={""} />
                           </Box>
                       </Grid>
                       <Grid item xs={6}>
-                          <Box className={classes.paper}>
-                              <BaseChart width={chartWidth} height={chartHeight} title={"Titulo 4"} />
+                          <Box className={classes.box}>
+                              <BaseChart width={chartWidth} height={chartHeight} title={""} />
                           </Box>
                       </Grid>
                   </Grid>
