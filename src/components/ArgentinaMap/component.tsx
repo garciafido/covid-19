@@ -9,7 +9,7 @@ const ArgentinaMap = (props: any) => (
             getColor={(provincia) => props.store.color[provincia]}
             clicked={(provincia) => alert(provincia)}
             out={"#C7BDC6"}
-            sea={"#90d8ff"} />
+            sea={"#4791db"} />
     </div>
 );
 
