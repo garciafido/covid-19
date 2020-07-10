@@ -1,51 +1,74 @@
 import React from 'react'
 import {
-  LineChart,
   Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend, Label, ResponsiveContainer
+  Legend, Label, ResponsiveContainer, Area, ComposedChart
 } from 'recharts';
 
-const data = [
+const rangeData = [
   {
-    name: '03/01', Ens: 15, Mean: 12, Obs: 10,
+    "day": "03/01",
+    "ensamble": [
+      10,
+      15
+    ],
+    "media": 12.5,
+    "observación": 11,
   },
   {
-    name: '04/01', Ens: 150, Mean: 125, Obs: 100,
+    "day": "04-01",
+    "ensamble": [
+      90,
+      180
+    ],
+    "media": 130,
+    "observación": 110,
   },
   {
-    name: '05/01', Ens: 1500, Mean: 1250, Obs: 1000,
+    "day": "05-01",
+    "ensamble": [
+      899,
+      1666
+    ],
+    "media": 1367,
+    "observación": 1100,
   },
   {
-    name: '06/01', Ens: 8000, Mean: 8200, Obs: 8400,
+    "day": "06-01",
+    "ensamble": [
+      7000,
+      19000
+    ],
+    "media": 11000,
+    "observación": 10000,
   },
-];
+]
 
 const BaseChart = (props: any) => (
-        <ResponsiveContainer minWidth={props.width} aspect={2} minHeight={props.height}>
-            <LineChart
-              data={data}
-              margin={{
-                top: 5, right: 30, left: 20, bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name">
-                <Label value="Time" offset={0} position="insideBottom" />
-              </XAxis>
-              <YAxis label={{ value: 'Cases', angle: -90, position: 'insideLeft' }}
-                     scale="log" domain={['auto', 'auto']}
-              />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="Ens" stroke="#8884d8" activeDot={{ r: 8 }} />
-              <Line type="monotone" dataKey="Mean" stroke="#82ca9d" />
-              <Line type="monotone" dataKey="Obs" stroke="#ff0000" />
-            </LineChart>
-        </ResponsiveContainer>
+    <ResponsiveContainer minWidth={props.width} aspect={2} minHeight={props.height}>
+        <ComposedChart
+          data={rangeData}
+          margin={{
+            top: 5, right: 30, left: 20, bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name">
+            <Label value="Tiempo" offset={0} position="insideBottom" />
+          </XAxis>
+          <YAxis label={{ value: 'Casos', angle: -90, position: 'insideLeft' }}
+                 scale="log" domain={['auto', 'auto']}
+          />
+          <Tooltip />
+          <Legend />
+          <Line type="monotone" dataKey="observación" stroke="#3300FF" activeDot={{ r: 8 }} />
+          <Area type="monotone" dataKey="ensamble" stroke="#CCCCCC"/>
+          <Line type="monotone" dataKey="media" stroke="#ff0000" />
+        </ComposedChart>
+    </ResponsiveContainer>
 );
 
 export { BaseChart };
