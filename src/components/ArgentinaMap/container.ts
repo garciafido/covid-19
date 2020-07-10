@@ -1,6 +1,8 @@
 import { ArgentinaMap } from "./component";
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 
-export const ArgentinaMapMenu = observer((store: any) => {
-    return ArgentinaMap(store);
+const ArgentinaMapMenu = observer((props: any) => {
+    return ArgentinaMap(props);
 });
+
+export { ArgentinaMapMenu }
