@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { ArgentinaMapMenu } from '../ArgentinaMap';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import { store } from '../../store/';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,7 +41,7 @@ function App() {
             spacing={2}>
           <Grid item xs={12}>
               <Paper className={classes.paper}>
-                  <ArgentinaMapMenu />
+                  <ArgentinaMapMenu store={store} />
               </Paper>
           </Grid>
       </Grid>
