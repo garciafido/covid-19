@@ -1,5 +1,4 @@
 import { observable } from "mobx"
-import * as React from "react";
 
 class CovidData {
     @observable color: object = {
