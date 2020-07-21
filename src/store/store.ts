@@ -2,36 +2,48 @@ import { observable } from "mobx";
 import * as _ from "lodash";
 import { cases, r, actives, deaths } from "./sampleData";
 
-function getShortDate(isoDate: string) {
+const getShortDate = (isoDate: string) => {
     const parts = isoDate.split('-');
     return parts[2] + '/' + parts[1];
 }
 
-function getObservation(row: [string, number, number, number]) {
+const getObservation = (row: [string, number, number, number]) => {
   return {
     "day": getShortDate(row[0]),
     "ensemble": [
-      row[2]-row[3],
-      row[2]+row[3]
+        (row[2]-row[3]).toFixed(3),
+        (row[2]+row[3]).toFixed(3)
     ],
     "mean": row[2],
     "observation": row[1]
   };
 }
 
-function getMean(row: [string, number, number]) {
+const getMean = (row: [string, number, number]) => {
   return {
     "day": getShortDate(row[0]),
     "ensemble": [
-      row[1]-row[2],
-      row[1]+row[2]
+        (row[1]-row[2]).toFixed(3),
+        (row[1]+row[2]).toFixed(3)
     ],
     "mean": row[1],
   };
 }
 
+const getMinMax = (data: any) => {
+    let minMax = [10000000, -100000000];
+    const hasObs = 'observation' in data[0]
+    for (let i=0; i < data.length; i++) {
+        const minValues = [data[i].ensemble[0], minMax[0], hasObs ? data[i].observation : 1000000];
+        const maxValues = [data[i].ensemble[1], minMax[1], hasObs ? data[i].observation : -1000000];
+        minMax = [Math.min(...minValues), Math.max(...maxValues)]
+    }
+    return minMax;
+}
+
 class CovidData {
     @observable color: object = {
+        "Argentina": "#fff",
         "Jujuy": "#fff",
         "Formosa": "#fff",
         "Salta": "#fff",
@@ -58,14 +70,24 @@ class CovidData {
         "CABA": "#fff",
         "La Rioja": "#fff",
         "San Juan": "#fff",
-        "Argentina": "#fff",
         "Antartida": "#fff",
         "Islas Malvinas": "#fff",
     }
-    @observable argentinaCases = _.map(cases, getObservation);
-    @observable argentinaR = _.map(r, getMean);
-    @observable argentinaActives = _.map(actives, getMean);
-    @observable argentinaDeaths = _.map(deaths, getObservation);
+
+    @observable currentCases = _.map(cases, getObservation);
+    @observable minMaxCases = getMinMax(this.currentCases);
+
+    @observable currentDeaths = _.map(deaths, getObservation);
+    @observable minMaxDeaths = getMinMax(this.currentDeaths);
+
+    @observable currentActives = _.map(actives, getMean);
+    @observable minMaxActives = getMinMax(this.currentActives);
+
+    @observable currentR = _.map(r, getMean);
+    @observable minMaxR = getMinMax(this.currentR);
+
+    @observable currentLocation = "Argentina";
+
 }
 
 export { CovidData };

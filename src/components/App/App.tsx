@@ -41,6 +41,8 @@ const App = () => {
     setValue(newValue);
   };
 
+  console.log('--------->', store.minMaxCases);
+
  return (
     <div className="App">
       <header>
@@ -77,7 +79,7 @@ const App = () => {
               <Grid item xs={8}>
                   <Grid container>
                       <Grid item xs={12}>
-                          <h3>Total Argentina</h3>
+                          <h3>{store.currentLocation}</h3>
                       </Grid>
                       <Grid item xs={12}>
                           <Divider className={classes.dividerFullWidth} />
@@ -85,13 +87,19 @@ const App = () => {
                       <Grid item xs={6}>
                           Casos totales
                           <Box className={classes.box}>
-                              <CasesChart width={chartWidth} height={chartHeight} data={store.argentinaCases} />
+                              <CasesChart width={chartWidth} height={chartHeight}
+                                          data={store.currentCases}
+                                          minMax={store.minMaxCases}
+                              />
                           </Box>
                       </Grid>
                       <Grid item xs={6}>
                           Cantidad de muertos
                           <Box className={classes.box}>
-                              <CasesChart width={chartWidth} height={chartHeight} data={store.argentinaDeaths} />
+                              <CasesChart width={chartWidth} height={chartHeight}
+                                          data={store.currentDeaths}
+                                          minMax={store.minMaxDeaths}
+                              />
                           </Box>
                       </Grid>
                       <Grid item xs={12}>
@@ -100,13 +108,20 @@ const App = () => {
                       <Grid item xs={6}>
                           Casos activos
                           <Box className={classes.box}>
-                              <CasesChart width={chartWidth} height={chartHeight} data={store.argentinaActives} />
+                              <CasesChart width={chartWidth} height={chartHeight}
+                                          data={store.currentActives}
+                                          minMax={store.minMaxActives}
+
+                              />
                           </Box>
                       </Grid>
                       <Grid item xs={6}>
                           R
                           <Box className={classes.box}>
-                              <CasesChart width={chartWidth} height={chartHeight} data={store.argentinaR} />
+                              <CasesChart width={chartWidth} height={chartHeight}
+                                          data={store.currentR}
+                                          minMax={store.minMaxR}
+                              />
                           </Box>
                       </Grid>
                   </Grid>
