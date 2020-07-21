@@ -9,7 +9,8 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import { store } from '../../store/';
 import { ArgentinaMapMenu } from '../ArgentinaMap';
-import { BaseChart } from '../BaseChart';
+import { CasesChart } from '../BaseChart';
+import {Divider} from "@material-ui/core";
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -21,6 +22,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(1),
     textAlign: 'center',
     color: theme.palette.text.secondary,
+  },
+  dividerFullWidth: {
+    margin: `15px 0 0 ${theme.spacing(2)}px`,
   },
   box: {
     alignItems: "center",
@@ -75,27 +79,34 @@ const App = () => {
                       <Grid item xs={12}>
                           <h3>Total Argentina</h3>
                       </Grid>
+                      <Grid item xs={12}>
+                          <Divider className={classes.dividerFullWidth} />
+                      </Grid>
                       <Grid item xs={6}>
+                          Casos totales
                           <Box className={classes.box}>
-                              <BaseChart width={chartWidth} height={chartHeight} title={""} />
+                              <CasesChart width={chartWidth} height={chartHeight} data={store.argentinaCases} />
                           </Box>
                       </Grid>
                       <Grid item xs={6}>
+                          Cantidad de muertos
                           <Box className={classes.box}>
-                              <BaseChart width={chartWidth} height={chartHeight} title={""} />
+                              <CasesChart width={chartWidth} height={chartHeight} data={store.argentinaDeaths} />
                           </Box>
                       </Grid>
                       <Grid item xs={12}>
-                          <h3>Provincia de Corrientes</h3>
+                          <Divider className={classes.dividerFullWidth} />
                       </Grid>
                       <Grid item xs={6}>
+                          Casos activos
                           <Box className={classes.box}>
-                              <BaseChart width={chartWidth} height={chartHeight} title={""} />
+                              <CasesChart width={chartWidth} height={chartHeight} data={store.argentinaActives} />
                           </Box>
                       </Grid>
                       <Grid item xs={6}>
+                          R
                           <Box className={classes.box}>
-                              <BaseChart width={chartWidth} height={chartHeight} title={""} />
+                              <CasesChart width={chartWidth} height={chartHeight} data={store.argentinaR} />
                           </Box>
                       </Grid>
                   </Grid>

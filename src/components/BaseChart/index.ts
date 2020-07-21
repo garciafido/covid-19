@@ -1,3 +1,3 @@
-import { BaseChart } from './component'
+import { CasesChart } from './container'
 
-export { BaseChart };
+export { CasesChart };

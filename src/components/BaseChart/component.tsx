@@ -5,70 +5,39 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend, Label, ResponsiveContainer, Area, ComposedChart
+  Legend, ResponsiveContainer, Area, ComposedChart
 } from 'recharts';
+import * as _ from 'lodash';
 
-const rangeData = [
-  {
-    "day": "03/01",
-    "ensamble": [
-      10,
-      15
-    ],
-    "media": 12.5,
-    "observación": 11,
-  },
-  {
-    "day": "04-01",
-    "ensamble": [
-      90,
-      180
-    ],
-    "media": 130,
-    "observación": 110,
-  },
-  {
-    "day": "05-01",
-    "ensamble": [
-      899,
-      1666
-    ],
-    "media": 1367,
-    "observación": 1100,
-  },
-  {
-    "day": "06-01",
-    "ensamble": [
-      7000,
-      19000
-    ],
-    "media": 11000,
-    "observación": 10000,
-  },
-]
 
-const BaseChart = (props: any) => (
+const BaseChart = (props: any) => {
+  const max = (a: any, b: any) => a.mean > b.mean ? a.mean : b.mean;
+  const isLog = _.reduce(props.data, max) > 10000;
+  const yAxis = isLog ? <YAxis scale="log" domain={['auto', 'auto']} /> : <YAxis />
+
+  const withObservation = 'observation' in props.data[0];
+  const observation = withObservation ? <Line type="monotone" dataKey="observation" name="Observación" stroke="#3300FF" dot={false} /> : <div/>;
+
+  return <>
     <ResponsiveContainer minWidth={props.width} aspect={2} minHeight={props.height}>
         <ComposedChart
-          data={rangeData}
+          data={props.data}
           margin={{
             top: 5, right: 30, left: 20, bottom: 5,
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name">
-            <Label value="Tiempo" offset={0} position="insideBottom" />
+          <XAxis dataKey="day" minTickGap={30}>
           </XAxis>
-          <YAxis label={{ value: 'Casos', angle: -90, position: 'insideLeft' }}
-                 scale="log" domain={['auto', 'auto']}
-          />
+          {yAxis}
           <Tooltip />
           <Legend />
-          <Line type="monotone" dataKey="observación" stroke="#3300FF" activeDot={{ r: 8 }} />
-          <Area type="monotone" dataKey="ensamble" stroke="#CCCCCC"/>
-          <Line type="monotone" dataKey="media" stroke="#ff0000" />
+          <Area type="monotone" dataKey="ensemble" name="Ensamble" stroke="#CCCCCC" dot={false} />
+          {observation}
+          <Line type="monotone" dataKey="mean" name="Media" stroke="#ff0000" dot={false} />
         </ComposedChart>
     </ResponsiveContainer>
-);
+  </>
+};
 
 export { BaseChart };
