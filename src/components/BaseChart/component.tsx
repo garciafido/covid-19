@@ -13,7 +13,7 @@ const BaseChart = (props: any) => {
   console.log(props.minMax);
   const yAxis = props.minMax[1] > 10000 ?
       <YAxis allowDecimals={false} scale="log" domain={['auto', 'auto']} />
-      : <YAxis allowDecimals={false} domain={props.minMax} />
+      : <YAxis allowDecimals={false} scale="linear" domain={props.minMax} />
 
   const withObservation = 'observation' in props.data[0];
   const observation = withObservation ?

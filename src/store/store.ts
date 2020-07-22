@@ -7,6 +7,11 @@ const getShortDate = (isoDate: string) => {
     return parts[2] + '/' + parts[1];
 }
 
+const getLongDate = (isoDate: string) => {
+    const parts = isoDate.split('-');
+    return parts[2] + '/' + parts[1] + '/' + parts[0];
+}
+
 const getObservation = (row: [string, number, number, number]) => {
   return {
     "day": getShortDate(row[0]),
@@ -87,6 +92,7 @@ class CovidData {
     @observable minMaxR = getMinMax(this.currentR);
 
     @observable currentLocation = "Argentina";
+    @observable currentDate = getLongDate(cases[cases.length-1][0]);
 
 }
 

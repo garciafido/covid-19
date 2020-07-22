@@ -41,8 +41,6 @@ const App = () => {
     setValue(newValue);
   };
 
-  console.log('--------->', store.minMaxCases);
-
  return (
     <div className="App">
       <header>
@@ -79,7 +77,7 @@ const App = () => {
               <Grid item xs={8}>
                   <Grid container>
                       <Grid item xs={12}>
-                          <h3>{store.currentLocation}</h3>
+                          <h2>{store.currentLocation}</h2> ({"fecha de actualización: " + store.currentDate})
                       </Grid>
                       <Grid item xs={12}>
                           <Divider className={classes.dividerFullWidth} />
