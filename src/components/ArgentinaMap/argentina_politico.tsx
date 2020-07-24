@@ -457,7 +457,7 @@ function SvgArgentinaPolitico(props: MapProps) {
         <text transform="translate(156.68 46.044)" onMouseDown={(e) => props.clicked("Jujuy")}>{"Jujuy"}</text>
         <text transform="translate(319.356 107.67)" onMouseDown={(e) => props.clicked("Formosa")}>{"Formosa"}</text>
         <text transform="translate(185.82 115.419)"onMouseDown={(e) => props.clicked("Salta")}>{"Salta"}</text>
-        <text transform="translate(178.726 148.585)"onMouseDown={(e) => props.clicked("Tucumán")}>{"Tucum\xE1n"}</text>
+        <text transform="translate(178.726 148.585)"onMouseDown={(e) => props.clicked("Tucuman")}>{"Tucuman"}</text>
         <text transform="translate(124.603 176.123)"onMouseDown={(e) => props.clicked("Catamarca")}>{"Catamarca"}</text>
         <text transform="translate(219.53 169.873)"onMouseDown={(e) => props.clicked("Santiago del Estero")}>{"Santiago"}</text>
         <text transform="translate(233.83 184.273)"onMouseDown={(e) => props.clicked("Santiago del Estero")}>{"del"}</text>
