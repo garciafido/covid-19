@@ -1,99 +1,85 @@
-import { observable } from "mobx";
-import * as _ from "lodash";
+import {action, observable, configure} from "mobx";
+import 'mobx-react-lite/batchingForReactDom';
 import { cases, r, actives, deaths } from "./sampleData";
+import {getColor, getLongDate, transformFromServer} from './dataMap';
+import {flowed} from "./storeUtils";
 
-const getShortDate = (isoDate: string) => {
-    const parts = isoDate.split('-');
-    return parts[2] + '/' + parts[1];
-}
+configure({ enforceActions: "observed" });
 
-const getLongDate = (isoDate: string) => {
-    const parts = isoDate.split('-');
-    return parts[2] + '/' + parts[1] + '/' + parts[0];
-}
+function * fetchFromServer(): any {
+    const mock = {
+            cases: cases,
+            r: r,
+            actives: actives,
+            deaths: deaths,
+            lastDate: getLongDate(cases[cases.length - 1][0]),
+            color: getColor(r[r.length - 1][1]),
+        };
 
-const getObservation = (row: [string, number, number, number]) => {
-  return {
-    "day": getShortDate(row[0]),
-    "ensemble": [
-        (row[2]-row[3]).toFixed(3),
-        (row[2]+row[3]).toFixed(3)
-    ],
-    "mean": row[2],
-    "observation": row[1]
-  };
-}
-
-const getMean = (row: [string, number, number]) => {
-  return {
-    "day": getShortDate(row[0]),
-    "ensemble": [
-        (row[1]-row[2]).toFixed(3),
-        (row[1]+row[2]).toFixed(3)
-    ],
-    "mean": row[1],
-  };
-}
-
-const getMinMax = (data: any) => {
-    let minMax = [10000000, -100000000];
-    const hasObs = 'observation' in data[0]
-    for (let i=0; i < data.length; i++) {
-        const minValues = [data[i].ensemble[0], minMax[0], hasObs ? data[i].observation : 1000000];
-        const maxValues = [data[i].ensemble[1], minMax[1], hasObs ? data[i].observation : -1000000];
-        minMax = [Math.min(...minValues), Math.max(...maxValues)]
-    }
-    return minMax;
+    yield {
+        "Argentina": mock,
+        "Jujuy": mock,
+        "Formosa": mock,
+        "Salta": mock,
+        "Tucuman": mock,
+        "Catamarca": mock,
+        "Santiago del Estero": mock,
+        "Chaco": mock,
+        "Misiones": mock,
+        "Corrientes": mock,
+        "Santa Fe": mock,
+        "Entre Rios": mock,
+        "Cordoba": mock,
+        "San Luis": mock,
+        "Mendoza": mock,
+        "La Pampa": mock,
+        "Buenos Aires": mock,
+        "Neuquen": mock,
+        "Rio Negro": mock,
+        "Chubut": mock,
+        "Santa Cruz": mock,
+        "Tierra del Fuego": mock,
+        "AMBA": mock,
+        "GBA": mock,
+        "CABA": mock,
+        "La Rioja": mock,
+        "San Juan": mock,
+        "Antartida": mock,
+        "Islas Malvinas": mock,
+    };
 }
 
 class CovidData {
-    @observable color: object = {
-        "Argentina": "#fff",
-        "Jujuy": "#fff",
-        "Formosa": "#fff",
-        "Salta": "#fff",
-        "Tucuman": "#fff",
-        "Catamarca": "#fff",
-        "Santiago del Estero": "#fff",
-        "Chaco": "#fff",
-        "Misiones": "#fff",
-        "Corrientes": "#fff",
-        "Santa Fe": "#fff",
-        "Entre Rios": "#fff",
-        "Cordoba": "#fff",
-        "San Luis": "#fff",
-        "Mendoza": "#fff",
-        "La Pampa": "#fff",
-        "Buenos Aires": "#fff",
-        "Neuquen": "#fff",
-        "Rio Negro": "#fff",
-        "Chubut": "#fff",
-        "Santa Cruz": "#fff",
-        "Tierra del Fuego": "#fff",
-        "AMBA": "#fff",
-        "GBA": "#fff",
-        "CABA": "#fff",
-        "La Rioja": "#fff",
-        "San Juan": "#fff",
-        "Antartida": "#fff",
-        "Islas Malvinas": "#fff",
+    constructor() {
+        this.fetchData();
     }
 
-    @observable currentCases = _.map(cases, getObservation);
-    @observable minMaxCases = getMinMax(this.currentCases);
+    @observable state: string = 'pending';
+    @observable data: any = {};
 
-    @observable currentDeaths = _.map(deaths, getObservation);
-    @observable minMaxDeaths = getMinMax(this.currentDeaths);
-
-    @observable currentActives = _.map(actives, getMean);
-    @observable minMaxActives = getMinMax(this.currentActives);
-
-    @observable currentR = _.map(r, getMean);
-    @observable minMaxR = getMinMax(this.currentR);
-
+    @observable current: any = {};
     @observable currentLocation = "Argentina";
-    @observable currentDate = getLongDate(cases[cases.length-1][0]);
 
+    @flowed * fetchData() {
+        this.data = {};
+        this.state = "loading";
+        try {
+            const results = yield fetchFromServer();
+            const serverData = results.next().value;
+            this.data = transformFromServer(serverData);
+            this.current = this.data[this.currentLocation];
+            this.state = "done";
+        } catch(error) {
+            console.log(error);
+            this.state = "error";
+        }
+    };
+
+    @action.bound
+    setCurrentLocation(location: string) {
+        this.currentLocation = location;
+        this.current = this.data[location];
+    }
 }
 
 export { CovidData };

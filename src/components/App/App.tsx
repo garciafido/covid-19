@@ -10,7 +10,8 @@ import Tab from "@material-ui/core/Tab";
 import { store } from '../../store/';
 import { ArgentinaMapMenu } from '../ArgentinaMap';
 import { CasesChart } from '../BaseChart';
-import {Divider} from "@material-ui/core";
+import { Divider } from "@material-ui/core";
+import {observer} from "mobx-react";
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const App = () => {
+const App = observer((props: any) => {
   const [value, setValue] = React.useState(0);
   const classes = useStyles();
   const chartWidth = 300;
@@ -41,7 +42,17 @@ const App = () => {
     setValue(newValue);
   };
 
- return (
+  if (store.state === 'error') {
+    return <div>Error...</div>
+  }
+
+  if (store.state !== 'done') {
+      return <div>Loading...</div>
+  }
+
+  console.log('Color: ', store.data['Buenos Aires']);
+
+  return (
     <div className="App">
       <header>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
@@ -77,7 +88,7 @@ const App = () => {
               <Grid item xs={8}>
                   <Grid container>
                       <Grid item xs={12}>
-                          <h2>{store.currentLocation}</h2> ({"fecha de actualización: " + store.currentDate})
+                          <h2>{store.currentLocation}</h2> ({"fecha de actualización: " + store.current.lastDate})
                       </Grid>
                       <Grid item xs={12}>
                           <Divider className={classes.dividerFullWidth} />
@@ -86,8 +97,8 @@ const App = () => {
                           Casos totales
                           <Box className={classes.box}>
                               <CasesChart width={chartWidth} height={chartHeight}
-                                          data={store.currentCases}
-                                          minMax={store.minMaxCases}
+                                          data={store.current.cases}
+                                          minMax={store.current.minMaxCases}
                               />
                           </Box>
                       </Grid>
@@ -95,8 +106,8 @@ const App = () => {
                           Cantidad de muertos
                           <Box className={classes.box}>
                               <CasesChart width={chartWidth} height={chartHeight}
-                                          data={store.currentDeaths}
-                                          minMax={store.minMaxDeaths}
+                                          data={store.current.deaths}
+                                          minMax={store.current.minMaxDeaths}
                               />
                           </Box>
                       </Grid>
@@ -107,8 +118,8 @@ const App = () => {
                           Casos activos
                           <Box className={classes.box}>
                               <CasesChart width={chartWidth} height={chartHeight}
-                                          data={store.currentActives}
-                                          minMax={store.minMaxActives}
+                                          data={store.current.actives}
+                                          minMax={store.current.minMaxActives}
 
                               />
                           </Box>
@@ -117,8 +128,8 @@ const App = () => {
                           R
                           <Box className={classes.box}>
                               <CasesChart width={chartWidth} height={chartHeight}
-                                          data={store.currentR}
-                                          minMax={store.minMaxR}
+                                          data={store.current.r}
+                                          minMax={store.current.minMaxR}
                               />
                           </Box>
                       </Grid>
@@ -128,6 +139,6 @@ const App = () => {
       </Grid>
     </div>
   );
-}
+})
 
 export default App;

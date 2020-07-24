@@ -1,15 +1,15 @@
-import React from 'react'
+import React from 'react';
 import Argentina from './argentina_politico';
 
 const ArgentinaMap = (props: any) => (
-    <div className="ArgentinaMap">
+    <div className="ArgentinaMap" style={{cursor: 'pointer'}}>
         <Argentina
             width={props.width}
             height={props.height}
-            getColor={(provincia) => props.store.color[provincia]}
-            clicked={(provincia) => alert(provincia)}
+            getColor={(provincia) => props.store.data[provincia].color}
+            clicked={(provincia) => props.store.setCurrentLocation(provincia)}
             out={"#C7BDC6"}
-            sea={"#4791db"} />
+            sea={"#4791db"}/>
     </div>
 );
 

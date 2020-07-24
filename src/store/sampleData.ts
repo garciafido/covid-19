@@ -453,3 +453,4 @@ export const deaths: Array<[string, number, number, number]> = [
     ["2020-06-20", 992, 1301, 4.4],
     ["2020-06-21", 1011, 1286, 4.7],
 ];
+

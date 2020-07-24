@@ -10,7 +10,6 @@ import {
 
 
 const BaseChart = (props: any) => {
-  console.log(props.minMax);
   const yAxis = props.minMax[1] > 10000 ?
       <YAxis allowDecimals={false} scale="log" domain={['auto', 'auto']} />
       : <YAxis allowDecimals={false} scale="linear" domain={props.minMax} />
