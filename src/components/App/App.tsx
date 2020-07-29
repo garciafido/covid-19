@@ -42,6 +42,11 @@ const App = observer((props: any) => {
     setValue(newValue);
   };
 
+  if (store.state === 'pending') {
+      store.fetchData();
+      return <div>Initializing...</div>
+  }
+
   if (store.state === 'error') {
     return <div>Error...</div>
   }
@@ -49,8 +54,6 @@ const App = observer((props: any) => {
   if (store.state !== 'done') {
       return <div>Loading...</div>
   }
-
-  console.log('Color: ', store.data['Buenos Aires']);
 
   return (
     <div className="App">
@@ -106,7 +109,7 @@ const App = observer((props: any) => {
                           Cantidad de muertos
                           <Box className={classes.box}>
                               <CasesChart width={chartWidth} height={chartHeight}
-                                          data={store.current.deaths}
+                                          data={store.current.deads}
                                           minMax={store.current.minMaxDeaths}
                               />
                           </Box>

@@ -133,15 +133,15 @@ def print_data(var_name, rows):
 cases = []
 r = []
 actives = []
-deaths = []
+deads = []
 for row in data:
     cases.append(row[0])
     r.append(row[1])
     actives.append(row[2])
-    deaths.append(row[3])
+    deads.append(row[3])
 
 
 print_data('cases', cases)
 print_data('r', r)
 print_data('actives', actives)
-print_data('deaths', deaths)
+print_data('deads', deads)

@@ -340,7 +340,7 @@ export const actives: Array<[string, number, number]> = [
     ["2020-06-21", 9582, 60.3],
 ];
 
-export const deaths: Array<[string, number, number, number]> = [
+export const deads: Array<[string, number, number, number]> = [
     ["2020-03-03", 0, 0, 0.0],
     ["2020-03-04", 0, 0, 0.0],
     ["2020-03-05", 0, 0, 0.0],
