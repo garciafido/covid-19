@@ -10,6 +10,7 @@ class CovidData {
 
     @observable current: any = {};
     @observable currentLocation = "Argentina";
+    @observable currentMode = "monitoreo";
 
     @flowed * fetchData() {
         this.data = {};
@@ -17,7 +18,7 @@ class CovidData {
         try {
             const serverData = yield fetch('https://garciafido.github.io/sample_data.json');
             this.data = yield serverData.json();
-            this.current = this.data.monitoreo[this.currentLocation];
+            this.current = this.data[this.currentMode][this.currentLocation];
             this.state = "done";
         } catch(error) {
             console.log(error);
@@ -27,11 +28,8 @@ class CovidData {
     };
 
     getColor = (provincia: string): string => {
-        if (['Antartida', 'Islas Malvinas'].includes(provincia)) {
-            provincia = 'Tierra del Fuego';
-        }
         if (this.data.monitoreo.hasOwnProperty(provincia)) {
-            const r = this.data.monitoreo[provincia].lastR;
+            const r = this.data[this.currentMode][provincia].lastR;
             console.log('last r', r)
             const palette = [
                 '#FFFFFF',
@@ -54,7 +52,13 @@ class CovidData {
    @action.bound
     setCurrentLocation(location: string) {
         this.currentLocation = location;
-        this.current = this.data.monitoreo[location];
+        this.current = this.data[this.currentMode][location];
+    }
+
+   @action.bound
+    setCurrentMode(mode: string) {
+        this.currentMode = mode;
+        this.current = this.data[mode][this.currentLocation];
     }
 }
 
