@@ -198,7 +198,7 @@ const App = observer((props: any) => {
                   <h3>Sistema de monitoreo y predicción del COVID-19 en la provincia de Corrientes [DEMO]</h3>
                   <Button style={{ background: 'transparent', boxShadow: 'none'}}
                         onClick={handleClickOpen}
-                        endIcon={<InfoIcon>info</InfoIcon>}
+                        startIcon={<InfoIcon>info</InfoIcon>}
                         >Info</Button>
                   </Box>
           </Grid>
