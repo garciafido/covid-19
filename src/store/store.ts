@@ -29,21 +29,41 @@ class CovidData {
 
     getColor = (provincia: string): string => {
         if (this.data.monitoreo.hasOwnProperty(provincia)) {
-            const r = this.data[this.currentMode][provincia].lastR;
+            let r = this.data[this.currentMode][provincia].lastR;
             console.log('last r', r)
-            const palette = [
-                '#FFFFFF',
-                '#FFB9B9',
-                '#FFA2A2',
-                '#FF8B8B',
-                '#FF7474',
-                '#FF5D5D',
-                '#FF4646',
-                '#FF2E2E',
-                '#FF1717',
-                '#FF0000',
-            ];
-            return palette[Math.min(Math.trunc(r), 9)];
+            if (r > 10) {
+                return '#FF0000';
+            } else if (r < 1) {
+                return '#FFFFFF';
+            } else if (r < 2) {
+                const pos = Math.min(Math.trunc(((r-1) / 1) * 7.0), 7);
+                const palette = [
+                '#fffafd',
+                '#feebf5',
+                '#ffdbea',
+                '#ffccde',
+                '#ffbccf',
+                '#ffacbf',
+                '#ff9cad',
+                '#ff8c99',
+                ]
+                console.log('R:', r, pos)
+                return palette[pos];
+            } else {
+                const pos = Math.min(Math.trunc(((r-2) / 10) * 7.0), 7);
+                const palette = [
+                '#ff0516',
+                '#ff2a2f',
+                '#ff3f44',
+                '#ff5157',
+                '#ff6169',
+                '#ff707a',
+                '#ff7e8a',
+                '#ff8c99',
+                ]
+                console.log('R:', r, pos)
+                return palette[pos];
+            }
         } else {
             return '#000000';
         }
