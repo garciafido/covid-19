@@ -16,7 +16,7 @@ class CovidData {
         this.data = {};
         this.state = "loading";
         try {
-            const serverData = yield fetch('https://garciafido.github.io/sample_data.json');
+            const serverData = yield fetch('sample_data.json');
             this.data = yield serverData.json();
             this.current = this.data[this.currentMode][this.currentLocation];
             this.state = "done";
@@ -30,7 +30,6 @@ class CovidData {
     getColor = (provincia: string): string => {
         if (this.data.monitoreo.hasOwnProperty(provincia)) {
             let r = this.data[this.currentMode][provincia].lastR;
-            console.log('last r', r)
             if (r > 10) {
                 return '#FF0000';
             } else if (r < 1) {
@@ -47,7 +46,6 @@ class CovidData {
                 '#ff9cad',
                 '#ff8c99',
                 ]
-                console.log('R:', r, pos)
                 return palette[pos];
             } else {
                 const pos = Math.min(Math.trunc(((r-2) / 10) * 7.0), 7);
@@ -61,7 +59,6 @@ class CovidData {
                 '#ff7e8a',
                 '#ff8c99',
                 ]
-                console.log('R:', r, pos)
                 return palette[pos];
             }
         } else {
