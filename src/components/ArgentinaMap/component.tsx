@@ -10,7 +10,7 @@ const ArgentinaMap = (props: any) => {
                 <Paper  style={{ backgroundColor:'#C7BDC6',}}>
         <Grid container>
             <Grid item xs={12}>
-                    <h3>{`R(t) al ${lDate[2]}/${lDate[1]} de ${lDate[0]}`}</h3>
+                    <h3>{`${props.store.currentMode === "monitoreo" ? "Monitoreo" : "Predicción"} de R(t) en ${lDate[2]}/${lDate[1]} de ${lDate[0]}`}</h3>
             </Grid>
             <Grid item xs={12}>
                 <Argentina

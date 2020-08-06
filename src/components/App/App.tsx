@@ -83,7 +83,7 @@ const App = observer((props: any) => {
 
   const handleChartClick = (dataIndex: any) => {
       if (dataIndex.date) {
-          store.setSelectedChartDate(dataIndex.type, dataIndex.date);
+          store.setSelectedChartDate(dataIndex.chart, dataIndex.date);
       }
   };
 
@@ -115,7 +115,7 @@ const App = observer((props: any) => {
                           <Box className={classes.box}>
                               <CasesChart width={chartWidth} height={chartHeight}
                                           data={store.current.cases}
-                                          onClick={(event: any) => handleChartClick({...event, chart: 'totales'})}
+                                          onClick={(event: any) => handleChartClick({...event, chart: 'cases'})}
                                           minMax={store.current.minMaxCases}
                               />
                           </Box>
@@ -131,7 +131,7 @@ const App = observer((props: any) => {
                           <Box className={classes.box}>
                               <CasesChart width={chartWidth} height={chartHeight}
                                           data={store.current.deads}
-                                          onClick={(event: any) => handleChartClick({...event, chart: 'muertos'})}
+                                          onClick={(event: any) => handleChartClick({...event, chart: 'deads'})}
                                           minMax={store.current.minMaxDeaths}
                               />
                           </Box>
@@ -150,7 +150,7 @@ const App = observer((props: any) => {
                           <Box className={classes.box}>
                               <CasesChart width={chartWidth} height={chartHeight}
                                           data={store.current.actives}
-                                          onClick={(event: any) => handleChartClick({...event, chart: 'activos'})}
+                                          onClick={(event: any) => handleChartClick({...event, chart: 'actives'})}
                                           minMax={store.current.minMaxActives}
 
                               />
