@@ -83,7 +83,7 @@ const App = observer((props: any) => {
 
   const handleChartClick = (dataIndex: any) => {
       if (dataIndex.date) {
-          store.setSelectedDate(dataIndex.date);
+          store.setSelectedChartDate(dataIndex.type, dataIndex.date);
       }
   };
 

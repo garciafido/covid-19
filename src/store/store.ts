@@ -2,7 +2,7 @@ import {action, observable, configure} from "mobx";
 import 'mobx-react-lite/batchingForReactDom';
 import {flowed} from "./storeUtils";
 import {colormaps} from "./colormaps";
-import {buildRByDate} from "./buildIndexes";
+import {buildActivesByDate, buildCasesByDate, buildDeadsByDate, buildRByDate} from "./buildIndexes";
 
 configure({ enforceActions: "observed" });
 
@@ -18,7 +18,13 @@ class CovidData {
     @observable currentMode = "monitoreo";
 
     @observable selectedDate: string = '';
+    @observable selectedChart: string = '';
+
     @observable rByDate: any = {};
+    @observable casesByDate: any = {};
+    @observable activesByDate: any = {};
+    @observable deadsByDate: any = {};
+
     @observable errorMessage: any = '';
 
     @flowed * fetchData() {
@@ -29,7 +35,11 @@ class CovidData {
             this.data = yield serverData.json();
             this.current = this.data[this.currentMode][this.currentLocation];
             this.selectedDate = this.current.lastDate;
+            this.selectedChart = 'r';
             this.rByDate = buildRByDate(this.data);
+            this.casesByDate = buildCasesByDate(this.data);
+            this.activesByDate = buildActivesByDate(this.data);
+            this.deadsByDate = buildDeadsByDate(this.data);
             this.state = "done";
         } catch(error) {
             this.state = "error";
@@ -65,12 +75,13 @@ class CovidData {
     }
 
    @action.bound
-    setSelectedDate(date: string | undefined) {
+    setSelectedChartDate(chart: string, date: string | undefined) {
         if (date === undefined) {
             this.selectedDate = this.current.lastDate
         } else {
             this.selectedDate = date;
         }
+        this.selectedChart = chart;
     }
 }
 
