@@ -66,7 +66,7 @@ const BaseChart = (props: any) => {
           />
           {observation}
           <Line type="monotone" dataKey="mean" name="Media" stroke="#3300FF" dot={false}
-                activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
+                activeDot={{r:8, onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
         </ComposedChart>
     </ResponsiveContainer>
   </>
