@@ -2,7 +2,6 @@ import React from 'react';
 import './App.css';
 import { Theme, makeStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import Box from "@material-ui/core/Box";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
@@ -14,13 +13,13 @@ import { CasesChart } from '../BaseChart';
 import { Divider } from "@material-ui/core";
 import {observer} from "mobx-react";
 import Tooltip from '@material-ui/core/Tooltip';
-import Button from '@material-ui/core/Button';
-import InfoIcon from '@material-ui/icons/Info';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'
+
 import {
   createMuiTheme,
   MuiThemeProvider
 } from "@material-ui/core/styles";
-import {DragHandleOutlined} from "@material-ui/icons";
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -86,6 +85,10 @@ const App = observer((props: any) => {
     setOpen(false);
   };
 
+  const handleChartClick = (dataIndex: any) => {
+    console.log('dataIndex: ', dataIndex);
+  };
+
   const modeName = store.currentMode === 'monitoreo' ? "monitoreo" : "predicción";
 
   const totalCasesText = `Observaciones del número de casos infectados acumulados (puntos naranja) y la media del número de infectados acumulados estimados con el sistema de asimilación de datos (línea celeste). El sombreado gris muestra la desviacion estandard del ensamble el cual esta representando la incerteza en la predicción. El primer día corresponde al 3 de Marzo.`;
@@ -106,14 +109,15 @@ const App = observer((props: any) => {
                       <Grid item xs={6}>
                         <MuiThemeProvider theme={theme}>
                             <Tooltip title={totalCasesText}>
-                                <div style={{ marginBottom: "20px" }}>
-                                    Casos totales
-                                </div>
+                                <Box display="flex" justifyContent="center">
+                                    <b>Casos totales<FontAwesomeIcon style={{marginLeft: 10}} icon={faInfoCircle}/></b>
+                                </Box>
                             </Tooltip>
                         </MuiThemeProvider>
                           <Box className={classes.box}>
                               <CasesChart width={chartWidth} height={chartHeight}
                                           data={store.current.cases}
+                                          onClick={(event: any) => handleChartClick({...event, chart: 'totales'})}
                                           minMax={store.current.minMaxCases}
                               />
                           </Box>
@@ -121,14 +125,15 @@ const App = observer((props: any) => {
                       <Grid item xs={6}>
                         <MuiThemeProvider theme={theme}>
                         <Tooltip title={deadsText}>
-                            <div style={{ marginBottom: "20px" }}>
-                                Cantidad de muertos
-                            </div>
+                            <Box display="flex" justifyContent="center">
+                                <b>Cantidad de muertos<FontAwesomeIcon style={{marginLeft: 10}} icon={faInfoCircle}/></b>
+                            </Box>
                         </Tooltip>
                         </MuiThemeProvider>
                           <Box className={classes.box}>
                               <CasesChart width={chartWidth} height={chartHeight}
                                           data={store.current.deads}
+                                          onClick={(event: any) => handleChartClick({...event, chart: 'muertos'})}
                                           minMax={store.current.minMaxDeaths}
                               />
                           </Box>
@@ -139,14 +144,15 @@ const App = observer((props: any) => {
                       <Grid item xs={6}>
                         <MuiThemeProvider theme={theme}>
                         <Tooltip title={activesText}>
-                            <div style={{ marginBottom: "20px" }}>
-                                Casos activos
-                            </div>
+                            <Box display="flex" justifyContent="center">
+                                <b>Casos activos<FontAwesomeIcon style={{marginLeft: 10}} icon={faInfoCircle}/></b>
+                            </Box>
                         </Tooltip>
                         </MuiThemeProvider>
                           <Box className={classes.box}>
                               <CasesChart width={chartWidth} height={chartHeight}
                                           data={store.current.actives}
+                                          onClick={(event: any) => handleChartClick({...event, chart: 'activos'})}
                                           minMax={store.current.minMaxActives}
 
                               />
@@ -155,14 +161,15 @@ const App = observer((props: any) => {
                       <Grid item xs={6}>
                         <MuiThemeProvider theme={theme}>
                         <Tooltip title={RText}>
-                            <div style={{ marginBottom: "20px" }}>
-                                    R(t)
-                            </div>
+                            <Box display="flex" justifyContent="center">
+                                <b>R(t)<FontAwesomeIcon style={{marginLeft: 10}} icon={faInfoCircle}/></b>
+                            </Box>
                         </Tooltip>
                         </MuiThemeProvider>
                           <Box className={classes.box}>
                               <CasesChart width={chartWidth} height={chartHeight}
                                           data={store.current.r}
+                                          onClick={(event: any) => handleChartClick({...event, chart: 'r'})}
                                           minMax={store.current.minMaxR}
                               />
                           </Box>
@@ -196,11 +203,7 @@ const App = observer((props: any) => {
           <Grid item xs={12}>
               <Box display="flex" justifyContent="center">
                   <h3>Sistema de monitoreo y predicción del COVID-19 en la provincia de Corrientes [DEMO]</h3>
-                  <Button style={{ background: 'transparent', boxShadow: 'none'}}
-                        onClick={handleClickOpen}
-                        startIcon={<InfoIcon>info</InfoIcon>}
-                        >Info</Button>
-                  </Box>
+              </Box>
           </Grid>
           <Grid container>
             <AppBar position="static"  color="default">
@@ -211,6 +214,7 @@ const App = observer((props: any) => {
                     centered>
                 <Tab label="Monitoreo" value={'monitoreo'} />
                 <Tab label="Predicción" value={'prediccion'} />
+                <Tab label="Información" value={'info'} />
               </Tabs>
             </AppBar>
               <Grid item xs={3}>

@@ -41,7 +41,10 @@ const BaseChart = (props: any) => {
     data = patch(data, withObservation);
   }
   const observation = withObservation ?
-      <Line type="monotone" dataKey="observation" name="Observación" stroke="#ff0000" strokeDasharray="3 4 5 2" dot={false} />
+      <Line type="monotone" dataKey="observation" name="Observación" stroke="#ff0000" strokeDasharray="3 4 5 2"
+            activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }}
+            dot={false}
+      />
       : <div/>;
 
   return <>
@@ -58,9 +61,12 @@ const BaseChart = (props: any) => {
           {yAxis}
           <Tooltip />
           <Legend />
-          <Area type="monotone" dataKey="ensemble" name="Ensamble" fill="#C7BDC6" stroke="#C7BDC6" dot={false} />
+          <Area type="monotone" dataKey="ensemble" name="Ensamble" fill="#C7BDC6" stroke="#C7BDC6" dot={false}
+                activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
+          />
           {observation}
-          <Line type="monotone" dataKey="mean" name="Media" stroke="#3300FF" dot={false} />
+          <Line type="monotone" dataKey="mean" name="Media" stroke="#3300FF" dot={false}
+                activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
         </ComposedChart>
     </ResponsiveContainer>
   </>

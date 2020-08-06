@@ -1,25 +1,11 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import Box from '@material-ui/core/Box';
 
-const useStyles = makeStyles({
-  root: {
-    minWidth: 275,
-  },
-  title: {
-    fontSize: 14,
-  },
-  dialog: {
-    padding: 0.5,
-  },
-});
-
 const ProjectInfo = (props: any) => {
 
-  const classes = useStyles();
   const { open } = props;
 
   return (
