@@ -70,23 +70,21 @@ const App = observer((props: any) => {
   }
 
   if (store.state === 'error') {
-    return <div>Error...</div>
+    return <div>{`Error: ${store.errorMessage}`}</div>
   }
 
   if (store.state !== 'done') {
       return <div>Loading...</div>
   }
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
     setOpen(false);
   };
 
   const handleChartClick = (dataIndex: any) => {
-    console.log('dataIndex: ', dataIndex);
+      if (dataIndex.date) {
+          store.setSelectedDate(dataIndex.date);
+      }
   };
 
   const modeName = store.currentMode === 'monitoreo' ? "monitoreo" : "predicción";
@@ -101,7 +99,7 @@ const App = observer((props: any) => {
     charts = <Grid item xs={8}>
                   <Grid container>
                       <Grid item xs={12}>
-                          <h2>{store.currentLocation}</h2> ({"fecha de actualización: " + store.current.lastDate})
+                          <h2>{store.currentLocation}</h2>
                       </Grid>
                       <Grid item xs={12}>
                           <Divider className={classes.dividerFullWidth} />
