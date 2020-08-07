@@ -5,12 +5,18 @@ import Paper from "@material-ui/core/Paper";
 
 const ArgentinaMap = (props: any) => {
     const seaColor = "#0aa8f1";
+    const chartsNames: any = {
+        r: 'R(t)',
+        actives: 'activos',
+        deads: 'muertes',
+        cases: 'casos',
+    };
     const lDate = props.store.selectedDate.split('-');
     return <div className="ArgentinaMap" style={{cursor: 'pointer'}}>
                 <Paper  style={{ backgroundColor:'#C7BDC6',}}>
         <Grid container>
             <Grid item xs={12}>
-                    <h3>{`${props.store.currentMode === "monitoreo" ? "Monitoreo" : "Predicción"} de R(t) en ${lDate[2]}/${lDate[1]} de ${lDate[0]}`}</h3>
+                    <h3>{`${props.store.currentMode === "monitoreo" ? "Monitoreo" : "Predicción"} de ${chartsNames[props.store.selectedChart]} el ${lDate[2]}/${lDate[1]} de ${lDate[0]}`}</h3>
             </Grid>
             <Grid item xs={12}>
                 <Argentina

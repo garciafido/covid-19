@@ -67,6 +67,9 @@ class CovidData {
     }
 
     getColor = (provincia: string): string => {
+        if (this.currentMode === 'info') {
+            return gray;
+        }
         if (this.selectedDate && this.data[this.currentMode].hasOwnProperty(provincia)) {
             if (this.selectedChart === 'r') {
                 let r = this.rByDate[provincia].values[this.selectedDate];
@@ -112,7 +115,9 @@ class CovidData {
    @action.bound
     setCurrentMode(mode: string) {
         this.currentMode = mode;
-        this.current = this.data[mode][this.currentLocation];
+        if (this.currentMode !== 'info') {
+            this.current = this.data[mode][this.currentLocation];
+        }
     }
 
    @action.bound

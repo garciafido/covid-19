@@ -56,7 +56,6 @@ const theme = createMuiTheme({
 
 const App = observer((props: any) => {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
   const chartWidth = 300;
   const chartHeight = 200;
 
@@ -77,10 +76,6 @@ const App = observer((props: any) => {
       return <div>Loading...</div>
   }
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   const handleChartClick = (dataIndex: any) => {
       if (dataIndex.date) {
           store.setSelectedChartDate(dataIndex.chart, dataIndex.date);
@@ -96,7 +91,18 @@ const App = observer((props: any) => {
 
   let charts;
   if (store.current) {
-    charts = <Grid item xs={8}>
+      if (store.currentMode === 'info') {
+        charts = (
+            <Grid item xs={4}>
+              <Grid container>
+                  <Grid item xs={12}>
+                    <ProjectInfo />
+                  </Grid>
+              </Grid>
+            </Grid>
+        )
+      } else {
+        charts = <Grid item xs={8}>
                   <Grid container>
                       <Grid item xs={12}>
                           <h2>{store.currentLocation}</h2>
@@ -124,7 +130,7 @@ const App = observer((props: any) => {
                         <MuiThemeProvider theme={theme}>
                         <Tooltip title={deadsText}>
                             <Box display="flex" justifyContent="center">
-                                <b>Cantidad de muertos<FontAwesomeIcon style={{marginLeft: 10}} icon={faInfoCircle}/></b>
+                                <b>Cantidad de muertes<FontAwesomeIcon style={{marginLeft: 10}} icon={faInfoCircle}/></b>
                             </Box>
                         </Tooltip>
                         </MuiThemeProvider>
@@ -174,6 +180,7 @@ const App = observer((props: any) => {
                       </Grid>
                   </Grid>
               </Grid>;
+      }
   } else {
       charts = <Grid item xs={8}>
                   <Grid container>
@@ -191,7 +198,6 @@ const App = observer((props: any) => {
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
         <link rel="stylesheet" href="https://jsfiddle.net/alidingling/xqjtetw0/" />
       </header>
-      <ProjectInfo open={open} onClose={handleClose}/>
       <Grid container className={classes.root}
             direction="row"
             justify="flex-start"
