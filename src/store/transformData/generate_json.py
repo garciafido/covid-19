@@ -1,10 +1,95 @@
 # coding=utf-8
 import datetime
 import json
+import os
 
+FILE_BASE_PATH = '../res/'
 
 forecast_files = [
-    ['Argentina', 'arg-for1.csv']
+    ['Argentina', 'arg-for1.csv'],
+    ['Buenos Aires', 'baires-for1.csv'],
+    ['CABA', 'caba-for1.csv'],
+    ['Catamarca', 'catamarca-for1.csv'],
+    ['Chaco', 'chaco-for1.csv'],
+    ['Chubut', 'chubut-for1.csv'],
+    ['GBA', 'conurbano-for1.csv'],
+    ['Cordoba', 'cordoba-for1.csv'],
+    ['Corrientes', 'corrientes-for1.csv'],
+    ['Entre Rios', 'entrerios-for1.csv'],
+    ['Formosa', 'formosa-for1.csv'],
+    ['Jujuy', 'jujuy-for1.csv'],
+    ['La Pampa', 'lapampa-for1.csv'],
+    ['La Rioja', 'larioja-for1.csv'],
+    ['Mendoza', 'mendoza-for1.csv'],
+    ['Misiones', 'misiones-for1.csv'],
+    ['Neuquen', 'neuquen-for1.csv'],
+    ['Rio Negro', 'rionegro-for1.csv'],
+    ['Salta', 'salta-for1.csv'],
+    ['San Juan', 'sanjuan-for1.csv'],
+    ['San Luis', 'sanluis-for1.csv'],
+    ['Santa Cruz', 'santacruz-for1.csv'],
+    ['Santa Fe', 'santafe-for1.csv'],
+    ['Santiago del Estero', 'santiago-for1.csv'],
+    ['Tierra del Fuego', 'tfuego-for1.csv'],
+    ['Tucuman', 'tucuman-for1.csv']
+]
+
+forecast_files_2 = [
+    ['Argentina', 'arg-for2.csv'],
+    ['Buenos Aires', 'baires-for2.csv'],
+    ['CABA', 'caba-for2.csv'],
+    ['Catamarca', 'catamarca-for2.csv'],
+    ['Chaco', 'chaco-for2.csv'],
+    ['Chubut', 'chubut-for2.csv'],
+    ['GBA', 'conurbano-for2.csv'],
+    ['Cordoba', 'cordoba-for2.csv'],
+    ['Corrientes', 'corrientes-for2.csv'],
+    ['Entre Rios', 'entrerios-for2.csv'],
+    ['Formosa', 'formosa-for2.csv'],
+    ['Jujuy', 'jujuy-for2.csv'],
+    ['La Pampa', 'lapampa-for2.csv'],
+    ['La Rioja', 'larioja-for2.csv'],
+    ['Mendoza', 'mendoza-for2.csv'],
+    ['Misiones', 'misiones-for2.csv'],
+    ['Neuquen', 'neuquen-for2.csv'],
+    ['Rio Negro', 'rionegro-for2.csv'],
+    ['Salta', 'salta-for2.csv'],
+    ['San Juan', 'sanjuan-for2.csv'],
+    ['San Luis', 'sanluis-for2.csv'],
+    ['Santa Cruz', 'santacruz-for2.csv'],
+    ['Santa Fe', 'santafe-for2.csv'],
+    ['Santiago del Estero', 'santiago-for2.csv'],
+    ['Tierra del Fuego', 'tfuego-for2.csv'],
+    ['Tucuman', 'tucuman-for2.csv']
+]
+
+forecast_files_3 = [
+    ['Argentina', 'arg-for3.csv'],
+    ['Buenos Aires', 'baires-for3.csv'],
+    ['CABA', 'caba-for3.csv'],
+    ['Catamarca', 'catamarca-for3.csv'],
+    ['Chaco', 'chaco-for3.csv'],
+    ['Chubut', 'chubut-for3.csv'],
+    ['GBA', 'conurbano-for3.csv'],
+    ['Cordoba', 'cordoba-for3.csv'],
+    ['Corrientes', 'corrientes-for3.csv'],
+    ['Entre Rios', 'entrerios-for3.csv'],
+    ['Formosa', 'formosa-for3.csv'],
+    ['Jujuy', 'jujuy-for3.csv'],
+    ['La Pampa', 'lapampa-for3.csv'],
+    ['La Rioja', 'larioja-for3.csv'],
+    ['Mendoza', 'mendoza-for3.csv'],
+    ['Misiones', 'misiones-for3.csv'],
+    ['Neuquen', 'neuquen-for3.csv'],
+    ['Rio Negro', 'rionegro-for3.csv'],
+    ['Salta', 'salta-for3.csv'],
+    ['San Juan', 'sanjuan-for3.csv'],
+    ['San Luis', 'sanluis-for3.csv'],
+    ['Santa Cruz', 'santacruz-for3.csv'],
+    ['Santa Fe', 'santafe-for3.csv'],
+    ['Santiago del Estero', 'santiago-for3.csv'],
+    ['Tierra del Fuego', 'tfuego-for3.csv'],
+    ['Tucuman', 'tucuman-for3.csv']
 ]
 
 
@@ -39,7 +124,8 @@ monitor_files = [
 
 
 def read_table(csv_file):
-    with open(csv_file, 'r') as f:
+    filepath = os.path.join(FILE_BASE_PATH, csv_file)
+    with open(filepath, 'r') as f:
         text = f.read()
     return map(lambda x: x.split(','), text.replace('\r', '').split('\n'))
 
