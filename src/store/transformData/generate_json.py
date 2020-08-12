@@ -194,20 +194,44 @@ def data_for_charts(table_values, is_forecast=False):
     }
 
 
+def add_empty_dates(date, first_table_date, table_values):
+    delta = first_table_date - date
+    empty_rows = []
+    empty_row = [0.0 for x in table_values[0]]
+    for i in range(delta.days):
+        day = date + datetime.timedelta(days=i)
+        empty_row[0] = day.isoformat()
+        empty_rows.append(empty_row)
+
+
 def write_json():
     data = {'monitoreo': {}, 'prediccion': {}}
 
     for file in forecast_files:
-        table = read_table(file[1])
+        try:
+            table = read_table(file[1])
+        except Exception as e:
+            if e.strerror == 'No such file or directory':
+                continue
+            raise e
         parsed_date = map(int, table[0][len(table[0])-1].replace('/', '-').split('-'))
         date = datetime.date(year=parsed_date[2], month=parsed_date[1], day=parsed_date[0])
         table_values = get_table_values(date, table[1:])
         data['prediccion'][file[0]] = data_for_charts(table_values, is_forecast=True)
 
     for file in monitor_files:
-        table = read_table(file[1])
+        try:
+            table = read_table(file[1])
+        except Exception as e:
+            if e.strerror == 'No such file or directory':
+                continue
+            raise e
+        parsed_date = map(int, table[0][len(table[0]) - 1].replace('/', '-').split('-'))
+        first_table_date = datetime.date(year=parsed_date[2], month=parsed_date[1], day=parsed_date[0])
         date = datetime.date(year=2020, month=3, day=3)
-        table_values = get_table_values(date, table[1:])
+        table_values = get_table_values(first_table_date, table[1:])
+        if first_table_date > date:
+            add_empty_dates(date, first_table_date, table_values)
         data['monitoreo'][file[0]] = data_for_charts(table_values)
 
     with open('sample_data.json', 'w') as f:
