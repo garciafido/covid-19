@@ -196,12 +196,11 @@ def data_for_charts(table_values, is_forecast=False):
 
 def add_empty_dates(date, first_table_date, table_values):
     delta = first_table_date - date
-    empty_rows = []
-    empty_row = [0.0 for x in table_values[0]]
-    for i in range(delta.days):
+    for i in reversed(range(delta.days)):
         day = date + datetime.timedelta(days=i)
+        empty_row = [0.0 for x in table_values[0]]
         empty_row[0] = day.isoformat()
-        empty_rows.append(empty_row)
+        table_values.insert(0, empty_row)
 
 
 def write_json():

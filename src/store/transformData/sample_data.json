@@ -78112,10 +78112,28 @@
     }, 
     "Buenos Aires": {
       "minMaxActives": [
-        0.3, 
+        0.0, 
         11703.0
       ], 
       "r": [
+        {
+          "date": "2020-03-03", 
+          "show_date": "03/03", 
+          "ensemble": [
+            0.0, 
+            0.0
+          ], 
+          "mean": 0.0
+        }, 
+        {
+          "date": "2020-03-04", 
+          "show_date": "04/03", 
+          "ensemble": [
+            0.0, 
+            0.0
+          ], 
+          "mean": 0.0
+        }, 
         {
           "date": "2020-03-05", 
           "show_date": "05/03", 
@@ -79423,6 +79441,26 @@
         1647.0
       ], 
       "deads": [
+        {
+          "date": "2020-03-03", 
+          "observation": 0.0, 
+          "show_date": "03/03", 
+          "ensemble": [
+            0.0, 
+            0.0
+          ], 
+          "mean": 0.0
+        }, 
+        {
+          "date": "2020-03-04", 
+          "observation": 0.0, 
+          "show_date": "04/03", 
+          "ensemble": [
+            0.0, 
+            0.0
+          ], 
+          "mean": 0.0
+        }, 
         {
           "date": "2020-03-05", 
           "observation": 0.0, 
@@ -80865,6 +80903,26 @@
         }
       ], 
       "cases": [
+        {
+          "date": "2020-03-03", 
+          "observation": 0.0, 
+          "show_date": "03/03", 
+          "ensemble": [
+            0.0, 
+            0.0
+          ], 
+          "mean": 0.0
+        }, 
+        {
+          "date": "2020-03-04", 
+          "observation": 0.0, 
+          "show_date": "04/03", 
+          "ensemble": [
+            0.0, 
+            0.0
+          ], 
+          "mean": 0.0
+        }, 
         {
           "date": "2020-03-05", 
           "observation": 0.0, 
@@ -82309,6 +82367,24 @@
       "lastR": 1.53, 
       "actives": [
         {
+          "date": "2020-03-03", 
+          "show_date": "03/03", 
+          "ensemble": [
+            0.0, 
+            0.0
+          ], 
+          "mean": 0.0
+        }, 
+        {
+          "date": "2020-03-04", 
+          "show_date": "04/03", 
+          "ensemble": [
+            0.0, 
+            0.0
+          ], 
+          "mean": 0.0
+        }, 
+        {
           "date": "2020-03-05", 
           "show_date": "05/03", 
           "ensemble": [
@@ -83606,7 +83682,7 @@
         }
       ], 
       "minMaxR": [
-        0.19, 
+        0.0, 
         3.76
       ]
     }, 
