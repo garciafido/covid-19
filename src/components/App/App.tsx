@@ -93,7 +93,7 @@ const App = observer((props: any) => {
   if (store.current) {
       if (store.currentMode === 'info') {
         charts = (
-            <Grid item xs={4}>
+            <Grid item xs={8}>
               <Grid container>
                   <Grid item xs={12}>
                     <ProjectInfo />

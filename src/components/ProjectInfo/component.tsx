@@ -2,67 +2,86 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import {Accordion} from "@material-ui/core";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import AccordionDetails from "@material-ui/core/AccordionDetails";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
   },
 }));
 
+function TabPanel(props: any) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
 const ProjectInfo = (props: any) => {
-    const classes = useStyles();
+    const [value, setValue] = React.useState(0);
+
+    const handleChange = (event: any, newValue: number) => {
+        setValue(newValue);
+    };
+
+    function a11yProps(index: number) {
+      return {
+        id: `tab-${index}`,
+        'aria-controls': `tabpanel-${index}`,
+      };
+    }
+
     return (
         <Box p={2}>
-         <Accordion expanded={true}>
-            <AccordionSummary
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-          <Typography className={classes.heading}>Reconocimientos</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
+          <Tabs value={value}
+                onChange={handleChange}
+                indicatorColor="primary"
+                aria-label="Información">
+            <Tab label="Reconocimientos" {...a11yProps(0)} />
+            <Tab label="Integrantes" {...a11yProps(1)} />
+            <Tab label="Metodología" {...a11yProps(2)} />
+          </Tabs>
+          <TabPanel value={value} index={0}>
             <Typography align="left" variant="body2" gutterBottom color="textSecondary" style={{whiteSpace: 'pre-line'}}>
-            <Box display="flex"  p={2} paddingBottom={0}>
-                Este proyecto es posible debido al financiamiento otorgado por la Agencia Nacional de Promocion Cientifica Tecnologica (ANPCyT) a traves del proyecto ORR 01 COVID FEDERAL EX-2020-38902538  ANPCyT. titulado " Sistema de monitoreo y predicción del COVID-19 en la provincia de Corrientes usando asimilación de datos"
-            </Box>
-            <Box display="flex"  p={2} paddingBottom={0} paddingTop={2}>
-                <b>Unidad Administradora: </b> SGCyT Universidad Nacional del Nordeste
-            </Box>
-            <Box display="flex" p={2} paddingBottom={0}>
-                <Typography align="left" variant="subtitle2" component="h2">
-                    Instituciones participantes:
-                </Typography>
-            </Box>
-            <Box display="flex" p={2} paddingBottom={0} paddingTop={0}>
-                Facultad de Ciencias Exactas y Naturales y Agrimensura (FaCENA, UNNE)
-            </Box>
-            <Box display="flex" p={2} paddingBottom={0} paddingTop={0}>
-                Centro de Investigacion en el Mar y la Atmosfera CIMA, FCEyN
-            </Box>
-            <Box display="flex" p={2} paddingTop={0}>
-                A todos estas instituciones agradecemos el apoyo recibido.
-            </Box>
-        </Typography>
-        </AccordionDetails>
-      </Accordion>
+                <Box display="flex"  p={2} paddingBottom={0}>
+                    Este proyecto es posible debido al financiamiento otorgado por la Agencia Nacional de Promocion Cientifica Tecnologica (ANPCyT) a traves del proyecto ORR 01 COVID FEDERAL EX-2020-38902538  ANPCyT. titulado " Sistema de monitoreo y predicción del COVID-19 en la provincia de Corrientes usando asimilación de datos"
+                </Box>
+                <Box display="flex"  p={2} paddingBottom={0} paddingTop={2}>
+                    <b>Unidad Administradora: </b> SGCyT Universidad Nacional del Nordeste
+                </Box>
+                <Box display="flex" p={2} paddingBottom={0}>
+                    <Typography align="left" variant="subtitle2" component="h2">
+                        Instituciones participantes:
+                    </Typography>
+                </Box>
+                <Box display="flex" p={2} paddingBottom={0} paddingTop={0}>
+                    Facultad de Ciencias Exactas y Naturales y Agrimensura (FaCENA, UNNE)
+                </Box>
+                <Box display="flex" p={2} paddingBottom={0} paddingTop={0}>
+                    Centro de Investigacion en el Mar y la Atmosfera CIMA, FCEyN
+                </Box>
+                <Box display="flex" p={2} paddingTop={0}>
+                    A todos estas instituciones agradecemos el apoyo recibido.
+                </Box>
+            </Typography>
+        </TabPanel>
 
-         <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-          <Typography className={classes.heading}>Integrantes</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
+    <TabPanel value={value} index={1}>
         <Typography align="left" variant="body2" gutterBottom color="textSecondary">
             <Box p={2} paddingBottom={0} >
             Manuel Pulido (Investigador Responsable, UNNE-CONICET)
@@ -109,22 +128,10 @@ const ProjectInfo = (props: any) => {
             Pierre Tandeo (IMT Atlantique. CNRS. France)
             </Box>
         </Typography>
-        </AccordionDetails>
-      </Accordion>
+    </TabPanel>
 
 
-
-
-
-         <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-          <Typography className={classes.heading}>Metodología</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
+    <TabPanel value={value} index={2}>
         <Typography align="left" variant="body2" gutterBottom color="textSecondary">
             <Box p={2}>
             Se realiza un monitoreo a tiempo real del avance del COVID-19 basado en técnicas de Monte Carlo que representan un ensamble de estados posibles.
@@ -145,8 +152,7 @@ const ProjectInfo = (props: any) => {
             Evensen G, J Amezcua , M Bocquet , A Carrassi, A Farchi , A Fowler , PL Houtekamer, CK Jones , RJ de Moraes, M Pulido , C Sampson, and FC Vossepoel, 2020: An international assessment of the COVID-19 pandemic using ensemble data assimilation. Submitted to Foundations of Data Science . https://doi.org/10.1101/2020.06.11.20128777
             </Box>
         </Typography>
-        </AccordionDetails>
-      </Accordion>
+    </TabPanel>
     </Box>
   );
 }
