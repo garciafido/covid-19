@@ -55,11 +55,12 @@ class CovidData {
             return gray;
         } else {
             const factor = 200 / ((max - min) + min);
-            cases = Math.trunc(factor * (cases - min));
-            if (cases < 100) {
-                return colormaps.Oranges[Math.trunc(cases)]
-            } else if (cases < 200) {
-                return colormaps.Reds[Math.trunc(cases - 100)]
+            let normalized_cases = Math.trunc(factor * (cases - min));
+            normalized_cases = normalized_cases >= 200 ? 199 : normalized_cases;
+            if (normalized_cases < 100) {
+                return colormaps.Oranges[Math.trunc(normalized_cases)]
+            } else if (normalized_cases < 200) {
+                return colormaps.Reds[Math.trunc(normalized_cases - 100)]
             } else {
                 return gray;
             }

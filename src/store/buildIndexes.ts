@@ -2,50 +2,41 @@ const buildByDate = (data: any, field: string) =>  {
     const indexedR: any = {};
     let min = 100000000000;
     let max = -100000000000;
+
     for (const key of Object.keys(data.monitoreo)) {
         indexedR[key] = {values: {}, min: 100000000000, max: -100000000000};
         const items = data.monitoreo[key][field];
-        items.forEach((item: any)  =>  {
-            if (item.mean < indexedR[key].min) {
-                indexedR[key].min = item.mean;
+        for (let i=0; i < items.length; i++) {
+            if (items[i].mean < min) {
+                min = items[i].mean;
             }
-            if (item.mean > indexedR[key].max) {
-                indexedR[key].max = item.mean;
+            if (key !== 'Argentina') {
+                if (items[i].mean > max) {
+                    max = items[i].mean;
+                }
             }
-            indexedR[key].values[item.date] = item.mean;
-        });
-        if (key !== 'Argentina') {
-            if (indexedR[key].min < min) {
-                min = indexedR[key].min;
-            }
-            if (indexedR[key].max > max) {
-                max = indexedR[key].max;
-            }
+            indexedR[key].values[items[i].date] = items[i].mean;
         }
     }
-    for (const key in Object.keys(data.prediccion)) {
+
+    for (const key of Object.keys(data.prediccion)) {
         if (data.prediccion[key]) {
             const items = data.prediccion[key][field];
-            items.forEach((item: any)  =>  {
-                // if (item.mean < indexedR[key].min) {
-                //     indexedR[key].min = item.mean;
-                // }
-                // if (item.mean > indexedR[key].max) {
-                //     indexedR[key].max = item.mean;
-                // }
-                // indexedR[key].values[item.date] = item.mean;
-            });
+            for (let i=0; i < items.length; i++) {
+                if (items[i].mean < min) {
+                    min = items[i].mean;
+                }
+                if (key !== 'Argentina') {
+                    if (items[i].mean > max) {
+                        max = items[i].mean;
+                    }
+                }
+                indexedR[key].values[items[i].date] = items[i].mean;
+            }
         }
-        // if (key !== 'Argentina') {
-        //     if (indexedR[key].min < min) {
-        //         min = indexedR[key].min;
-        //     }
-        //     if (indexedR[key].max > max) {
-        //         max = indexedR[key].max;
-        //     }
-        // }
     }
-    indexedR.min = min;
+
+    indexedR.min = min < 0 ? 0 : min;
     indexedR.max = max;
     return indexedR;
 }
