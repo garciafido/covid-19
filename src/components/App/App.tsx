@@ -206,7 +206,7 @@ const App = observer((props: any) => {
             spacing={2}>
           <Grid item xs={12}>
               <Box display="flex" justifyContent="center">
-                  <h3>Sistema de monitoreo y predicción del COVID-19 en la provincia de Corrientes [DEMO]</h3>
+                  <h3>Sistema de Monitoreo y Predicción de COVID-19 en Argentina</h3>
               </Box>
           </Grid>
           <Grid container>

@@ -149,13 +149,13 @@ def get_chart_value(iso_date, values):
         "show_date": '{}/{}'.format(list_date[2], list_date[1]),
         "date": iso_date,
         "ensemble": [
-            mean-std_dev,
-            mean+std_dev
+            round(mean-std_dev, 1) if mean-std_dev > 0 else 0,
+            round(mean+std_dev, 1) if mean+std_dev > 0 else 0,
         ],
-        "mean": mean
+        "mean": round(mean, 1) if mean > 0 else 0
     }
     if observation is not None:
-        value['observation'] = observation
+        value['observation'] = round(observation, 0) if observation > 0 else 0
     return value
 
 
@@ -204,19 +204,66 @@ def add_empty_dates(date, first_table_date, table_values):
 
 
 def write_json():
-    data = {'monitoreo': {}, 'prediccion': {}}
+    data = {'monitoreo': {}, 'prediccion': {}, 'fecha_de_asimilacion': None}
+    no_date = True
 
-    for file in forecast_files:
+    def get_values(filepath):
         try:
-            table = read_table(file[1])
+            table = read_table(filepath)
         except Exception as e:
-            if e.strerror == 'No such file or directory':
-                continue
+            if e.strerror != 'No such file or directory':
+                return None
             raise e
         parsed_date = map(int, table[0][len(table[0])-1].replace('/', '-').split('-'))
         date = datetime.date(year=parsed_date[2], month=parsed_date[1], day=parsed_date[0])
-        table_values = get_table_values(date, table[1:])
-        data['prediccion'][file[0]] = data_for_charts(table_values, is_forecast=True)
+        return get_table_values(date, table[1:])
+
+    for file in forecast_files:
+        table_values = get_values(file[1])
+        if table_values is not None:
+            data['prediccion'][file[0]] = data_for_charts(table_values, is_forecast=True)
+
+    for file in forecast_files_2:
+        table_values = get_values(file[1])
+        if table_values is not None:
+            values = data_for_charts(table_values, is_forecast=True)
+            for i in range(len(data['prediccion'][file[0]]['cases'])):
+                previous_data = data['prediccion'][file[0]]['cases'][i]
+                previous_data['ensemble2'] = values['cases'][i]['ensemble']
+                previous_data['mean2'] = values['cases'][i]['mean']
+
+                previous_data = data['prediccion'][file[0]]['deads'][i]
+                previous_data['ensemble2'] = values['deads'][i]['ensemble']
+                previous_data['mean2'] = values['deads'][i]['mean']
+
+                previous_data = data['prediccion'][file[0]]['actives'][i]
+                previous_data['ensemble2'] = values['actives'][i]['ensemble']
+                previous_data['mean2'] = values['actives'][i]['mean']
+
+                previous_data = data['prediccion'][file[0]]['r'][i]
+                previous_data['ensemble2'] = values['r'][i]['ensemble']
+                previous_data['mean2'] = values['r'][i]['mean']
+
+    for file in forecast_files_3:
+        table_values = get_values(file[1])
+        if table_values is not None:
+            values = data_for_charts(table_values, is_forecast=True)
+            for i in range(len(data['prediccion'][file[0]]['cases'])):
+                previous_data = data['prediccion'][file[0]]['cases'][i]
+                previous_data['ensemble3'] = values['cases'][i]['ensemble']
+                previous_data['mean3'] = values['cases'][i]['mean']
+
+                previous_data = data['prediccion'][file[0]]['deads'][i]
+                previous_data['ensemble3'] = values['deads'][i]['ensemble']
+                previous_data['mean3'] = values['deads'][i]['mean']
+
+                previous_data = data['prediccion'][file[0]]['actives'][i]
+                previous_data['ensemble3'] = values['actives'][i]['ensemble']
+                previous_data['mean3'] = values['actives'][i]['mean']
+
+                previous_data = data['prediccion'][file[0]]['r'][i]
+                previous_data['ensemble3'] = values['r'][i]['ensemble']
+                previous_data['mean3'] = values['r'][i]['mean']
 
     for file in monitor_files:
         try:
@@ -225,7 +272,15 @@ def write_json():
             if e.strerror == 'No such file or directory':
                 continue
             raise e
-        parsed_date = map(int, table[0][len(table[0]) - 1].replace('/', '-').split('-'))
+        parsed_dates = table[0][len(table[0]) - 1].replace('/', '-').strip(' ').split(' ')
+
+        if no_date:
+            parsed_date = map(int, parsed_dates[1].split('-'))
+            ran_date = datetime.date(year=parsed_date[2], month=parsed_date[1], day=parsed_date[0])
+            data["fecha_de_asimilacion"] = ran_date.isoformat()
+            no_date = False
+
+        parsed_date = map(int, parsed_dates[0].split('-'))
         first_table_date = datetime.date(year=parsed_date[2], month=parsed_date[1], day=parsed_date[0])
         date = datetime.date(year=2020, month=3, day=3)
         table_values = get_table_values(first_table_date, table[1:])
