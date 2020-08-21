@@ -7,8 +7,8 @@ import {buildActivesByDate, buildCasesByDate, buildDeadsByDate, buildRByDate} fr
 configure({ enforceActions: "observed" });
 
 let covidDataUrl = ((window as any).COVID_DATA_URL);
-// covidDataUrl = covidDataUrl ? covidDataUrl : 'http://covid19.unne.edu.ar/sample_data.json';
-covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data.json';
+covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
+// covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data.json';
 
 const gray = "#C7BDC6";
 
@@ -21,6 +21,7 @@ class CovidData {
     @observable currentMode = "monitoreo";
 
     @observable selectedDate: string = '';
+    @observable assimilationDate: string = '';
     @observable selectedChart: string = '';
 
     @observable rByDate: any = {};
@@ -38,6 +39,7 @@ class CovidData {
             this.data = yield serverData.json();
             this.current = this.data[this.currentMode][this.currentLocation];
             this.selectedDate = this.current.lastDate;
+            this.assimilationDate = this.data.fecha_de_asimilacion;
             this.selectedChart = 'r';
             this.rByDate = buildRByDate(this.data);
             this.casesByDate = buildCasesByDate(this.data);

@@ -89,6 +89,8 @@ const App = observer((props: any) => {
   const activesText = `Número de infectados COVID-19 activos  estimados con el sistema de asimilación de datos.`;
   const RText = `Número de reproducción efectivo, R(t), estimado con la técnica de asimilación de datos y su incerteza.`;
 
+  const assimilationDate = store.assimilationDate.split('-');
+
   let charts;
   if (store.current) {
       if (store.currentMode === 'info') {
@@ -104,7 +106,7 @@ const App = observer((props: any) => {
       } else {
         charts = <Grid item xs={8}>
                   <Grid container>
-                      <Grid item xs={12}>
+                      <Grid item xs={12} >
                           <h2>{store.currentLocation}</h2>
                       </Grid>
                       <Grid item xs={12}>
@@ -179,6 +181,9 @@ const App = observer((props: any) => {
                           </Box>
                       </Grid>
                   </Grid>
+                      <Grid item xs={12} >
+                            <h5>&nbsp;{`Fecha de asimilación: ${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`}</h5>
+                      </Grid>
               </Grid>;
       }
   } else {
