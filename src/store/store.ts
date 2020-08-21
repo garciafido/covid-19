@@ -7,7 +7,8 @@ import {buildActivesByDate, buildCasesByDate, buildDeadsByDate, buildRByDate} fr
 configure({ enforceActions: "observed" });
 
 let covidDataUrl = ((window as any).COVID_DATA_URL);
-covidDataUrl = covidDataUrl ? covidDataUrl : 'http://covid19.unne.edu.ar/sample_data.json';
+// covidDataUrl = covidDataUrl ? covidDataUrl : 'http://covid19.unne.edu.ar/sample_data.json';
+covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data.json';
 
 const gray = "#C7BDC6";
 
