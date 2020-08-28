@@ -28,7 +28,7 @@ function patch(data: any, withObservation: boolean) {
 }
 
 const BaseChart = (props: any) => {
-  const logarithmic = props.minMax[1] > 50000;
+  const logarithmic = props.minMax[1] > 5000;
   const yAxis = logarithmic ?
       <YAxis allowDecimals={false} scale="log" domain={[1, props.minMax[1]]} />
       : <YAxis allowDecimals={false} scale="linear" domain={props.minMax} />
