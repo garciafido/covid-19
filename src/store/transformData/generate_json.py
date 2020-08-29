@@ -160,9 +160,9 @@ def get_chart_value(iso_date, values):
 
 
 def data_for_charts(table_values, is_forecast=False):
-    def min_max(*indexes):
-        values = [list(row[i] for i in indexes) for row in table_values]
-        return [min([min(*v) for v in values]), max([max(*v) for v in values])]
+    def min_max(index):
+        values = [row[index] for row in table_values]
+        return [min(values), max(values)]
 
     if is_forecast:
         cases_indexes = (1, 2)
@@ -185,10 +185,10 @@ def data_for_charts(table_values, is_forecast=False):
         'r': r,
         'actives': actives,
         'deads': deads,
-        'minMaxCases': min_max(*cases_indexes),
-        'minMaxR': min_max(*r_indexes),
-        'minMaxActives': min_max(*actives_indexes),
-        'minMaxDeaths': min_max(*deads_indexes),
+        'minMaxCases': min_max(cases_indexes[0]),
+        'minMaxR': min_max(r_indexes[0]),
+        'minMaxActives': min_max(actives_indexes[0]),
+        'minMaxDeaths': min_max(deads_indexes[0]),
         'lastDate': cases[len(cases)-1]['date'],
         'lastR': r[len(r)-1]['mean']
     }
