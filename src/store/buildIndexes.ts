@@ -26,11 +26,11 @@ const buildByDate = (data: any, field: string) =>  {
         if (data.prediccion[key]) {
             const items = data.prediccion[key][field];
             for (let i=0; i < items.length; i++) {
-                if (items[i].mean < min) {
+                if (items[i].mean < min_prediccion) {
                     min_prediccion = items[i].mean;
                 }
                 if (key !== 'Argentina') {
-                    if (items[i].mean > max) {
+                    if (items[i].mean > max_prediccion) {
                         max_prediccion = items[i].mean;
                     }
                 }

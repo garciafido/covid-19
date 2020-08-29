@@ -94,8 +94,8 @@ class CovidData {
                     min = this.casesByDate.min;
                     max = this.casesByDate.max;
                 } else {
-                    min = this.casesByDate.min_prediccion;
-                    max = this.casesByDate.max_prediccion;
+                    min = Math.min(this.casesByDate.min_prediccion, this.casesByDate.min);
+                    max = Math.max(this.casesByDate.max_prediccion, this.casesByDate.max);
                 }
                 return this.autoColorMap(cases, min, max);
             } else if (this.selectedChart === 'deads') {
@@ -105,8 +105,8 @@ class CovidData {
                     min = this.deadsByDate.min;
                     max = this.deadsByDate.max;
                 } else {
-                    min = this.deadsByDate.min_prediccion;
-                    max = this.deadsByDate.max_prediccion;
+                    min = Math.min(this.deadsByDate.min_prediccion, this.deadsByDate.min);
+                    max = Math.max(this.deadsByDate.max_prediccion, this.deadsByDate.max);
                 }
                 return this.autoColorMap(deads, min, max);
             } else if (this.selectedChart === 'actives') {
@@ -116,8 +116,8 @@ class CovidData {
                     min = this.activesByDate.min;
                     max = this.activesByDate.max;
                 } else {
-                    min = this.activesByDate.min_prediccion;
-                    max = this.activesByDate.max_prediccion;
+                    min = Math.min(this.activesByDate.min_prediccion, this.activesByDate.min);
+                    max = Math.max(this.activesByDate.max_prediccion, this.activesByDate.max);
                 }
                 return this.autoColorMap(actives, min, max);
             } else {
