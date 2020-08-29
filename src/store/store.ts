@@ -89,18 +89,36 @@ class CovidData {
                 }
             } else if (this.selectedChart === 'cases') {
                 const cases = this.casesByDate[provincia].values[this.selectedDate];
-                const min = this.casesByDate.min;
-                const max = this.casesByDate.max;
+                let min, max;
+                if (this.currentMode === 'monitoreo') {
+                    min = this.casesByDate.min;
+                    max = this.casesByDate.max;
+                } else {
+                    min = this.casesByDate.min_prediccion;
+                    max = this.casesByDate.max_prediccion;
+                }
                 return this.autoColorMap(cases, min, max);
             } else if (this.selectedChart === 'deads') {
                 const deads = this.deadsByDate[provincia].values[this.selectedDate];
-                const min = this.deadsByDate.min;
-                const max = this.deadsByDate.max;
+                let min, max;
+                if (this.currentMode === 'monitoreo') {
+                    min = this.deadsByDate.min;
+                    max = this.deadsByDate.max;
+                } else {
+                    min = this.deadsByDate.min_prediccion;
+                    max = this.deadsByDate.max_prediccion;
+                }
                 return this.autoColorMap(deads, min, max);
             } else if (this.selectedChart === 'actives') {
                 const actives = this.activesByDate[provincia].values[this.selectedDate];
-                const min = this.activesByDate.min;
-                const max = this.activesByDate.max;
+                let min, max;
+                if (this.currentMode === 'monitoreo') {
+                    min = this.activesByDate.min;
+                    max = this.activesByDate.max;
+                } else {
+                    min = this.activesByDate.min_prediccion;
+                    max = this.activesByDate.max_prediccion;
+                }
                 return this.autoColorMap(actives, min, max);
             } else {
                 return gray;

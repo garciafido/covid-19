@@ -19,16 +19,19 @@ const buildByDate = (data: any, field: string) =>  {
         }
     }
 
+    let min_prediccion = 100000000000;
+    let max_prediccion = -100000000000;
+
     for (const key of Object.keys(data.prediccion)) {
         if (data.prediccion[key]) {
             const items = data.prediccion[key][field];
             for (let i=0; i < items.length; i++) {
                 if (items[i].mean < min) {
-                    min = items[i].mean;
+                    min_prediccion = items[i].mean;
                 }
                 if (key !== 'Argentina') {
                     if (items[i].mean > max) {
-                        max = items[i].mean;
+                        max_prediccion = items[i].mean;
                     }
                 }
                 indexedR[key].values[items[i].date] = items[i].mean;
@@ -38,6 +41,8 @@ const buildByDate = (data: any, field: string) =>  {
 
     indexedR.min = min < 0 ? 0 : min;
     indexedR.max = max;
+    indexedR.min_prediccion = min_prediccion < 0 ? 0 : min_prediccion;
+    indexedR.max_prediccion = max_prediccion;
     return indexedR;
 }
 
