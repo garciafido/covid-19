@@ -203,6 +203,11 @@ def add_empty_dates(date, first_table_date, table_values):
         table_values.insert(0, empty_row)
 
 
+def setNewMinMax(previous, new):
+    for field in ['minMaxCases', 'minMaxR', 'minMaxActives', 'minMaxDeaths']:
+        previous[field] = [min(previous[field], new[field]), max(previous[field], new[field])]
+
+
 def write_json():
     data = {'monitoreo': {}, 'prediccion': {}, 'fecha_de_asimilacion': None}
     no_date = True
@@ -228,6 +233,8 @@ def write_json():
         if table_values is not None:
             values = data_for_charts(table_values, is_forecast=True)
             for i in range(len(data['prediccion'][file[0]]['cases'])):
+                setNewMinMax(data['prediccion'][file[0]], values)
+
                 previous_data = data['prediccion'][file[0]]['cases'][i]
                 previous_data['ensemble2'] = values['cases'][i]['ensemble']
                 previous_data['mean2'] = values['cases'][i]['mean']
@@ -249,6 +256,8 @@ def write_json():
         if table_values is not None:
             values = data_for_charts(table_values, is_forecast=True)
             for i in range(len(data['prediccion'][file[0]]['cases'])):
+                setNewMinMax(data['prediccion'][file[0]], values)
+
                 previous_data = data['prediccion'][file[0]]['cases'][i]
                 previous_data['ensemble3'] = values['cases'][i]['ensemble']
                 previous_data['mean3'] = values['cases'][i]['mean']

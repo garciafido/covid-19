@@ -1,0 +1,1 @@
+scp garcia@200.45.54.94:/home/pulido/covid/res/* .
