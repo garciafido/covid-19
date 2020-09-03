@@ -232,9 +232,8 @@ def write_json():
         table_values = get_values(file[1])
         if table_values is not None:
             values = data_for_charts(table_values, is_forecast=True)
+            setNewMinMax(data['prediccion'][file[0]], values)
             for i in range(len(data['prediccion'][file[0]]['cases'])):
-                setNewMinMax(data['prediccion'][file[0]], values)
-
                 previous_data = data['prediccion'][file[0]]['cases'][i]
                 previous_data['ensemble2'] = values['cases'][i]['ensemble']
                 previous_data['mean2'] = values['cases'][i]['mean']
@@ -255,9 +254,8 @@ def write_json():
         table_values = get_values(file[1])
         if table_values is not None:
             values = data_for_charts(table_values, is_forecast=True)
+            setNewMinMax(data['prediccion'][file[0]], values)
             for i in range(len(data['prediccion'][file[0]]['cases'])):
-                setNewMinMax(data['prediccion'][file[0]], values)
-
                 previous_data = data['prediccion'][file[0]]['cases'][i]
                 previous_data['ensemble3'] = values['cases'][i]['ensemble']
                 previous_data['mean3'] = values['cases'][i]['mean']
