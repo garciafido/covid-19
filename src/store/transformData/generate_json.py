@@ -241,7 +241,7 @@ def write_json():
             values = data_for_charts(table_values, is_forecast=True)
             setNewMinMax(data['prediccion'][file[0]], values)
             for i in range(len(data['prediccion'][file[0]]['cases'])):
-                add_ensamble_data(data['prediccion'][file[0]], i, values, 3)
+                add_ensamble_data(data['prediccion'][file[0]], i, values, 2)
 
     for file in forecast_files_3:
         table_values = get_values(file[1])
