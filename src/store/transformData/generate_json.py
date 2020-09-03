@@ -208,6 +208,13 @@ def setNewMinMax(previous, new):
         previous[field] = [min(previous[field], new[field]), max(previous[field], new[field])]
 
 
+def add_ensamble_data(previous, row_number, values, ensamble_number):
+    for field in ['cases', 'deads', 'actives', 'r']:
+        previous_data = previous[field][row_number]
+        previous_data['ensemble{}'.format(ensamble_number)] = values[field][row_number]['ensemble']
+        previous_data['mean{}'.format(ensamble_number)] = values[field][row_number]['mean']
+
+
 def write_json():
     data = {'monitoreo': {}, 'prediccion': {}, 'fecha_de_asimilacion': None}
     no_date = True
@@ -234,21 +241,7 @@ def write_json():
             values = data_for_charts(table_values, is_forecast=True)
             setNewMinMax(data['prediccion'][file[0]], values)
             for i in range(len(data['prediccion'][file[0]]['cases'])):
-                previous_data = data['prediccion'][file[0]]['cases'][i]
-                previous_data['ensemble2'] = values['cases'][i]['ensemble']
-                previous_data['mean2'] = values['cases'][i]['mean']
-
-                previous_data = data['prediccion'][file[0]]['deads'][i]
-                previous_data['ensemble2'] = values['deads'][i]['ensemble']
-                previous_data['mean2'] = values['deads'][i]['mean']
-
-                previous_data = data['prediccion'][file[0]]['actives'][i]
-                previous_data['ensemble2'] = values['actives'][i]['ensemble']
-                previous_data['mean2'] = values['actives'][i]['mean']
-
-                previous_data = data['prediccion'][file[0]]['r'][i]
-                previous_data['ensemble2'] = values['r'][i]['ensemble']
-                previous_data['mean2'] = values['r'][i]['mean']
+                add_ensamble_data(data['prediccion'][file[0]], i, values, 3)
 
     for file in forecast_files_3:
         table_values = get_values(file[1])
@@ -256,21 +249,7 @@ def write_json():
             values = data_for_charts(table_values, is_forecast=True)
             setNewMinMax(data['prediccion'][file[0]], values)
             for i in range(len(data['prediccion'][file[0]]['cases'])):
-                previous_data = data['prediccion'][file[0]]['cases'][i]
-                previous_data['ensemble3'] = values['cases'][i]['ensemble']
-                previous_data['mean3'] = values['cases'][i]['mean']
-
-                previous_data = data['prediccion'][file[0]]['deads'][i]
-                previous_data['ensemble3'] = values['deads'][i]['ensemble']
-                previous_data['mean3'] = values['deads'][i]['mean']
-
-                previous_data = data['prediccion'][file[0]]['actives'][i]
-                previous_data['ensemble3'] = values['actives'][i]['ensemble']
-                previous_data['mean3'] = values['actives'][i]['mean']
-
-                previous_data = data['prediccion'][file[0]]['r'][i]
-                previous_data['ensemble3'] = values['r'][i]['ensemble']
-                previous_data['mean3'] = values['r'][i]['mean']
+                add_ensamble_data(data['prediccion'][file[0]], i, values, 3)
 
     for file in monitor_files:
         try:
