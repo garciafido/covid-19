@@ -74,20 +74,20 @@ def get_chart_value(iso_date, values):
 
 
 def data_for_charts(table_values, is_forecast=False):
-    def min_max(*indexes):
-        values = [list(row[i] for i in indexes) for row in table_values]
-        return [min([min(*v) for v in values]), max([max(*v) for v in values])]
+    def min_max(index, dev_index):
+        values = [(row[index] - row[dev_index], row[index] + row[dev_index]) for row in table_values]
+        return [min([v[0] for v in values]), max([v[1] for v in values])]
 
     if is_forecast:
-        cases_indexes = (1, 2)
-        r_indexes = (3, 4)
-        actives_indexes = (5, 6)
-        deads_indexes = (7, 8)
+        cases_indexes = (1, 2)      # mean, dev
+        r_indexes = (3, 4)          # mean, dev
+        actives_indexes = (5, 6)    # mean, dev
+        deads_indexes = (7, 8)      # mean, v
     else:
-        cases_indexes = (1, 2, 3)
-        r_indexes = (4, 5)
-        actives_indexes = (6, 7)
-        deads_indexes = (8, 9, 10)
+        cases_indexes = (1, 2, 3)   # obs, mean, dev
+        r_indexes = (4, 5)          # mean, dev
+        actives_indexes = (6, 7)    # mean, dev
+        deads_indexes = (8, 9, 10)  # obs, mean, dev
 
     cases = map(lambda row: get_chart_value(row[0], [row[i] for i in cases_indexes]), table_values)
     r = map(lambda row: get_chart_value(row[0], [row[i] for i in r_indexes]), table_values)
@@ -99,10 +99,10 @@ def data_for_charts(table_values, is_forecast=False):
         'r': r,
         'actives': actives,
         'deads': deads,
-        'minMaxCases': min_max(*cases_indexes),
-        'minMaxR': min_max(*r_indexes),
-        'minMaxActives': min_max(*actives_indexes),
-        'minMaxDeaths': min_max(*deads_indexes),
+        'minMaxCases': min_max(cases_indexes[-2], cases_indexes[-1]),
+        'minMaxR': min_max(r_indexes[-2], r_indexes[-1]),
+        'minMaxActives': min_max(actives_indexes[0], actives_indexes[-1]),
+        'minMaxDeaths': min_max(deads_indexes[0], deads_indexes[-1]),
         'lastDate': cases[len(cases)-1]['date'],
         'lastR': r[len(r)-1]['mean']
     }
@@ -119,7 +119,7 @@ def add_empty_dates(date, first_table_date, table_values):
 
 def setNewMinMax(previous, new):
     for field in ['minMaxCases', 'minMaxR', 'minMaxActives', 'minMaxDeaths']:
-        previous[field] = [min(previous[field], new[field]), max(previous[field], new[field])]
+        previous[field] = [min(previous[field][0], new[field][0]), max(previous[field][1], new[field][1])]
 
 
 def add_ensamble_data(previous, row_number, values, ensamble_number):

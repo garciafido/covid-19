@@ -30,7 +30,8 @@ function patch(data: any, withObservation: boolean) {
 const BaseChart = (props: any) => {
   const logarithmic = props.minMax[1] > 5000;
   const yAxis = logarithmic ?
-      <YAxis allowDecimals={false} scale="log" domain={[Math.max(1, props.minMax[0]), props.minMax[1]]} />
+      <YAxis allowDecimals={false} scale="log"
+             domain={[Math.max(1, props.minMax[0]), props.minMax[1]]} />
       : <YAxis allowDecimals={false} scale="linear" domain={props.minMax} />
 
   let data = props.data;
@@ -51,7 +52,8 @@ const BaseChart = (props: any) => {
 
   const mean2 = withMean2 ?
           <Line type="monotone" dataKey="mean2" name="Media 2" stroke="#BB11FF" dot={false}
-                activeDot={{r:8, onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
+                activeDot={{r:8, onClick: (payload: any) => {props.onClick(
+                    {type: payload.dataKey, date: props.data[payload.index].date})} }} />
       : <div/>;
 
   const ensemble2 = withMean2 ?
@@ -83,16 +85,18 @@ const BaseChart = (props: any) => {
           {yAxis}
           <Tooltip />
           <Legend />
-          <Area type="monotone" dataKey="ensemble" name="Ensamble" fill="#C7BDC6" stroke="#C7BDC6" dot={false}
-                activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
-          />
+
           {ensemble2}
           {ensemble3}
-          {observation}
-          <Line type="monotone" dataKey="mean" name="Media" stroke="#3300FF" dot={false}
-                activeDot={{r:8, onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
+          <Area type="monotone" dataKey="ensemble" name="Ensamble" fill="#C7BDC6" stroke="#C7BDC6" dot={false}
+                activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
+
           {mean2}
           {mean3}
+          <Line type="monotone" dataKey="mean" name="Media" stroke="#3300FF" dot={false}
+                activeDot={{r:8, onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
+
+          {observation}
         </ComposedChart>
     </ResponsiveContainer>
   </>
