@@ -9,29 +9,27 @@ import {
 } from 'recharts';
 
 
-function patch(data: any, withObservation: boolean) {
-  const newData = [];
+function patch(data: any,
+               withObservation: boolean, withMean2: boolean, withMean3: boolean,
+               minValue: number) {
   for (const row of data) {
-    const minValue = 1;
-    const newValue = {
-      mean: row.mean < minValue ? minValue : row.mean,
-      ensemble: [
+    if (withObservation) {
+        row.observation = row.observation >= minValue ? row.observation : minValue;
+    }
+    row.mean = row.mean < minValue ? minValue : row.mean;
+    row.ensemble = [
           row.ensemble[0] < minValue ? minValue : row.ensemble[0],
           row.ensemble[1] < minValue ? minValue : row.ensemble[1],
-      ],
-      observation: withObservation && row.observation > minValue ? row.observation : minValue,
-      show_date: row.show_date,
-    }
-    newData.push(newValue);
+      ];
   }
-  return newData;
 }
 
 const BaseChart = (props: any) => {
   const logarithmic = props.minMax[1] > 5000;
+  const minValue = Math.max(1, props.minMax[0]);
   const yAxis = logarithmic ?
       <YAxis allowDecimals={false} scale="log"
-             domain={[Math.max(1, props.minMax[0]), props.minMax[1]]} />
+             domain={[minValue, props.minMax[1]]} />
       : <YAxis allowDecimals={false} scale="linear" domain={props.minMax} />
 
   let data = props.data;
@@ -40,9 +38,10 @@ const BaseChart = (props: any) => {
   const withMean2 = 'mean2' in data[0];
   const withMean3 = 'mean3' in data[0];
 
-//  if (logarithmic) {
-//    data = patch(data, withObservation);
-//  }
+  if (logarithmic) {
+    patch(data, withObservation, withMean2, withMean3, minValue);
+  }
+
   const observation = withObservation ?
       <Line type="monotone" dataKey="observation" name="Observación" stroke="#ff0000" strokeDasharray="3 4 5 2"
             activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }}
@@ -57,7 +56,7 @@ const BaseChart = (props: any) => {
       : <div/>;
 
   const ensemble2 = withMean2 ?
-        <Area type="monotone" dataKey="ensemble2" name="Ensamble 2" fill="#C7BDC6" stroke="#C7BDC6" dot={false}
+        <Area type="monotone" dataKey="ensemble2" name="Inserteza 2" fill="#C7BDC6" stroke="#C7BDC6" dot={false}
               activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
       : <div/>;
 
@@ -67,7 +66,7 @@ const BaseChart = (props: any) => {
       : <div/>;
 
   const ensemble3 = withMean3 ?
-        <Area type="monotone" dataKey="ensemble3" name="Ensamble 3" fill="#C7BDC6" stroke="#C7BDC6" dot={false}
+        <Area type="monotone" dataKey="ensemble3" name="Inserteza 3" fill="#C7BDC6" stroke="#C7BDC6" dot={false}
               activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
       : <div/>;
 
@@ -88,7 +87,7 @@ const BaseChart = (props: any) => {
 
           {ensemble2}
           {ensemble3}
-          <Area type="monotone" dataKey="ensemble" name="Ensamble" fill="#C7BDC6" stroke="#C7BDC6" dot={false}
+          <Area type="monotone" dataKey="ensemble" name="Inserteza 1" fill="#C7BDC6" stroke="#C7BDC6" dot={false}
                 activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
 
           {mean2}
