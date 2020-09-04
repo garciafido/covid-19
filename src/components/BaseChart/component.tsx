@@ -40,9 +40,9 @@ const BaseChart = (props: any) => {
   const withMean2 = 'mean2' in data[0];
   const withMean3 = 'mean3' in data[0];
 
-  if (logarithmic) {
-    data = patch(data, withObservation);
-  }
+//  if (logarithmic) {
+//    data = patch(data, withObservation);
+//  }
   const observation = withObservation ?
       <Line type="monotone" dataKey="observation" name="Observación" stroke="#ff0000" strokeDasharray="3 4 5 2"
             activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }}
