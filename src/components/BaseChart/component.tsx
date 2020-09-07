@@ -56,7 +56,7 @@ const BaseChart = (props: any) => {
       : <div/>;
 
   const ensemble2 = withMean2 ?
-        <Area type="monotone" dataKey="ensemble2" name="Inserteza 2" fill="#C7BDC6" stroke="#C7BDC6" dot={false}
+        <Area type="monotone" dataKey="ensemble2" name="Incerteza 2" fill="#C7BDC6" stroke="#C7BDC6" dot={false}
               activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
       : <div/>;
 
@@ -66,7 +66,7 @@ const BaseChart = (props: any) => {
       : <div/>;
 
   const ensemble3 = withMean3 ?
-        <Area type="monotone" dataKey="ensemble3" name="Inserteza 3" fill="#C7BDC6" stroke="#C7BDC6" dot={false}
+        <Area type="monotone" dataKey="ensemble3" name="Incerteza 3" fill="#C7BDC6" stroke="#C7BDC6" dot={false}
               activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
       : <div/>;
 
@@ -87,7 +87,7 @@ const BaseChart = (props: any) => {
 
           {ensemble2}
           {ensemble3}
-          <Area type="monotone" dataKey="ensemble" name="Inserteza 1" fill="#C7BDC6" stroke="#C7BDC6" dot={false}
+          <Area type="monotone" dataKey="ensemble" name="Incerteza" fill="#C7BDC6" stroke="#C7BDC6" dot={false}
                 activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
 
           {mean2}
