@@ -7,8 +7,8 @@ import {buildActivesByDate, buildCasesByDate, buildDeadsByDate, buildRByDate} fr
 configure({ enforceActions: "observed" });
 
 let covidDataUrl = ((window as any).COVID_DATA_URL);
-covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
-//covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data_test.json';
+//covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
+covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data_test.json';
 
 const gray = "#C7BDC6";
 
@@ -137,9 +137,12 @@ class CovidData {
    @action.bound
     setCurrentMode(mode: string) {
         this.currentMode = mode;
-        if (this.currentMode !== 'info') {
-            this.current = this.data[mode][this.currentLocation];
-        }
+        this.current = this.data[mode][this.currentLocation];
+    }
+
+   @action.bound
+    setSelectedChart(chart: string) {
+        this.selectedChart = chart;
     }
 
    @action.bound

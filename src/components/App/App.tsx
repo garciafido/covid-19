@@ -6,6 +6,7 @@ import Box from "@material-ui/core/Box";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
+import Button from "@material-ui/core/Button";
 import { store } from '../../store/';
 import { ArgentinaMapMenu } from '../ArgentinaMap';
 import { ProjectInfo } from '../ProjectInfo';
@@ -20,6 +21,11 @@ import {
   createMuiTheme,
   MuiThemeProvider
 } from "@material-ui/core/styles";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Paper from "@material-ui/core/Paper";
+import MenuList from "@material-ui/core/MenuList";
+import MenuItem from "@material-ui/core/MenuItem";
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -58,6 +64,15 @@ const App = observer((props: any) => {
   const classes = useStyles();
   const chartWidth = 300;
   const chartHeight = 200;
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: any): void => {
     store.setCurrentMode(newValue);
@@ -82,110 +97,98 @@ const App = observer((props: any) => {
       }
   };
 
-  const modeName = store.currentMode === 'monitoreo' ? "monitoreo" : "predicción";
+  const handleChartTypeClick = (value: string) => {
+      store.setSelectedChart(value);
+  };
 
-  const totalCasesText = `Observaciones del número de casos infectados acumulados (puntos naranja) y la media del número de infectados acumulados estimados con el sistema de asimilación de datos (línea celeste). El sombreado gris muestra la desviacion estandard del ensamble el cual esta representando la incerteza en la predicción. El primer día corresponde al 3 de Marzo.`;
-  const deadsText = `Observaciones del número de muertes acumuladas (puntos naranja) y la media del número de infectados acumulados estimados con el sistema de asimilación de datos (línea celeste). Las líneas grises muestran el ensamble el cual esta representando la incerteza en la predicción. El primer día corresponde al 3 de Marzo.`;
-  const activesText = `Número de infectados COVID-19 activos  estimados con el sistema de asimilación de datos.`;
-  const RText = `Número de reproducción efectivo, R(t), estimado con la técnica de asimilación de datos y su incerteza.`;
+  const modeName = store.currentMode === 'monitoreo' ? "monitoreo" : "predicción";
 
   const assimilationDate = store.assimilationDate.split('-');
 
   let charts;
   if (store.current) {
-      if (store.currentMode === 'info') {
-        charts = (
-            <Grid item xs={8}>
+          let title;
+          let infoText = "";
+          let minMax;
+          let data;
+          let provincia = store.currentLocation;
+          if (store.currentLocation === "Tierra del Fuego") {
+              provincia = "Tierra del Fuego, Malvinas y Antártida"
+          }
+          if (store.selectedChart === "actives") {
+            infoText = `Número de infectados COVID-19 activos  estimados con el sistema de asimilación de datos.`;
+            title = "Casos activos";
+            minMax = store.current.minMaxActives;
+            data = store.current.actives;
+          }
+          else if (store.selectedChart === "cases") {
+            infoText = `Observaciones del número de casos infectados acumulados (puntos naranja) y la media del número de infectados acumulados estimados con el sistema de asimilación de datos (línea celeste). El sombreado gris muestra la desviacion estandard del ensamble el cual esta representando la incerteza en la predicción. El primer día corresponde al 3 de Marzo.`;
+            title = "Casos acumulados";
+            minMax = store.current.minMaxCases;
+            data = store.current.cases;
+          }
+          else if (store.selectedChart === "deads") {
+            infoText = `Observaciones del número de muertes acumuladas (puntos naranja) y la media del número de infectados acumulados estimados con el sistema de asimilación de datos (línea celeste). Las líneas grises muestran el ensamble el cual esta representando la incerteza en la predicción. El primer día corresponde al 3 de Marzo.`;
+            title = "Cantidad de muertes acumuladas";
+            minMax = store.current.minMaxDeaths;
+            data = store.current.deads;
+          }
+          else if (store.selectedChart === "r") {
+            infoText = `Número de reproducción efectivo, R(t), estimado con la técnica de asimilación de datos y su incerteza.`;
+            title = "R(t)";
+            minMax = store.current.minMaxR;
+            data = store.current.r;
+          }
+
+          const chart = <>
+            <MuiThemeProvider theme={theme}>
+                <Tooltip title={infoText}>
+                    <Box display="flex" justifyContent="center">
+                        <b>{title}<FontAwesomeIcon style={{marginLeft: 10, color: "#F88"}} icon={faInfoCircle}/></b>
+                        &nbsp;Explicación
+                    </Box>
+                </Tooltip>
+            </MuiThemeProvider>
+              <Box className={classes.box}>
+                  <CasesChart width={chartWidth} height={chartHeight}
+                              data={data}
+                              onClick={(event: any) => handleChartClick({...event, chart: store.selectedChart})}
+                              minMax={minMax}
+                  />
+              </Box>
+          </>
+
+        charts = <>
+            <Grid item xs={9}>
               <Grid container>
-                  <Grid item xs={12}>
-                    <ProjectInfo />
+                <Grid item xs={12} >
+                  <h2>{provincia}</h2>
+                </Grid>
+                <Grid item xs={12}>
+                  <Divider className={classes.dividerFullWidth} />
+                </Grid>
+                <Grid container xs={12}>
+                  <Grid item xs={10}>
+                    {chart}
                   </Grid>
+                  <Grid item xs={2}>
+                    <Paper className={classes.paper}>
+                        <MenuList>
+                          <MenuItem onClick={() => handleChartTypeClick("cases")}>Casos</MenuItem>
+                          <MenuItem onClick={() => handleChartTypeClick("deads")}>Muertes</MenuItem>
+                          <MenuItem onClick={() => handleChartTypeClick("actives")}>Activos</MenuItem>
+                          <MenuItem onClick={() => handleChartTypeClick("r")}>R(t)</MenuItem>
+                        </MenuList>
+                    </Paper>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={12} >
+                <h5>&nbsp;{`Fecha de asimilación: ${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`}</h5>
               </Grid>
             </Grid>
-        )
-      } else {
-        charts = <Grid item xs={8}>
-                  <Grid container>
-                      <Grid item xs={12} >
-                          <h2>{store.currentLocation}</h2>
-                      </Grid>
-                      <Grid item xs={12}>
-                          <Divider className={classes.dividerFullWidth} />
-                      </Grid>
-                      <Grid item xs={6}>
-                        <MuiThemeProvider theme={theme}>
-                            <Tooltip title={totalCasesText}>
-                                <Box display="flex" justifyContent="center">
-                                    <b>Casos totales<FontAwesomeIcon style={{marginLeft: 10}} icon={faInfoCircle}/></b>
-                                </Box>
-                            </Tooltip>
-                        </MuiThemeProvider>
-                          <Box className={classes.box}>
-                              <CasesChart width={chartWidth} height={chartHeight}
-                                          data={store.current.cases}
-                                          onClick={(event: any) => handleChartClick({...event, chart: 'cases'})}
-                                          minMax={store.current.minMaxCases}
-                              />
-                          </Box>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <MuiThemeProvider theme={theme}>
-                        <Tooltip title={deadsText}>
-                            <Box display="flex" justifyContent="center">
-                                <b>Cantidad de muertes<FontAwesomeIcon style={{marginLeft: 10}} icon={faInfoCircle}/></b>
-                            </Box>
-                        </Tooltip>
-                        </MuiThemeProvider>
-                          <Box className={classes.box}>
-                              <CasesChart width={chartWidth} height={chartHeight}
-                                          data={store.current.deads}
-                                          onClick={(event: any) => handleChartClick({...event, chart: 'deads'})}
-                                          minMax={store.current.minMaxDeaths}
-                              />
-                          </Box>
-                      </Grid>
-                      <Grid item xs={12}>
-                          <Divider className={classes.dividerFullWidth} />
-                      </Grid>
-                      <Grid item xs={6}>
-                        <MuiThemeProvider theme={theme}>
-                        <Tooltip title={activesText}>
-                            <Box display="flex" justifyContent="center">
-                                <b>Casos activos<FontAwesomeIcon style={{marginLeft: 10}} icon={faInfoCircle}/></b>
-                            </Box>
-                        </Tooltip>
-                        </MuiThemeProvider>
-                          <Box className={classes.box}>
-                              <CasesChart width={chartWidth} height={chartHeight}
-                                          data={store.current.actives}
-                                          onClick={(event: any) => handleChartClick({...event, chart: 'actives'})}
-                                          minMax={store.current.minMaxActives}
+        </>;
 
-                              />
-                          </Box>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <MuiThemeProvider theme={theme}>
-                        <Tooltip title={RText}>
-                            <Box display="flex" justifyContent="center">
-                                <b>R(t)<FontAwesomeIcon style={{marginLeft: 10}} icon={faInfoCircle}/></b>
-                            </Box>
-                        </Tooltip>
-                        </MuiThemeProvider>
-                          <Box className={classes.box}>
-                              <CasesChart width={chartWidth} height={chartHeight}
-                                          data={store.current.r}
-                                          onClick={(event: any) => handleChartClick({...event, chart: 'r'})}
-                                          minMax={store.current.minMaxR}
-                              />
-                          </Box>
-                      </Grid>
-                  </Grid>
-                      <Grid item xs={12} >
-                            <h5>&nbsp;{`Fecha de asimilación: ${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`}</h5>
-                      </Grid>
-              </Grid>;
-      }
   } else {
       charts = <Grid item xs={8}>
                   <Grid container>
@@ -209,9 +212,14 @@ const App = observer((props: any) => {
             alignItems="flex-start"
             alignContent="center"
             spacing={2}>
-          <Grid item xs={12}>
-              <Box display="flex" justifyContent="center">
+          <Grid container style={{height: "50%"}} justify= "center" alignItems="stretch" spacing={3}>
+              <Box height="25%">
                   <h3>Sistema de Monitoreo y Predicción de COVID-19 en Argentina</h3>
+              </Box>
+          </Grid>
+          <Grid container alignItems="flex-start" justify="flex-end" direction="row" style={{height: "25%"}} xs={12}>
+              <Box height="25%">
+                  <Button size="small" color="primary" onClick={handleClickOpen}>Acerca del proyecto</Button>
               </Box>
           </Grid>
           <Grid container>
@@ -223,7 +231,6 @@ const App = observer((props: any) => {
                     centered>
                 <Tab label="Monitoreo" value={'monitoreo'} />
                 <Tab label="Predicción" value={'prediccion'} />
-                <Tab label="Información" value={'info'} />
               </Tabs>
             </AppBar>
               <Grid item xs={3}>
@@ -233,9 +240,13 @@ const App = observer((props: any) => {
               </Grid>
               {charts}
           </Grid>
+        <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} maxWidth={"md"} fullWidth={true}>
+              <DialogTitle id="simple-dialog-title">Acerca del proyecto</DialogTitle>
+            <ProjectInfo />
+        </Dialog>
       </Grid>
     </Box>
-      </MuiThemeProvider>
+</MuiThemeProvider>
   );
 })
 

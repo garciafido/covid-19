@@ -47,6 +47,7 @@ const ProjectInfo = (props: any) => {
             <Tab label="Reconocimientos" {...a11yProps(0)} />
             <Tab label="Integrantes" {...a11yProps(1)} />
             <Tab label="Metodología" {...a11yProps(2)} />
+            <Tab label="Contacto" {...a11yProps(3)} />
           </Tabs>
           <TabPanel value={value} index={0}>
             <Typography align="left" variant="body2" gutterBottom color="textSecondary" style={{whiteSpace: 'pre-line'}}>
@@ -145,6 +146,12 @@ const ProjectInfo = (props: any) => {
             </Box>
         </Typography>
     </TabPanel>
+
+    <TabPanel value={value} index={3}>
+        <Typography align="left" variant="body2" gutterBottom color="textSecondary">
+        </Typography>
+    </TabPanel>
+
     </Box>
   );
 }
