@@ -106,6 +106,7 @@ const App = observer((props: any) => {
   const assimilationDate = store.assimilationDate.split('-');
 
   let charts;
+  let chartsMenu;
   if (store.current) {
           let title;
           let infoText = "";
@@ -141,62 +142,61 @@ const App = observer((props: any) => {
           }
 
           const chart = <>
+              <Grid container>
+            <Grid item xs={12}>
             <MuiThemeProvider theme={theme}>
                 <Tooltip title={infoText}>
                     <Box display="flex" justifyContent="center">
-                        <b>{title}<FontAwesomeIcon style={{marginLeft: 10, color: "#F88"}} icon={faInfoCircle}/></b>
+                        <b><FontAwesomeIcon style={{marginLeft: 10, color: "#F88"}} icon={faInfoCircle}/></b>
                         &nbsp;Explicación
                     </Box>
                 </Tooltip>
             </MuiThemeProvider>
-              <Box className={classes.box}>
+            </Grid>
+                  <Grid item xs={12}>
+            <Box className={classes.box}>
                   <CasesChart width={chartWidth} height={chartHeight}
                               data={data}
                               onClick={(event: any) => handleChartClick({...event, chart: store.selectedChart})}
                               minMax={minMax}
                   />
-              </Box>
-          </>
+            </Box>
+            </Grid>
+          </Grid>
+              </>
 
         charts = <>
-            <Grid item xs={9}>
               <Grid container>
-                <Grid item xs={12} >
-                  <h2>{provincia}</h2>
+                <Grid item alignItems='center' alignContent='center' style={{height: "25%"}} xs={12} >
+                      <h4>{`${title} en ${provincia}`}</h4>
                 </Grid>
                 <Grid item xs={12}>
                   <Divider className={classes.dividerFullWidth} />
                 </Grid>
-                <Grid container xs={12}>
-                  <Grid item xs={10}>
+                <Grid item xs={12}>
                     {chart}
-                  </Grid>
-                  <Grid item xs={2}>
-                    <Paper className={classes.paper}>
-                        <MenuList>
-                          <MenuItem onClick={() => handleChartTypeClick("cases")}>Casos</MenuItem>
-                          <MenuItem onClick={() => handleChartTypeClick("deads")}>Muertes</MenuItem>
-                          <MenuItem onClick={() => handleChartTypeClick("actives")}>Activos</MenuItem>
-                          <MenuItem onClick={() => handleChartTypeClick("r")}>R(t)</MenuItem>
-                        </MenuList>
-                    </Paper>
-                  </Grid>
                 </Grid>
               </Grid>
-              <Grid item xs={12} >
-                <h5>&nbsp;{`Fecha de asimilación: ${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`}</h5>
-              </Grid>
-            </Grid>
         </>;
 
+        chartsMenu = <>
+            <Paper className={classes.paper}>
+                <MenuList>
+                  <MenuItem onClick={() => handleChartTypeClick("cases")} selected={store.selectedChart==="cases"}>Casos</MenuItem>
+                  <MenuItem onClick={() => handleChartTypeClick("deads")} selected={store.selectedChart==="deads"}>Muertes</MenuItem>
+                  <MenuItem onClick={() => handleChartTypeClick("actives")} selected={store.selectedChart==="actives"}>Activos</MenuItem>
+                  <MenuItem onClick={() => handleChartTypeClick("r")} selected={store.selectedChart==="r"}>R(t)</MenuItem>
+                </MenuList>
+            </Paper>
+        </>;
+
+
   } else {
-      charts = <Grid item xs={8}>
-                  <Grid container>
-                      <Grid item xs={12}>
-                          <h2>{'No hay datos disponibles de '} {modeName} para {store.currentLocation}</h2>
-                      </Grid>
+      charts = <Grid container>
+                  <Grid item xs={12}>
+                      <h2>{'No hay datos disponibles de '} {modeName} para {store.currentLocation}</h2>
                   </Grid>
-              </Grid>
+               </Grid>
   }
 
   return (
@@ -233,17 +233,25 @@ const App = observer((props: any) => {
                 <Tab label="Predicción" value={'prediccion'} />
               </Tabs>
             </AppBar>
+            <Grid container>
               <Grid item xs={3}>
-                  <Box className={classes.box}>
-                      <ArgentinaMapMenu store={store} />
-                  </Box>
+                <Box className={classes.box}>
+                  <ArgentinaMapMenu store={store} />
+                </Box>
               </Grid>
-              {charts}
+              <Grid item xs={7}>
+                  {charts}
+                  <h5>&nbsp;{`Fecha de asimilación: ${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`}</h5>
+              </Grid>
+              <Grid item xs={2}>
+                  {chartsMenu}
+              </Grid>
           </Grid>
         <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} maxWidth={"md"} fullWidth={true}>
               <DialogTitle id="simple-dialog-title">Acerca del proyecto</DialogTitle>
             <ProjectInfo />
         </Dialog>
+      </Grid>
       </Grid>
     </Box>
 </MuiThemeProvider>
