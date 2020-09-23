@@ -63,13 +63,13 @@ def get_chart_value(iso_date, values):
         "show_date": '{}/{}'.format(list_date[2], list_date[1]),
         "date": iso_date,
         "ensemble": [
-            round(mean-std_dev, 1) if mean-std_dev > 0 else 0,
-            round(mean+std_dev, 1) if mean+std_dev > 0 else 0,
+            mean-std_dev if mean-std_dev > 0 else 0,
+            mean+std_dev if mean+std_dev > 0 else 0,
         ],
-        "mean": round(mean, 1) if mean > 0 else 0
+        "mean": mean if mean > 0 else 0
     }
     if observation is not None:
-        value['observation'] = round(observation, 0) if observation > 0 else 0
+        value['observation'] = observation if observation > 0 else 0
     return value
 
 

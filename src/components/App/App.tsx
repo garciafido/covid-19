@@ -11,9 +11,7 @@ import { store } from '../../store/';
 import { ArgentinaMapMenu } from '../ArgentinaMap';
 import { ProjectInfo } from '../ProjectInfo';
 import { CasesChart } from '../BaseChart';
-import { Divider } from "@material-ui/core";
 import {observer} from "mobx-react";
-import Tooltip from '@material-ui/core/Tooltip';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'
 
@@ -26,6 +24,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Paper from "@material-ui/core/Paper";
 import MenuList from "@material-ui/core/MenuList";
 import MenuItem from "@material-ui/core/MenuItem";
+import {ChartExplanation} from "./ChartExplanation";
+import {DialogContent} from "@material-ui/core";
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -65,6 +65,7 @@ const App = observer((props: any) => {
   const chartWidth = 300;
   const chartHeight = 200;
   const [open, setOpen] = React.useState(false);
+  const [explain, setExplain] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -72,6 +73,14 @@ const App = observer((props: any) => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleClickExplain = () => {
+    setExplain(true);
+  };
+
+  const handleCloseExplain = () => {
+    setExplain(false);
   };
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: any): void => {
@@ -107,9 +116,9 @@ const App = observer((props: any) => {
 
   let charts;
   let chartsMenu;
+  let title;
+  let explainTitle;
   if (store.current) {
-          let title;
-          let infoText = "";
           let minMax;
           let data;
           let provincia = store.currentLocation;
@@ -117,46 +126,46 @@ const App = observer((props: any) => {
               provincia = "Tierra del Fuego, Malvinas y Antártida"
           }
           if (store.selectedChart === "actives") {
-            infoText = `Número de infectados COVID-19 activos  estimados con el sistema de asimilación de datos.`;
             title = "Casos activos";
             minMax = store.current.minMaxActives;
             data = store.current.actives;
           }
           else if (store.selectedChart === "cases") {
-            infoText = `Observaciones del número de casos infectados acumulados (puntos naranja) y la media del número de infectados acumulados estimados con el sistema de asimilación de datos (línea celeste). El sombreado gris muestra la desviacion estandard del ensamble el cual esta representando la incerteza en la predicción. El primer día corresponde al 3 de Marzo.`;
             title = "Casos acumulados";
             minMax = store.current.minMaxCases;
             data = store.current.cases;
           }
           else if (store.selectedChart === "deads") {
-            infoText = `Observaciones del número de muertes acumuladas (puntos naranja) y la media del número de infectados acumulados estimados con el sistema de asimilación de datos (línea celeste). Las líneas grises muestran el ensamble el cual esta representando la incerteza en la predicción. El primer día corresponde al 3 de Marzo.`;
-            title = "Cantidad de muertes acumuladas";
+            title = "Cantidad de fallecimientos acumulados";
             minMax = store.current.minMaxDeaths;
             data = store.current.deads;
           }
           else if (store.selectedChart === "r") {
-            infoText = `Número de reproducción efectivo, R(t), estimado con la técnica de asimilación de datos y su incerteza.`;
-            title = "R(t)";
-            minMax = store.current.minMaxR;
+            title = "R(t) estimado";
+            minMax = [0, store.current.minMaxR[1]];
             data = store.current.r;
           }
+          explainTitle = title;
 
           const chart = <>
-              <Grid container>
-            <Grid item xs={12}>
+            <Grid container>
+            <Grid container alignItems="flex-start" justify="flex-end" direction="row" style={{height: "25%", marginRight: 35}} xs={12}>
             <MuiThemeProvider theme={theme}>
-                <Tooltip title={infoText}>
-                    <Box display="flex" justifyContent="center">
-                        <b><FontAwesomeIcon style={{marginLeft: 10, color: "#F88"}} icon={faInfoCircle}/></b>
-                        &nbsp;Explicación
-                    </Box>
-                </Tooltip>
+                <Button size="small" color="primary" onClick={handleClickExplain}>
+                <Box display="flex" justifyContent="center">
+                    <b><FontAwesomeIcon style={{marginRight: 5, color: "#F88"}} icon={faInfoCircle}/></b>
+                    Explicación
+                </Box>
+                </Button>
             </MuiThemeProvider>
             </Grid>
-                  <Grid item xs={12}>
+            <Grid item xs={12}>
             <Box className={classes.box}>
                   <CasesChart width={chartWidth} height={chartHeight}
                               data={data}
+                              mode={store.currentMode}
+                              constantLine={store.selectedChart==="r" ? 1 : undefined}
+                              constantLabel={store.selectedChart==="r" ? "R(t)=1" : undefined}
                               onClick={(event: any) => handleChartClick({...event, chart: store.selectedChart})}
                               minMax={minMax}
                   />
@@ -171,9 +180,6 @@ const App = observer((props: any) => {
                       <h4>{`${title} en ${provincia}`}</h4>
                 </Grid>
                 <Grid item xs={12}>
-                  <Divider className={classes.dividerFullWidth} />
-                </Grid>
-                <Grid item xs={12}>
                     {chart}
                 </Grid>
               </Grid>
@@ -182,10 +188,14 @@ const App = observer((props: any) => {
         chartsMenu = <>
             <Paper className={classes.paper}>
                 <MenuList>
-                  <MenuItem onClick={() => handleChartTypeClick("cases")} selected={store.selectedChart==="cases"}>Casos</MenuItem>
-                  <MenuItem onClick={() => handleChartTypeClick("deads")} selected={store.selectedChart==="deads"}>Muertes</MenuItem>
-                  <MenuItem onClick={() => handleChartTypeClick("actives")} selected={store.selectedChart==="actives"}>Activos</MenuItem>
-                  <MenuItem onClick={() => handleChartTypeClick("r")} selected={store.selectedChart==="r"}>R(t)</MenuItem>
+                  <MenuItem onClick={() => handleChartTypeClick("cases")}
+                            selected={store.selectedChart==="cases"}>Casos</MenuItem>
+                  <MenuItem onClick={() => handleChartTypeClick("actives")}
+                            selected={store.selectedChart==="actives"}>Casos activos</MenuItem>
+                  <MenuItem onClick={() => handleChartTypeClick("deads")}
+                            selected={store.selectedChart==="deads"}>Fallecidos</MenuItem>
+                  <MenuItem onClick={() => handleChartTypeClick("r")}
+                            selected={store.selectedChart==="r"}>R(t) estimado</MenuItem>
                 </MenuList>
             </Paper>
         </>;
@@ -217,7 +227,7 @@ const App = observer((props: any) => {
                   <h3>Sistema de Monitoreo y Predicción de COVID-19 en Argentina</h3>
               </Box>
           </Grid>
-          <Grid container alignItems="flex-start" justify="flex-end" direction="row" style={{height: "25%"}} xs={12}>
+          <Grid container alignItems="flex-start" justify="flex-end" direction="row" style={{height: "25%", marginRight: 25}} xs={12}>
               <Box height="25%">
                   <Button size="small" color="primary" onClick={handleClickOpen}>Acerca del proyecto</Button>
               </Box>
@@ -242,6 +252,7 @@ const App = observer((props: any) => {
               <Grid item xs={7}>
                   {charts}
                   <h5>&nbsp;{`Fecha de asimilación: ${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`}</h5>
+                  <h6>El sistema  es puramente experimental. Por ser totalmente automático no se controlan ni realizan evaluaciones diarias de los resultados. Quienes desarrollamos este proyecto no nos responsabilizamos por la mala interpretación o uso de la información que se está publicando en el sitio.</h6>
               </Grid>
               <Grid item xs={2}>
                   {chartsMenu}
@@ -250,6 +261,14 @@ const App = observer((props: any) => {
         <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} maxWidth={"md"} fullWidth={true}>
               <DialogTitle id="simple-dialog-title">Acerca del proyecto</DialogTitle>
             <ProjectInfo />
+        </Dialog>
+        <Dialog onClose={handleCloseExplain} aria-labelledby="simple-dialog-title"
+                open={explain} maxWidth={"sm"} fullWidth={false}>
+              <DialogTitle id="simple-dialog-title">{explainTitle}</DialogTitle>
+            <DialogContent>
+                <ChartExplanation explanation={store.selectedChart} mode={store.currentMode}/>
+            </DialogContent>
+
         </Dialog>
       </Grid>
       </Grid>

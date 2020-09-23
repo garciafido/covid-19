@@ -8,7 +8,6 @@ import {
   Legend, ResponsiveContainer, Area, ComposedChart
 } from 'recharts';
 
-
 function patch(data: any,
                withObservation: boolean, withMean2: boolean, withMean3: boolean,
                minValue: number) {
@@ -19,12 +18,13 @@ function patch(data: any,
     if (withObservation) {
         newRow["observation"] = row.observation >= minValue ? row.observation : minValue;
     }
+    newRow.show_date = row.show_date;
+    newRow.date = row.date;
     newRow.mean = row.mean < minValue ? minValue : row.mean;
     newRow.ensemble = [
           row.ensemble[0] < minValue ? minValue : row.ensemble[0],
           row.ensemble[1] < minValue ? minValue : row.ensemble[1],
       ];
-
     if (withMean2) {
       newRow.mean2 = row.mean2 < minValue ? minValue : row.mean2;
       newRow.ensemble2 = [
@@ -45,7 +45,7 @@ function patch(data: any,
 }
 
 const BaseChart = (props: any) => {
-  const logarithmic = (props.minMax[1] - props.minMax[0]) > 5000;
+  const logarithmic = (props.minMax[1] - props.minMax[0]) > 500;
   const minValue = Math.max(1, props.minMax[0]);
   const yAxis = logarithmic ?
       <YAxis allowDecimals={false} scale="log"
@@ -58,35 +58,56 @@ const BaseChart = (props: any) => {
   const withMean2 = 'mean2' in data[0];
   const withMean3 = 'mean3' in data[0];
 
+  const red = "#b71c1c";
+  const green = "#1abaa8";
+  const blue = "#01579b";
+
   if (logarithmic) {
     data = patch(data, withObservation, withMean2, withMean3, minValue);
   }
 
+  if (props.constantLine) {
+    data.map((v: any) => v["constant"] = props.constantLine);
+  }
+
+  const constantLine = props.constantLine ?
+      <Line type="monotone" dataKey="constant" name={props.constantLabel} strokeWidth={1}
+            stroke="#000000" strokeDasharray="3 4 5 2"
+            activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }}
+            dot={false}
+      />
+      : <div/>;
+
   const observation = withObservation ?
-      <Line type="monotone" dataKey="observation" name="Observación" stroke="#ff0000" strokeDasharray="3 4 5 2"
+      <Line type="monotone" dataKey="observation" name="Observación" strokeWidth={3}
+            stroke={red} strokeDasharray="3 4 5 2"
             activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }}
             dot={false}
       />
       : <div/>;
 
   const mean2 = withMean2 ?
-          <Line type="monotone" dataKey="mean2" name="Optimista" stroke="#11BBFF" dot={false}
+          <Line type="monotone" dataKey="mean2" name="Optimista" strokeWidth={3}
+                stroke={green} dot={false}
                 activeDot={{r:8, onClick: (payload: any) => {props.onClick(
                     {type: payload.dataKey, date: props.data[payload.index].date})} }} />
       : <div/>;
 
   const ensemble2 = withMean2 ?
-        <Area type="monotone" dataKey="ensemble2" name=" " fill="#C7BDC6" stroke="#C7BDC6" dot={false}
+        <Area type="monotone" dataKey="ensemble2" name=" " fillOpacity="0.3"
+              fill={green} stroke={green} dot={false}
               activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
       : <div/>;
 
   const mean3 = withMean3 ?
-          <Line type="monotone" dataKey="mean3" name="Pesimista" stroke="#BB11FF" dot={false}
+          <Line type="monotone" dataKey="mean3" name="Pesimista" strokeWidth={3}
+                stroke={red} dot={false}
                 activeDot={{r:8, onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
       : <div/>;
 
   const ensemble3 = withMean3 ?
-        <Area type="monotone" dataKey="ensemble3" name=" " fill="#C7BDC6" stroke="#C7BDC6" dot={false}
+        <Area type="monotone" dataKey="ensemble3" name=" " fillOpacity="0.3"
+              fill={red} stroke={red} dot={false}
               activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
       : <div/>;
 
@@ -99,6 +120,14 @@ const BaseChart = (props: any) => {
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
+          <Tooltip formatter={(value, name, payload, index) => {
+            if (Array.isArray(value)) {
+              return [`[${Number(value[0]).toFixed(1)}, ${Number(value[1]).toFixed(1)}]`,
+                "d.e."];
+            }
+            return `${Number(value).toFixed(1)}`;
+          }
+          } />
           <XAxis dataKey="show_date" minTickGap={30}>
           </XAxis>
           {yAxis}
@@ -106,16 +135,21 @@ const BaseChart = (props: any) => {
           <Legend />
 
           {ensemble3}
-          {ensemble2}
-          <Area type="monotone" dataKey="ensemble" name="Desviación estándar" fill="#C7BDC6" stroke="#C7BDC6" dot={false}
+          <Area type="monotone" dataKey="ensemble" name="Desviación estándar" fillOpacity="0.3"
+                fill={blue} stroke={blue} dot={false}
                 activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
+          {ensemble2}
 
           {mean3}
-          <Line type="monotone" dataKey="mean" name="Media" stroke="#3300FF" dot={false}
+          <Line type="monotone" dataKey="mean" name={props.mode === "monitoreo" ? "Media" : "Sin cambios"} strokeWidth={3}
+                stroke={blue} dot={false}
                 activeDot={{r:8, onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
           {mean2}
 
           {observation}
+          {constantLine}
+
+
         </ComposedChart>
     </ResponsiveContainer>
   </>

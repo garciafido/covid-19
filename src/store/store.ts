@@ -7,10 +7,52 @@ import {buildActivesByDate, buildCasesByDate, buildDeadsByDate, buildRByDate} fr
 configure({ enforceActions: "observed" });
 
 let covidDataUrl = ((window as any).COVID_DATA_URL);
-covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
-//covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data_test.json';
+//covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
+covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data_test.json';
 
 const gray = "#C7BDC6";
+
+const colormap = [
+    "#FFFFFF",
+    "#F3E08C",
+    "#FAC55F",
+    "#FAA930",
+    "#FBA953",
+    "#F96A00",
+    "#F34E00",
+    "#E32F00",
+    "#D00A00",
+]
+
+const population = {
+    'Argentina': 40117096.,
+    'Buenos Aires':  5708369.,
+    'CABA': 2890151.,
+    'Catamarca':  367828.,
+    'Chaco':  1055259.,
+    'Chubut':  499790.,
+    'GBA':  9916715.,
+    'Cordoba':  3308876.,
+    'Corrientes':  992595.,
+    'Entre Rios':  1215811.,
+    'Formosa':  530162.,
+    'Jujuy':  673307.,
+    'La Pampa':  318951.,
+    'La Rioja':  333642.,
+    'Mendoza':  1738929.,
+    'Misiones':  1101593.,
+    'Neuquen':  551266.,
+    'Rio Negro':  638645.,
+    'Salta':  1214441.,
+    'San Juan':  681055.,
+    'San Luis':  432310.,
+    'Santa Fe':  3194537.,
+    'Santiago del Estero':  874006.,
+    'Santa Cruz':  273964.,
+    'Tierra del Fuego':  127205.,
+    'Tucuman':  1448188.
+};
+
 
 class CovidData {
     @observable state: string = 'pending';
@@ -23,11 +65,13 @@ class CovidData {
     @observable selectedDate: string = '';
     @observable assimilationDate: string = '';
     @observable selectedChart: string = '';
+    @observable chartPerDay: boolean = false;
 
     @observable rByDate: any = {};
     @observable casesByDate: any = {};
     @observable activesByDate: any = {};
     @observable deadsByDate: any = {};
+    @observable population: any = population;
 
     @observable errorMessage: any = '';
 
@@ -80,12 +124,16 @@ class CovidData {
                 if (r === undefined) {
                     return gray;
                 } else {
-                    if (r < 1) {
-                        return colormaps.Oranges[Math.trunc(r*100)]
-                    } else {
-                        const rPow = Math.trunc(Math.min(r**2, 99));
-                        return colormaps.Reds[rPow];
+                    const minR = 0.6;
+                    const maxR = 2.0;
+                    if (r < minR) {
+                        return colormap[0]
+                    } else if (r > maxR){
+                        return colormap[colormap.length-1]
                     }
+                    const factor = (maxR-minR) / (colormap.length-2);
+                    const index = Math.trunc((r-minR) / factor) + 1;
+                    return colormap[index];
                 }
             } else if (this.selectedChart === 'cases') {
                 const cases = this.casesByDate[provincia].values[this.selectedDate];
@@ -155,5 +203,6 @@ class CovidData {
         this.selectedChart = chart;
     }
 }
+
 
 export { CovidData };
