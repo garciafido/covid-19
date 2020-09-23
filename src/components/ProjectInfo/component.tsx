@@ -38,6 +38,9 @@ const ProjectInfo = (props: any) => {
       };
     }
 
+    const url1 = "https://onlinelibrary.wiley.com/doi/pdf/10.1002/wcc.535?casa_token=A3sakLciyCYAAAAA:B9pihVypTnKn6LeL-HHjuTeND3liJ9frWuD2-fTgHDgV9arOGXr-nObtT8CGudrAkGU23guJXEnQ7J6L";
+    const url2 = "https://doi.org/10.1101/2020.06.11.20128777"
+
     return (
         <Box p={2}>
           <Tabs value={value}
@@ -66,10 +69,18 @@ const ProjectInfo = (props: any) => {
             <b> Datos. </b>  Las  fuentes de datos utilizados corresponden a la base de datos del SNVS (Sistema Nacional de Vigilancia de la Salud) del Ministerio de Salud de la Nación y los informes diarios a nivel nacional y provincial tomados en forma automática desde la red.
             </Box>
             <Box p={2}>
-            Carrassi, A., Bocquet, M., Bertino, L. and Evensen, G., 2018. Data assimilation in the geosciences: An overview of methods, issues, and perspectives. Wiley Interdisciplinary Reviews: Climate Change, 9(5), p.e535 https://onlinelibrary.wiley.com/doi/pdf/10.1002/wcc.535?casa_token=A3sakLciyCYAAAAA:B9pihVypTnKn6LeL-HHjuTeND3liJ9frWuD2-fTgHDgV9arOGXr-nObtT8CGudrAkGU23guJXEnQ7J6L
+            Carrassi, A., Bocquet, M., Bertino, L. and Evensen, G., 2018. Data assimilation in the geosciences: An overview of methods, issues, and perspectives. Wiley Interdisciplinary Reviews: Climate Change, 9(5), p.e535
+                &nbsp;
+                <a href={url1} target="_blank" rel="noopener noreferrer">
+                https://onlinelibrary.wiley.com/doi/pdf/10.1002/wcc.535?casa_token=A3sakLciyCYAAAAA:B9pihVypTnKn6LeL-HHjuTeND3liJ9frWuD2-fTgHDgV9arOGXr-nObtT8CGudrAkGU23guJXEnQ7J6L
+                </a>
             </Box>
             <Box p={2}>
-            Evensen G, J Amezcua , M Bocquet , A Carrassi, A Farchi , A Fowler , PL Houtekamer, CK Jones , RJ de Moraes, M Pulido , C Sampson, and FC Vossepoel, 2020: An international assessment of the COVID-19 pandemic using ensemble data assimilation. Submitted to Foundations of Data Science . https://doi.org/10.1101/2020.06.11.20128777
+            Evensen G, J Amezcua , M Bocquet , A Carrassi, A Farchi , A Fowler , PL Houtekamer, CK Jones , RJ de Moraes, M Pulido , C Sampson, and FC Vossepoel, 2020: An international assessment of the COVID-19 pandemic using ensemble data assimilation. Submitted to Foundations of Data Science.
+                &nbsp;
+                <a href={url2} target="_blank" rel="noopener noreferrer">
+                https://doi.org/10.1101/2020.06.11.20128777
+                </a>
             </Box>
         </Typography>
     </TabPanel>
