@@ -34,7 +34,7 @@ const ChartExplanation = (props: any) => {
                 Estimación de la media de casos acumulados obtenida por el sistema de asimilación
             </Typography>
             <Typography align="left" variant="body2" gutterBottom color="textSecondary">
-                <h3>Sobreado azul:</h3>
+                <h3>Sombreado azul:</h3>
                 Desviación estándar de la estimación de casos
             </Typography>
          </>;
@@ -51,7 +51,7 @@ const ChartExplanation = (props: any) => {
                 Estimación de la media del número de fallecimientos acumulados obtenida por el sistema de asimilación
             </Typography>
             <Typography align="left" variant="body2" gutterBottom color="textSecondary">
-                <h3>Sobreado azul:</h3>
+                <h3>Sombreado azul:</h3>
                 Desviación estándar de la estimación de fallecimientos
             </Typography>
          </>;
@@ -64,7 +64,7 @@ const ChartExplanation = (props: any) => {
                 Número de infectados por COVID-19 activos al día de la fecha estimados por el sistema de asimilación
             </Typography>
             <Typography align="left" variant="body2" gutterBottom color="textSecondary">
-                <h3>Sobreado azul:</h3>
+                <h3>Sombreado azul:</h3>
                 Desviación estándar de la estimación de infectados por COVID-19
             </Typography>
          </>;
@@ -88,7 +88,7 @@ const ChartExplanation = (props: any) => {
                 Escenario pesimista donde el R(t) se incrementa linealmente en 15 dias por 0.4 y luego permanece en el nuevo valor durante los próximos 15 días
             </Typography>
             <Typography align="left" variant="body2" gutterBottom color="textSecondary">
-                <h3>Sobreados:</h3>
+                <h3>Sombreados:</h3>
                 Desviación estándar de la predicción de casos
             </Typography>
          </>;
@@ -112,7 +112,7 @@ const ChartExplanation = (props: any) => {
                 Predicción en un escenario pesimista con menor distanciamiento social
             </Typography>
             <Typography align="left" variant="body2" gutterBottom color="textSecondary">
-                <h3>Sobreados:</h3>
+                <h3>Sombreados:</h3>
                 Desviación estándar de la predicción de casos
             </Typography>
          </>;
@@ -136,7 +136,7 @@ const ChartExplanation = (props: any) => {
                 Predicción en un escenario pesimista con menor distanciamiento social
             </Typography>
             <Typography align="left" variant="body2" gutterBottom color="textSecondary">
-                <h3>Sobreados:</h3>
+                <h3>Sombreados:</h3>
                 Desviación estándar de la predicción de fallecimientos
             </Typography>
          </>;
@@ -160,7 +160,7 @@ const ChartExplanation = (props: any) => {
                 Predicción en un escenario optimista con mayor distanciamiento social
             </Typography>
             <Typography align="left" variant="body2" gutterBottom color="textSecondary">
-                <h3>Sobreados:</h3>
+                <h3>Sombreados:</h3>
                 Desviación estándar de la predicción de casos activos
             </Typography>
          </>;
