@@ -49,8 +49,24 @@ const BaseChart = (props: any) => {
   const minValue = Math.max(1, props.minMax[0]);
   const yAxis = logarithmic ?
       <YAxis allowDecimals={false} scale="log"
-             domain={[minValue, props.minMax[1]]} />
-      : <YAxis allowDecimals={false} scale="linear" domain={props.minMax} />
+             domain={[minValue, props.minMax[1]]}
+             label={{
+               angle: -90,
+               x:0,
+               y:0,
+               dx:-40,
+               offset:0,
+               value: props.yLabel}}
+      />
+      : <YAxis allowDecimals={false} scale="linear" domain={props.minMax}
+             label={{
+               angle: -90,
+               x:0,
+               y:0,
+               dx:-40,
+               offset:0,
+               value: props.yLabel}}
+      />
 
   let data = props.data;
 
@@ -95,7 +111,7 @@ const BaseChart = (props: any) => {
 
   const ensemble2 = withMean2 ?
         <Area type="monotone" dataKey="ensemble2" name=" " fillOpacity="0.3"
-              fill={green} stroke={green} dot={false}
+              fill={green} stroke={green} strokeWidth={0} dot={false}
               activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
       : <div/>;
 
@@ -106,7 +122,7 @@ const BaseChart = (props: any) => {
       : <div/>;
 
   const ensemble3 = withMean3 ?
-        <Area type="monotone" dataKey="ensemble3" name=" " fillOpacity="0.3"
+        <Area type="monotone" dataKey="ensemble3" strokeWidth={0} name=" " fillOpacity="0.3"
               fill={red} stroke={red} dot={false}
               activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
       : <div/>;
@@ -115,6 +131,7 @@ const BaseChart = (props: any) => {
     <ResponsiveContainer minWidth={props.width} aspect={2} minHeight={props.height}>
         <ComposedChart
           data={data}
+          onClick={payload => {if (payload && payload.activePayload) props.onClick({type: "mean", date: payload.activePayload[0].payload.date})}}
           margin={{
             top: 5, right: 30, left: 20, bottom: 5,
           }}
@@ -128,14 +145,14 @@ const BaseChart = (props: any) => {
             return `${Number(value).toFixed(1)}`;
           }
           } />
-          <XAxis dataKey="show_date" minTickGap={30}>
+          <XAxis dataKey="show_date" minTickGap={30} >
           </XAxis>
           {yAxis}
           <Tooltip />
           <Legend />
 
           {ensemble3}
-          <Area type="monotone" dataKey="ensemble" name="Desviación estándar" fillOpacity="0.3"
+          <Area type="monotone" dataKey="ensemble" strokeWidth={0} name="Desviación estándar" fillOpacity="0.3"
                 fill={blue} stroke={blue} dot={false}
                 activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
           {ensemble2}

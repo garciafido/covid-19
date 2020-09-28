@@ -163,6 +163,7 @@ const App = observer((props: any) => {
             <Box className={classes.box}>
                   <CasesChart width={chartWidth} height={chartHeight}
                               data={data}
+                              yLabel={title}
                               mode={store.currentMode}
                               constantLine={store.selectedChart==="r" ? 1 : undefined}
                               constantLabel={store.selectedChart==="r" ? "R(t)=1" : undefined}

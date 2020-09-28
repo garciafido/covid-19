@@ -38,7 +38,7 @@ const ProjectInfo = (props: any) => {
       };
     }
 
-    const url1 = "https://onlinelibrary.wiley.com/doi/pdf/10.1002/wcc.535?casa_token=A3sakLciyCYAAAAA:B9pihVypTnKn6LeL-HHjuTeND3liJ9frWuD2-fTgHDgV9arOGXr-nObtT8CGudrAkGU23guJXEnQ7J6L";
+    const url1 = "https://onlinelibrary.wiley.com/doi/pdf/10.1002/wcc.535";
     const url2 = "https://doi.org/10.1101/2020.06.11.20128777"
 
     return (
@@ -57,7 +57,7 @@ const ProjectInfo = (props: any) => {
             Este proyecto COVID-Federal realiza un monitoreo a tiempo real y predicción del avance de la pandemia COVID-19 en Argentina utilizando un <b> sistema de asimilación de datos </b>.
             </Box>
             <Box p={2}>
-            <b>  Sistema de asimilación de datos. </b> El sistema está basado en una técnica físico-estadística que permite combinar información de datos existentes de distintas fuentes con información de un modelo epidemiológico. Esta metodología permite determinar de manera objetiva diferentes parámetros relacionados con la propagación de la enfermedad así como también determinar la precisión con la que los mismos pueden ser conocidos. De esta manera se puede obtener información acerca de cómo se comporta la enfermedad, y cómo impactan diferentes medidas de distanciamiento social sobre la propagación de la misma. Por otra parte la información obtenida permite realizar proyecciones de la evolución futura de la epidemia junto con una cuantificación del nivel de incertidumbre asociada a las mismas.  En el proceso de estimación se consideran las posibles fuentes de incertidumbre, tanto las asociadas a las fuentes de información como también aquellas provenientes de las predicciones del modelo epidemiológico. Para considerar las incertezas en la estimación se trabaja con una técnica de Monte Carlo qu e utiliza un conjunto numeroso de posibles escenarios de propagación de la enfermedad. Una descripción precisa de las técnicas de asimilación de datos puede ser encontrada en Carrassi et al. (2019).
+            <b>  Sistema de asimilación de datos. </b> El sistema está basado en una técnica físico-estadística que permite combinar información de datos existentes de distintas fuentes con información de un modelo epidemiológico. Esta metodología permite determinar de manera objetiva diferentes parámetros relacionados con la propagación de la enfermedad así como también determinar la precisión con la que los mismos pueden ser conocidos. De esta manera se puede obtener información acerca de cómo se comporta la enfermedad, y cómo impactan diferentes medidas de distanciamiento social sobre la propagación de la misma. Por otra parte la información obtenida permite realizar proyecciones de la evolución futura de la epidemia junto con una cuantificación del nivel de incertidumbre asociada a las mismas.  En el proceso de estimación se consideran las posibles fuentes de incertidumbre, tanto las asociadas a las fuentes de información como también aquellas provenientes de las predicciones del modelo epidemiológico. Para considerar las incertezas en la estimación se trabaja con una técnica de Monte Carlo que utiliza un conjunto numeroso de posibles escenarios de propagación de la enfermedad. Una descripción precisa de las técnicas de asimilación de datos puede ser encontrada en Carrassi et al. (2019).
             </Box>
             <Box p={2}>
             <b> Técnica de asimilación. </b> Más especificamente, el sistema está basado en un suavizador de Kalman por ensambles en el cual se utiliza un estado aumentado para estimar los parámetros en conjunción con el estado. Una aplicación de esta técnica de asimilación ha sido descripta detalladamente y evaluada para el COVID-19 en Evensen, et al (2020).
@@ -72,7 +72,7 @@ const ProjectInfo = (props: any) => {
             Carrassi, A., Bocquet, M., Bertino, L. and Evensen, G., 2018. Data assimilation in the geosciences: An overview of methods, issues, and perspectives. Wiley Interdisciplinary Reviews: Climate Change, 9(5), p.e535
                 &nbsp;
                 <a href={url1} target="_blank" rel="noopener noreferrer">
-                https://onlinelibrary.wiley.com/doi/pdf/10.1002/wcc.535?casa_token=A3sakLciyCYAAAAA:B9pihVypTnKn6LeL-HHjuTeND3liJ9frWuD2-fTgHDgV9arOGXr-nObtT8CGudrAkGU23guJXEnQ7J6L
+                https://onlinelibrary.wiley.com/doi/pdf/10.1002/wcc.535
                 </a>
             </Box>
             <Box p={2}>
@@ -158,7 +158,6 @@ const ProjectInfo = (props: any) => {
                 </Box>
             </Typography>
         </TabPanel>
-
     </Box>
   );
 }
