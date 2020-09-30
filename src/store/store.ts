@@ -1,7 +1,6 @@
 import {action, observable, configure} from "mobx";
 import 'mobx-react-lite/batchingForReactDom';
 import {flowed} from "./storeUtils";
-import {colormaps} from "./colormaps";
 import {buildActivesByDate, buildCasesByDate, buildDeadsByDate, buildRByDate} from "./buildIndexes";
 
 configure({ enforceActions: "observed" });
@@ -24,35 +23,13 @@ const colormap = [
     "#D00A00",
 ]
 
-const population = {
-    'Argentina': 40117096.,
-    'Buenos Aires':  5708369.,
-    'CABA': 2890151.,
-    'Catamarca':  367828.,
-    'Chaco':  1055259.,
-    'Chubut':  499790.,
-    'GBA':  9916715.,
-    'Cordoba':  3308876.,
-    'Corrientes':  992595.,
-    'Entre Rios':  1215811.,
-    'Formosa':  530162.,
-    'Jujuy':  673307.,
-    'La Pampa':  318951.,
-    'La Rioja':  333642.,
-    'Mendoza':  1738929.,
-    'Misiones':  1101593.,
-    'Neuquen':  551266.,
-    'Rio Negro':  638645.,
-    'Salta':  1214441.,
-    'San Juan':  681055.,
-    'San Luis':  432310.,
-    'Santa Fe':  3194537.,
-    'Santiago del Estero':  874006.,
-    'Santa Cruz':  273964.,
-    'Tierra del Fuego':  127205.,
-    'Tucuman':  1448188.
-};
-
+function getColor(scale: number[], value: number) {
+    let index: number = 0;
+    for (; index < scale.length; index++) {
+        if (scale[index] > value) break;
+    }
+    return colormap[index <= 7 ? index : 8];
+}
 
 class CovidData {
     @observable state: string = 'pending';
@@ -71,7 +48,6 @@ class CovidData {
     @observable casesByDate: any = {};
     @observable activesByDate: any = {};
     @observable deadsByDate: any = {};
-    @observable population: any = population;
 
     @observable errorMessage: any = '';
 
@@ -97,23 +73,6 @@ class CovidData {
         return this.data;
     };
 
-    autoColorMap(cases: any, min: number, max: number) {
-        if (cases === undefined) {
-            return gray;
-        } else {
-            const factor = 200 / ((max - min) + min);
-            let normalized_cases = Math.trunc(factor * (cases - min));
-            normalized_cases = normalized_cases >= 200 ? 199 : normalized_cases;
-            if (normalized_cases < 100) {
-                return colormaps.Oranges[Math.trunc(normalized_cases)]
-            } else if (normalized_cases < 200) {
-                return colormaps.Reds[Math.trunc(normalized_cases - 100)]
-            } else {
-                return gray;
-            }
-        }
-    }
-
     getColor = (provincia: string): string => {
         if (this.currentMode === 'info') {
             return gray;
@@ -136,38 +95,17 @@ class CovidData {
                     return colormap[index];
                 }
             } else if (this.selectedChart === 'cases') {
-                const cases = this.casesByDate[provincia].values[this.selectedDate];
-                let min, max;
-                if (this.currentMode === 'monitoreo') {
-                    min = this.casesByDate.min;
-                    max = this.casesByDate.max;
-                } else {
-                    min = Math.min(this.casesByDate.min_prediccion, this.casesByDate.min);
-                    max = Math.max(this.casesByDate.max_prediccion, this.casesByDate.max);
-                }
-                return this.autoColorMap(cases, min, max);
+                const value = this.casesByDate[provincia].values[this.selectedDate];
+                const scale = [100, 250, 500, 1000, 2500, 5000, 10000, 25000, 50000];
+                return getColor(scale, value);
             } else if (this.selectedChart === 'deads') {
-                const deads = this.deadsByDate[provincia].values[this.selectedDate];
-                let min, max;
-                if (this.currentMode === 'monitoreo') {
-                    min = this.deadsByDate.min;
-                    max = this.deadsByDate.max;
-                } else {
-                    min = Math.min(this.deadsByDate.min_prediccion, this.deadsByDate.min);
-                    max = Math.max(this.deadsByDate.max_prediccion, this.deadsByDate.max);
-                }
-                return this.autoColorMap(deads, min, max);
+                const value = this.deadsByDate[provincia].values[this.selectedDate];
+                const scale = [5, 10, 25, 50, 100, 250, 500, 1000, 2500];
+                return getColor(scale, value);
             } else if (this.selectedChart === 'actives') {
-                const actives = this.activesByDate[provincia].values[this.selectedDate];
-                let min, max;
-                if (this.currentMode === 'monitoreo') {
-                    min = this.activesByDate.min;
-                    max = this.activesByDate.max;
-                } else {
-                    min = Math.min(this.activesByDate.min_prediccion, this.activesByDate.min);
-                    max = Math.max(this.activesByDate.max_prediccion, this.activesByDate.max);
-                }
-                return this.autoColorMap(actives, min, max);
+                const value = this.activesByDate[provincia].values[this.selectedDate];
+                const scale = [10, 25, 50, 100, 250, 500, 1000, 2500, 5000];
+                return getColor(scale, value);
             } else {
                 return gray;
             }
