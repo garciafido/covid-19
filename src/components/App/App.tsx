@@ -26,6 +26,9 @@ import MenuList from "@material-ui/core/MenuList";
 import MenuItem from "@material-ui/core/MenuItem";
 import {ChartExplanation} from "./ChartExplanation";
 import {DialogContent} from "@material-ui/core";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Radio from "@material-ui/core/Radio";
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -87,6 +90,10 @@ const App = observer((props: any) => {
     store.setCurrentMode(newValue);
   };
 
+  const handleRadioChange = (event: any): void => {
+      store.setChartPerDay(event.target.value === "daily");
+  };
+
   if (store.state === 'pending') {
       store.fetchData();
       return <div>Initializing...</div>
@@ -122,6 +129,7 @@ const App = observer((props: any) => {
           let minMax;
           let data;
           let provincia = store.currentLocation;
+          let chartPerDay = false;
           if (store.currentLocation === "Tierra del Fuego") {
               provincia = "Tierra del Fuego, Malvinas y Antártida"
           }
@@ -132,13 +140,25 @@ const App = observer((props: any) => {
           }
           else if (store.selectedChart === "cases") {
             title = "Casos acumulados";
-            minMax = store.current.minMaxCases;
-            data = store.current.cases;
+            if (store.chartPerDay) {
+                minMax = store.current.minMaxDailyCases;
+                data = store.current.dailyCases;
+            } else {
+                minMax = store.current.minMaxCases;
+                data = store.current.cases;
+            }
+            chartPerDay = true;
           }
           else if (store.selectedChart === "deads") {
             title = "Cantidad de fallecimientos acumulados";
-            minMax = store.current.minMaxDeaths;
-            data = store.current.deads;
+            if (store.chartPerDay) {
+                minMax = store.current.minMaxDailyDeads;
+                data = store.current.dailyDeads;
+            } else {
+                minMax = store.current.minMaxDeaths;
+                data = store.current.deads;
+            }
+            chartPerDay = true;
           }
           else if (store.selectedChart === "r") {
             title = "R(t) estimado";
@@ -147,17 +167,29 @@ const App = observer((props: any) => {
           }
           explainTitle = title;
 
+          const radioPerDay = chartPerDay ? <RadioGroup row aria-label="position" value={store.chartPerDay ? "daily" : "accumulated"} onChange={handleRadioChange}>
+                    <FormControlLabel value="accumulated" control={<Radio size="small" />} label="Acumulado" />
+                    <FormControlLabel value="daily" control={<Radio size="small" />} label="Diario" />
+                </RadioGroup> : <div/>;
+
           const chart = <>
             <Grid container>
-            <Grid container alignItems="flex-start" justify="flex-end" direction="row" style={{height: "25%", marginRight: 35}} xs={12}>
-            <MuiThemeProvider theme={theme}>
-                <Button size="small" color="primary" onClick={handleClickExplain}>
-                <Box display="flex" justifyContent="center">
-                    <b><FontAwesomeIcon style={{marginRight: 5, color: "#F88"}} icon={faInfoCircle}/></b>
-                    Explicación
-                </Box>
-                </Button>
-            </MuiThemeProvider>
+            <Grid container alignItems="flex-start" direction="row" style={{height: "25%", marginLeft: 35}} xs={12}>
+                <Grid xs={1}>
+                </Grid>
+                <Grid xs={8}>
+                    {radioPerDay}
+                </Grid>
+                <Grid xs={3}>
+                    <MuiThemeProvider theme={theme}>
+                        <Button size="small" color="primary" onClick={handleClickExplain}>
+                        <Box display="flex" justifyContent="center">
+                            <b><FontAwesomeIcon style={{marginRight: 5, color: "#F88"}} icon={faInfoCircle}/></b>
+                            Explicación
+                        </Box>
+                        </Button>
+                    </MuiThemeProvider>
+                </Grid>
             </Grid>
             <Grid item xs={12}>
             <Box className={classes.box}>
