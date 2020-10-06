@@ -5,7 +5,7 @@ import {
     YAxis,
     CartesianGrid,
     Tooltip,
-    Legend, ResponsiveContainer, Area, ComposedChart, IconType
+    Legend, ResponsiveContainer, Area, ComposedChart
 } from 'recharts';
 
 function patch(data: any,
@@ -54,7 +54,7 @@ const BaseChart = (props: any) => {
                angle: -90,
                x:0,
                y:0,
-               dx:-40,
+               dx:-60,
                offset:0,
                value: props.yLabel}}
       />
@@ -63,7 +63,7 @@ const BaseChart = (props: any) => {
                angle: -90,
                x:0,
                y:0,
-               dx:-40,
+               dx:-60,
                offset:0,
                value: props.yLabel}}
       />
@@ -133,7 +133,7 @@ const BaseChart = (props: any) => {
           data={data}
           onClick={payload => {if (payload && payload.activePayload) props.onClick({type: "mean", date: payload.activePayload[0].payload.date})}}
           margin={{
-            top: 5, right: 30, left: 20, bottom: 5,
+            top: 5, right: 10, left: 40, bottom: 5,
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />

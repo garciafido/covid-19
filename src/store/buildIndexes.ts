@@ -32,49 +32,80 @@ const buildByDate = (data: any, field: string, perMIllion: boolean) =>  {
     const indexed: any = {};
     let min = 100000000000;
     let max = -100000000000;
+    let minDaily = 100000000000;
+    let maxDaily = -100000000000;
 
     for (const key of Object.keys(data.monitoreo)) {
-        indexed[key] = {values: {}, min: 100000000000, max: -100000000000};
+        indexed[key] = {values: {}, dailyValues: {}, min: 100000000000, max: -100000000000,
+            minDaily: 100000000000, maxDaily: -100000000000};
         const items = data.monitoreo[key][field];
+        let previous = 0;
         for (let i=0; i < items.length; i++) {
             const value = perMIllion ?  1.e6 * items[i].mean / population[key] : items[i].mean;
+            const dailyValue = value - previous;
             if (value < min) {
                 min = value;
+            }
+            if (dailyValue < minDaily) {
+                minDaily = dailyValue;
             }
             if (key !== 'Argentina') {
                 if (value > max) {
                     max = value;
                 }
+                if (dailyValue > maxDaily) {
+                    maxDaily = dailyValue;
+                }
             }
             indexed[key].values[items[i].date] = value;
+            indexed[key].dailyValues[items[i].date] = dailyValue;
+            previous = value;
         }
     }
 
-    let min_prediccion = 100000000000;
-    let max_prediccion = -100000000000;
+    let minPrediccion = 100000000000;
+    let maxPrediccion = -100000000000;
+    let minPrediccionDaily = 100000000000;
+    let maxPrediccionDaily = -100000000000;
 
     for (const key of Object.keys(data.prediccion)) {
         if (data.prediccion[key]) {
             const items = data.prediccion[key][field];
+            let previous = 0;
             for (let i=0; i < items.length; i++) {
-                const value = items[i].mean;
-                if (value < min_prediccion) {
-                    min_prediccion = value;
+                const value = perMIllion ?  1.e6 * items[i].mean / population[key] : items[i].mean;
+                const dailyValue = value - previous;
+                if (value < minPrediccion) {
+                    minPrediccion = value;
+                }
+                if (i > 0 && dailyValue < minPrediccionDaily) {
+                    minPrediccionDaily = dailyValue;
                 }
                 if (key !== 'Argentina') {
-                    if (value > max_prediccion) {
-                        max_prediccion = value;
+                    if (value > maxPrediccion) {
+                        maxPrediccion = value;
                     }
+                    if (i > 0 && dailyValue > maxPrediccionDaily) {
+                        maxPrediccionDaily = dailyValue;
+                    }
+
                 }
                 indexed[key].values[items[i].date] = value;
+                if (i > 0)
+                    indexed[key].dailyValues[items[i].date] = dailyValue;
+                previous = value;
             }
         }
     }
 
     indexed.min = min < 0 ? 0 : min;
     indexed.max = max;
-    indexed.min_prediccion = min_prediccion < 0 ? 0 : min_prediccion;
-    indexed.max_prediccion = max_prediccion;
+    indexed.minPrediccion = minPrediccion < 0 ? 0 : minPrediccion;
+    indexed.maxPrediccion = maxPrediccion;
+    indexed.minDaily = minDaily < 0 ? 0 : minDaily;
+    indexed.maxDaily = maxDaily;
+    indexed.minPrediccionDaily = minPrediccionDaily < 0 ? 0 : minPrediccionDaily;
+    indexed.maxPrediccionDaily = maxPrediccionDaily;
     return indexed;
 }
 
