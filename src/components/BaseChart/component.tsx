@@ -1,11 +1,11 @@
 import React from 'react'
 import {
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend, ResponsiveContainer, Area, ComposedChart
+    Line,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend, ResponsiveContainer, Area, ComposedChart, IconType
 } from 'recharts';
 
 function patch(data: any,
@@ -110,7 +110,7 @@ const BaseChart = (props: any) => {
       : <div/>;
 
   const ensemble2 = withMean2 ?
-        <Area type="monotone" dataKey="ensemble2" name=" " fillOpacity="0.3"
+        <Area type="monotone" dataKey="ensemble2" legendType={"none"} name=" " fillOpacity="0.3"
               fill={green} stroke={green} strokeWidth={0} dot={false}
               activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
       : <div/>;
@@ -122,7 +122,7 @@ const BaseChart = (props: any) => {
       : <div/>;
 
   const ensemble3 = withMean3 ?
-        <Area type="monotone" dataKey="ensemble3" strokeWidth={0} name=" " fillOpacity="0.3"
+        <Area type="monotone" dataKey="ensemble3" strokeWidth={0} legendType={"none"} name=" " fillOpacity="0.3"
               fill={red} stroke={red} dot={false}
               activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
       : <div/>;
@@ -152,7 +152,7 @@ const BaseChart = (props: any) => {
           <Legend />
 
           {ensemble3}
-          <Area type="monotone" dataKey="ensemble" strokeWidth={0} name="Desviación estándar" fillOpacity="0.3"
+          <Area type="monotone" dataKey="ensemble" strokeWidth={0} legendType={"none"} name="Desviación estándar" fillOpacity="0.3"
                 fill={blue} stroke={blue} dot={false}
                 activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
           {ensemble2}

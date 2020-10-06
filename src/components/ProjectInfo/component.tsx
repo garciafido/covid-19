@@ -39,7 +39,8 @@ const ProjectInfo = (props: any) => {
     }
 
     const url1 = "https://onlinelibrary.wiley.com/doi/pdf/10.1002/wcc.535";
-    const url2 = "https://doi.org/10.1101/2020.06.11.20128777"
+    const url2 = "https://doi.org/10.1101/2020.06.11.20128777";
+    const url3 = "http://datos.salud.gob.ar/dataset/covid-19-casos-registrados-en-la-republica-argentina";
 
     return (
         <Box p={2}>
@@ -66,7 +67,12 @@ const ProjectInfo = (props: any) => {
             <b> Modelo epidemiológico:. </b>  El modelo epidemiológico utilizado en el sistema de asimilación de datos es del tipo SEIRHD (suceptibles - expuestos - infectados - recuperados - hospitalizados y fallecidos por sus sigla en inglés). En donde la población se divide en fracciones o compartimentos. Dichas fracciones corresponden a los susceptibles (aquellos que no han estado en contacto con el virus), los expuestos (aquellos que han tenido contacto con una persona infectada pero aún no cursan la enfermedad), los infectados (aquellos que se encuentran cursando la enfermedad con diferentes sintomatologías), recuperados (aquellos que habiendo estado infectados ya se encuentran recuperados y por tanto se los supone inmunes a la enfermedad), hospitalizados (aquellos que por la severidad de sus síntomas requieren algún tipo de internación hospitalaria) y los fallecidos (aquellos que murieron como consecuencia directa de la enfermedad). La figura muestra los compartimentos del modelo. El modelo SEIRHD permite estimar la evolución en el tiempo de la cantidad de personas que se encuentra en cada categoría a través de un sistema de ecuaciones diferenciales acopladas. Este sistema de ecuaciones incluye parámetros que controlan aspectos tales como la tasa de contagios o la mortalidad del virus. Estos parámetros dependen de factores externos como el nivel de distanciamiento social o las propiedades del virus y su valor no es conocido con precisión y además puede variar de acuerdo a la localidad o a las medidas de distanciamiento social.
             </Box>
             <Box p={2}>
-            <b> Datos. </b>  Las  fuentes de datos utilizados corresponden a la base de datos del SNVS (Sistema Nacional de Vigilancia de la Salud) del Ministerio de Salud de la Nación y los informes diarios a nivel nacional y provincial tomados en forma automática desde la red.
+            <b> Datos. </b>  Las  fuentes de datos utilizados corresponden a la base de datos del &nbsp;
+                <a href={url3} target="_blank" rel="noopener noreferrer">
+                 SNVS (Sistema Nacional de Vigilancia de la Salud)
+                </a>
+                 &nbsp;
+                del Ministerio de Salud de la Nación y los informes diarios a nivel nacional y provincial tomados en forma automática desde la red.
             </Box>
             <Box p={2}>
             Carrassi, A., Bocquet, M., Bertino, L. and Evensen, G., 2018. Data assimilation in the geosciences: An overview of methods, issues, and perspectives. Wiley Interdisciplinary Reviews: Climate Change, 9(5), p.e535

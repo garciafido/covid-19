@@ -139,24 +139,26 @@ const App = observer((props: any) => {
             data = store.current.actives;
           }
           else if (store.selectedChart === "cases") {
-            title = "Casos acumulados";
             if (store.chartPerDay) {
+                title = "Casos diarios";
                 minMax = store.current.minMaxDailyCases;
                 data = store.current.dailyCases;
             } else {
+                title = "Casos acumulados";
                 minMax = store.current.minMaxCases;
                 data = store.current.cases;
             }
             chartPerDay = true;
           }
           else if (store.selectedChart === "deads") {
-            title = "Cantidad de fallecimientos acumulados";
             if (store.chartPerDay) {
                 minMax = store.current.minMaxDailyDeads;
                 data = store.current.dailyDeads;
+                title = "Cantidad de fallecimientos diarios";
             } else {
                 minMax = store.current.minMaxDeaths;
                 data = store.current.deads;
+                title = "Cantidad de fallecimientos acumulados";
             }
             chartPerDay = true;
           }
