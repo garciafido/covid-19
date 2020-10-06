@@ -184,8 +184,10 @@ const App = observer((props: any) => {
                 </Grid>
                 <Grid xs={3}>
                     <MuiThemeProvider theme={theme}>
-                        <Button size="small" color="primary" onClick={handleClickExplain}>
-                        <Box display="flex" justifyContent="center">
+                        <Button size="small" color="primary" onClick={handleClickExplain}
+                                style={{paddingTop: 0, paddingBottom: 0, marginBottom: 0, marginTop: 0}}>
+                        <Box display="flex" justifyContent="center"
+                             style={{paddingTop: 0, paddingBottom: 0, marginBottom: 0, marginTop: 0}}>
                             <b><FontAwesomeIcon style={{marginRight: 5, color: "#F88"}} icon={faInfoCircle}/></b>
                             Explicación
                         </Box>
@@ -211,8 +213,9 @@ const App = observer((props: any) => {
 
         charts = <>
               <Grid container>
-                <Grid item alignItems='center' alignContent='center' style={{height: "25%"}} xs={12} >
-                      <h4>{`${title} en ${provincia}`}</h4>
+                <Grid item alignItems='center' alignContent='center'
+                      style={{paddingBottom: 0, marginBottom: 0}} xs={12}>
+                      <h4 style={{paddingBottom: 0, marginBottom: 0}}>{`${title} en ${provincia}`}</h4>
                 </Grid>
                 <Grid item xs={12}>
                     {chart}
@@ -257,14 +260,17 @@ const App = observer((props: any) => {
             alignItems="flex-start"
             alignContent="center"
             spacing={2}>
-          <Grid container style={{height: "50%"}} justify= "center" alignItems="stretch" spacing={3}>
-              <Box height="25%">
-                  <h3>Sistema de Monitoreo y Predicción de COVID-19 en Argentina</h3>
+          <Grid container style={{marginTop: 3, paddingBottom: 0, marginBottom: 0}}
+                justify="center" alignItems="stretch">
+              <Box style={{paddingBottom: 0, marginBottom: 0}}>
+                  <h3 style={{paddingBottom: 0, marginBottom: 0}}>Sistema de Monitoreo y Predicción de COVID-19 en Argentina</h3>
               </Box>
           </Grid>
-          <Grid container alignItems="flex-start" justify="flex-end" direction="row" style={{height: "25%", marginRight: 25}} xs={12}>
-              <Box height="25%">
-                  <Button size="small" color="primary" onClick={handleClickOpen}>Acerca del proyecto</Button>
+          <Grid container alignItems="flex-start" justify="flex-end" direction="row"
+                style={{marginRight: 25, paddingTop: 0, paddingBottom: 0, marginBottom: 0, marginTop: 0}} xs={12}>
+              <Box style={{paddingTop: 0, paddingBottom: 0, marginBottom: 0, marginTop: 0}}>
+                  <Button size="small" color="primary" onClick={handleClickOpen}
+                          style={{paddingTop: 0, paddingBottom: 0, marginBottom: 0, marginTop: 0}}>Acerca del proyecto</Button>
               </Box>
           </Grid>
           <Grid container>
@@ -287,7 +293,7 @@ const App = observer((props: any) => {
               <Grid item xs={7}>
                   {charts}
                   <h5>&nbsp;{`Fecha de asimilación: ${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`}</h5>
-                  <h6>El sistema  es puramente experimental. Por ser totalmente automático no se controlan ni realizan evaluaciones diarias de los resultados. Quienes desarrollamos este proyecto no nos responsabilizamos por la mala interpretación o uso de la información que se está publicando en el sitio.</h6>
+                  <h6>El sistema es puramente experimental. Por ser totalmente automático no se controlan ni realizan evaluaciones diarias de los resultados. Quienes desarrollamos este proyecto no nos responsabilizamos por la mala interpretación o uso de la información que se está publicando en el sitio.</h6>
               </Grid>
               <Grid item xs={2}>
                   {chartsMenu}

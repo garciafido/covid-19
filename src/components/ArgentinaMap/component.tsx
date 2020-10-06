@@ -7,16 +7,16 @@ const ArgentinaMap = (props: any) => {
     const seaColor = "#0aa8f1";
     const chartsNames: any = {
         r: 'R(t)',
-        actives: 'activos',
-        deads: 'muertes',
-        cases: 'casos',
+        actives: 'Activos',
+        deads: 'Muertes',
+        cases: 'Casos',
     };
     const lDate = props.store.selectedDate.split('-');
     return <div className="ArgentinaMap" style={{cursor: 'pointer'}}>
                 <Paper  style={{ backgroundColor:'#C7BDC6',}}>
         <Grid container>
             <Grid item xs={12}>
-                    <h3>{`${chartsNames[props.store.selectedChart]} el ${lDate[2]}/${lDate[1]} de ${lDate[0]}`}</h3>
+                    <h3>{`${chartsNames[props.store.selectedChart]} ${lDate[2]}-${lDate[1]}-${lDate[0].substring(2,4)}`}</h3>
             </Grid>
             <Grid item xs={12}>
                 <Argentina
