@@ -30,6 +30,11 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 
+const url_facena = "http://exa.unne.edu.ar/";
+const url_cima = "http://www.cima.fcen.uba.ar/index.php";
+const url_unne = "https://www.unne.edu.ar/";
+const url_imt = "https://www.imt-atlantique.fr/";
+
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -49,6 +54,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     margin: theme.spacing(1),
+  },
+  largeLogo: {
+    height: theme.spacing(6),
   },
 }));
 
@@ -262,16 +270,18 @@ const App = observer((props: any) => {
             spacing={2}>
           <Grid container style={{marginTop: 3, paddingBottom: 0, marginBottom: 0}}
                 justify="center" alignItems="stretch">
-              <Box style={{paddingBottom: 0, marginBottom: 0}}>
-                  <h3 style={{paddingBottom: 0, marginBottom: 0}}>Sistema de Monitoreo y Predicción de COVID-19 en Argentina</h3>
-              </Box>
-          </Grid>
-          <Grid container alignItems="flex-start" justify="flex-end" direction="row"
-                style={{marginRight: 25, paddingTop: 0, paddingBottom: 0, marginBottom: 0, marginTop: 0}} xs={12}>
-              <Box style={{paddingTop: 0, paddingBottom: 0, marginBottom: 0, marginTop: 0}}>
-                  <Button size="small" color="primary" onClick={handleClickOpen}
-                          style={{paddingTop: 0, paddingBottom: 0, marginBottom: 0, marginTop: 0}}>Acerca del proyecto</Button>
-              </Box>
+              <Grid item xs={3}>
+              </Grid>
+              <Grid item xs={6}>
+                  <Box >
+                      <h3>Sistema de Monitoreo y Predicción de COVID-19 en Argentina</h3>
+                  </Box>
+              </Grid>
+              <Grid item xs={3}>
+                  <Box >
+                      <h3><b><FontAwesomeIcon style={{marginRight: 5, color: "#F88"}} icon={faInfoCircle}/></b><Button size="small" color="primary" onClick={handleClickOpen}>Acerca del proyecto</Button></h3>
+                  </Box>
+              </Grid>
           </Grid>
           <Grid container>
             <AppBar position="static"  color="default">
@@ -290,13 +300,43 @@ const App = observer((props: any) => {
                   <ArgentinaMapMenu store={store} />
                 </Box>
               </Grid>
-              <Grid item xs={7}>
-                  {charts}
-                  <h5>&nbsp;{`Fecha de asimilación: ${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`}</h5>
-                  <h6>El sistema es puramente experimental. Por ser totalmente automático no se controlan ni realizan evaluaciones diarias de los resultados. Quienes desarrollamos este proyecto no nos responsabilizamos por la mala interpretación o uso de la información que se está publicando en el sitio.</h6>
-              </Grid>
-              <Grid item xs={2}>
-                  {chartsMenu}
+              <Grid item xs={9}>
+                  <Grid container>
+                      <Grid item xs={10}>
+                        {charts}
+                      </Grid>
+                      <Grid item xs={2}>
+                          {chartsMenu}
+                      </Grid>
+                      <Grid container>
+                          <Grid item xs={1}>
+
+                          </Grid>
+                          <Grid item xs={7} alignContent={"flex-start"}>
+                              <h5>&nbsp;{`Fecha de asimilación: ${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`}</h5>
+                              <h6>El sistema es puramente experimental. Por ser totalmente automático no se controlan ni realizan evaluaciones diarias de los resultados. Quienes desarrollamos este proyecto no nos responsabilizamos por la mala interpretación o uso de la información que se está publicando en el sitio.</h6>
+                          </Grid>
+                          <Grid item xs={4}
+                              container
+                              direction="row"
+                              justify="flex-end"
+                              alignItems="center"
+                                style={{paddingRight: 25, marginTop: 15, paddingBottom: 0, marginBottom: 0}}>
+                                <a href={url_facena} target="_blank" rel="noopener noreferrer"style={{paddingLeft: 15}} >
+                                    <img alt="FaCENA" src="recor-facena.png" className={classes.largeLogo}/>
+                                </a>
+                                <a href={url_cima} target="_blank" rel="noopener noreferrer" style={{paddingLeft: 15}} >
+                                    <img alt="CIMA" src="logo_cima.png"  className={classes.largeLogo}/>
+                                </a>
+                                <a href={url_unne} target="_blank" rel="noopener noreferrer" style={{paddingLeft: 15}} >
+                                    <img alt="UNNE" src="logo_unne.png" className={classes.largeLogo}/>
+                                </a>
+                                <a href={url_imt} target="_blank" rel="noopener noreferrer" style={{paddingLeft: 15}}>
+                                    <img alt="IMT Atlantique" src="imt-atlantique.png" className={classes.largeLogo}/>
+                                </a>
+                          </Grid>
+                      </Grid>
+                  </Grid>
               </Grid>
           </Grid>
         <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} maxWidth={"md"} fullWidth={true}>
