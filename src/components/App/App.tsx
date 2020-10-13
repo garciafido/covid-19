@@ -22,13 +22,12 @@ import {
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Paper from "@material-ui/core/Paper";
-import MenuList from "@material-ui/core/MenuList";
-import MenuItem from "@material-ui/core/MenuItem";
 import {ChartExplanation} from "./ChartExplanation";
 import {DialogContent} from "@material-ui/core";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
+import Typography from "@material-ui/core/Typography";
 
 const url_facena = "http://exa.unne.edu.ar/";
 const url_cima = "http://www.cima.fcen.uba.ar/index.php";
@@ -50,6 +49,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   box: {
     alignItems: "center",
+  },
+  disclaimerBox: {
+    alignItems: "left",
   },
   button: {
     margin: theme.spacing(1),
@@ -195,8 +197,8 @@ const App = observer((props: any) => {
                                 style={{paddingTop: 0, paddingBottom: 0, marginBottom: 0, marginTop: 0}}>
                         <Box display="flex" justifyContent="center"
                              style={{paddingTop: 0, paddingBottom: 0, marginBottom: 0, marginTop: 0}}>
-                            <b><FontAwesomeIcon style={{marginRight: 5, color: "#F88"}} icon={faInfoCircle}/></b>
-                            Explicación
+                            <b><FontAwesomeIcon style={{marginRight: 5, color: "#F88"}} icon={faInfoCircle}/>
+                            Explicación</b>
                         </Box>
                         </Button>
                     </MuiThemeProvider>
@@ -240,19 +242,6 @@ const App = observer((props: any) => {
           </RadioGroup>
             </Paper>
         </>;
-
-/*                        <MenuList>
-                  <MenuItem onClick={() => handleChartTypeClick("cases")}
-                            selected={store.selectedChart==="cases"}>Casos</MenuItem>
-                  <MenuItem onClick={() => handleChartTypeClick("actives")}
-                            selected={store.selectedChart==="actives"}>Casos activos</MenuItem>
-                  <MenuItem onClick={() => handleChartTypeClick("deads")}
-                            selected={store.selectedChart==="deads"}>Fallecidos</MenuItem>
-                  <MenuItem onClick={() => handleChartTypeClick("r")}
-                            selected={store.selectedChart==="r"}>R(t) estimado</MenuItem>
-                </MenuList>
-*/
-
   } else {
       charts = <Grid container>
                   <Grid item xs={12}>
@@ -327,11 +316,15 @@ const App = observer((props: any) => {
                           <Grid item xs={1}>
 
                           </Grid>
-                          <Grid item xs={7} alignContent={"flex-start"}>
-                              <h5>&nbsp;{`Fecha de asimilación: ${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`}</h5>
-                              <h6>El sistema es puramente experimental. Por ser totalmente automático no se controlan ni realizan evaluaciones diarias de los resultados. Quienes desarrollamos este proyecto no nos responsabilizamos por la mala interpretación o uso de la información que se está publicando en el sitio.</h6>
+                          <Grid item xs={9} alignContent={"flex-start"}>
+                            <Typography align="left" variant="body2" gutterBottom color="textSecondary">
+                                <Box p={1}>
+                                  <h4>{`Fecha de asimilación: ${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`}</h4>
+                                  El sistema es puramente experimental. Por ser totalmente automático no se controlan ni realizan evaluaciones diarias de los resultados. Quienes desarrollamos este proyecto no nos responsabilizamos por la mala interpretación o uso de la información que se está publicando en el sitio.
+                                </Box>
+                            </Typography>
                           </Grid>
-                          <Grid item xs={4}>
+                          <Grid item xs={2}>
                           </Grid>
                       </Grid>
                   </Grid>
@@ -347,7 +340,6 @@ const App = observer((props: any) => {
             <DialogContent>
                 <ChartExplanation explanation={store.selectedChart} mode={store.currentMode}/>
             </DialogContent>
-
         </Dialog>
       </Grid>
       </Grid>

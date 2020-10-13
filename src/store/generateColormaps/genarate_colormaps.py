@@ -54,10 +54,10 @@ def sample():
     fig.subplots_adjust(bottom=0.5)
 
     cmap = mpl.colors.ListedColormap(colormap)
-    ax.tick_params(size=0)
+    #ax.tick_params(size=0)
 
     cb2 = mpl.colorbar.ColorbarBase(ax, cmap=cmap, orientation='horizontal')
-    cb2.set_ticks([])
+    #cb2.set_ticks([])
     fig.savefig("colormap.svg")
 
 if __name__ == "__main__":

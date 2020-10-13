@@ -14,13 +14,13 @@ const ArgentinaMap = (props: any) => {
     };
     const lDate = props.store.selectedDate.split('-');
     return <div className="ArgentinaMap" style={{cursor: 'pointer'}}>
-                <Paper  style={{ backgroundColor:'#C7BDC6',}}>
+      <Paper  style={{ backgroundColor:'#C7BDC6',}}>
         <Grid container>
             <Grid item xs={12} >
-                    <h3 style={{marginBottom: 0, paddingBottom: 2, marginTop: 0, paddingTop: 3}}>{`${chartsNames[props.store.selectedChart]} ${lDate[2]}-${lDate[1]}-${lDate[0].substring(2,4)}`}</h3>
+                    <h5 style={{marginBottom: 0, paddingBottom: 2, marginTop: 0, paddingTop: 3}}>{`${chartsNames[props.store.selectedChart]} ${lDate[2]}-${lDate[1]}-${lDate[0].substring(2,4)}`}</h5>
             </Grid>
             <Grid item xs={12}>
-                <Colormap />
+                <Colormap values={props.store.currentScale}/>
                 <Argentina
                     width={props.width}
                     height={props.height}
@@ -30,7 +30,7 @@ const ArgentinaMap = (props: any) => {
                     sea={seaColor}/>
             </Grid>
         </Grid>
-                </Paper>
+      </Paper>
     </div>
 };
 
