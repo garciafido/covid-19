@@ -203,42 +203,42 @@ class CovidData {
         return this.data;
     };
 
-    getColor = (provincia: string): string => {
+    getColorValue = (provincia: string): any => {
         if (this.currentMode === 'info') {
-            return gray;
+            return {color: gray, value: undefined};
         }
         if (this.selectedDate && this.data[this.currentMode].hasOwnProperty(provincia)) {
             if (this.selectedChart === 'r') {
                 let value = this.rByDate[provincia].values[this.selectedDate];
                 if (value === undefined) {
-                    return gray;
+                    return {color: gray, value: value};
                 } else {
-                    return getColorFromScale(this.currentScale, value);
+                    return {color: getColorFromScale(this.currentScale, value), value: value};
                 }
             } else if (this.selectedChart === 'cases') {
                 if (this.chartPerDay) {
                     const value = this.casesByDate[provincia].dailyValues[this.selectedDate];
-                    return getColorFromScale(this.currentScale, value);
+                    return {color: getColorFromScale(this.currentScale, value), value: value};
                 } else {
                     const value = this.casesByDate[provincia].values[this.selectedDate];
-                    return getColorFromScale(this.currentScale, value);
+                    return {color: getColorFromScale(this.currentScale, value), value: value};
                 }
             } else if (this.selectedChart === 'deads') {
                 if (this.chartPerDay) {
                     const value = this.deadsByDate[provincia].dailyValues[this.selectedDate];
-                    return getColorFromScale(this.currentScale, value);
+                    return {color: getColorFromScale(this.currentScale, value), value: value};
                 } else {
                     const value = this.deadsByDate[provincia].values[this.selectedDate];
-                    return getColorFromScale(this.currentScale, value);
+                    return {color: getColorFromScale(this.currentScale, value), value: value};
                 }
             } else if (this.selectedChart === 'actives') {
                 const value = this.activesByDate[provincia].values[this.selectedDate];
-                return getColorFromScale(this.currentScale, value);
+                    return {color: getColorFromScale(this.currentScale, value), value: value};
             } else {
-                return gray;
+                return {color: gray, value: undefined};
             }
         } else {
-            return gray;
+            return {color: gray, value: undefined};
         }
     }
 

@@ -78,14 +78,14 @@ L 91.2 8.64
 L 54 8.64
 z
 " fill={"none"} stroke={"#000000"} />
-     <text x="91.2" y="35" textAnchor="middle" fill="#000000" font-size="8">{props.values[0]}</text>
-     <text x="128.4" y="35" textAnchor="middle" fill="#000000" font-size="8">{props.values[1]}</text>
-     <text x="165.6" y="35" textAnchor="middle" fill="#000000" font-size="8">{props.values[2]}</text>
-     <text x="202.8" y="35" textAnchor="middle" fill="#000000" font-size="8">{props.values[3]}</text>
-     <text x="240" y="35" textAnchor="middle" fill="#000000" font-size="8">{props.values[4]}</text>
-     <text x="277.2" y="35" textAnchor="middle" fill="#000000" font-size="8">{props.values[5]}</text>
-     <text x="314.4" y="35" textAnchor="middle" fill="#000000" font-size="8">{props.values[6]}</text>
-     <text x="351.6" y="35" textAnchor="middle" fill="#000000" font-size="8">{props.values[7]}</text>
+     <text x="91.2" y="35" textAnchor="middle" fill="#000000" font-size="9">{props.values[0]}</text>
+     <text x="128.4" y="35" textAnchor="middle" fill="#000000" font-size="9">{props.values[1]}</text>
+     <text x="165.6" y="35" textAnchor="middle" fill="#000000" font-size="9">{props.values[2]}</text>
+     <text x="202.8" y="35" textAnchor="middle" fill="#000000" font-size="9">{props.values[3]}</text>
+     <text x="240" y="35" textAnchor="middle" fill="#000000" font-size="9">{props.values[4]}</text>
+     <text x="277.2" y="35" textAnchor="middle" fill="#000000" font-size="9">{props.values[5]}</text>
+     <text x="314.4" y="35" textAnchor="middle" fill="#000000" font-size="9">{props.values[6]}</text>
+     <text x="351.6" y="35" textAnchor="middle" fill="#000000" font-size="9">{props.values[7]}</text>
    </g>
   </g>
  </g>

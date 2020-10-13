@@ -24,7 +24,7 @@ const ArgentinaMap = (props: any) => {
                 <Argentina
                     width={props.width}
                     height={props.height}
-                    getColor={(provincia) => props.store.getColor(provincia)}
+                    getColor={(provincia) => props.store.getColorValue(provincia).color}
                     clicked={(provincia) => props.store.setCurrentLocation(provincia)}
                     out={"#C7BDC6"}
                     sea={seaColor}/>

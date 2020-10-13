@@ -134,11 +134,14 @@ const App = observer((props: any) => {
   let chartsMenu;
   let title;
   let explainTitle;
+  let currentValue = "";
   if (store.current) {
           let minMax;
           let data;
           let provincia = store.currentLocation;
           let chartPerDay = false;
+          const lDate = store.selectedDate.split('-');
+          const sortDate = `${lDate[2]}-${lDate[1]}-${lDate[0].substring(2,4)}`;
           if (store.currentLocation === "Tierra del Fuego") {
               provincia = "Tierra del Fuego, Malvinas y Antártida"
           }
@@ -146,6 +149,9 @@ const App = observer((props: any) => {
             title = "Casos activos";
             minMax = store.current.minMaxActives;
             data = store.current.actives;
+            if (provincia !== "Argentina") {
+                currentValue = `(${sortDate}: ${Math.trunc(store.getColorValue(provincia).value)} por millón)`;
+            }
           }
           else if (store.selectedChart === "cases") {
             if (store.chartPerDay) {
@@ -158,6 +164,9 @@ const App = observer((props: any) => {
                 data = store.current.cases;
             }
             chartPerDay = true;
+            if (provincia !== "Argentina") {
+                currentValue = `(${sortDate}: ${Math.trunc(store.getColorValue(provincia).value)} por millón)`;
+            }
           }
           else if (store.selectedChart === "deads") {
             if (store.chartPerDay) {
@@ -169,12 +178,18 @@ const App = observer((props: any) => {
                 data = store.current.deads;
                 title = "Cantidad de fallecimientos acumulados";
             }
+            if (provincia !== "Argentina") {
+                currentValue = `(${sortDate}: ${Math.trunc(store.getColorValue(provincia).value)} por millón)`;
+            }
             chartPerDay = true;
           }
           else if (store.selectedChart === "r") {
             title = "R(t) estimado";
             minMax = [0, store.current.minMaxR[1]];
             data = store.current.r;
+            if (provincia !== "Argentina") {
+                currentValue = `(${sortDate}: ${Math.trunc(store.getColorValue(provincia).value*10.0) / 10.0})`;
+            }
           }
           explainTitle = title;
 
@@ -188,15 +203,17 @@ const App = observer((props: any) => {
             <Grid container alignItems="flex-start" direction="row" style={{height: "25%", marginLeft: 35}} xs={12}>
                 <Grid xs={1}>
                 </Grid>
-                <Grid xs={8}>
+                <Grid xs={4}>
                     {radioPerDay}
+                </Grid>
+                <Grid xs={4}>
+                    <h6 style={{marginTop: 25, paddingTop: 0, marginBottom: 0, paddingBottom: 0}}>{currentValue}</h6>
                 </Grid>
                 <Grid xs={3}>
                     <MuiThemeProvider theme={theme}>
                         <Button size="small" color="primary" onClick={handleClickExplain}
-                                style={{paddingTop: 0, paddingBottom: 0, marginBottom: 0, marginTop: 0}}>
-                        <Box display="flex" justifyContent="center"
-                             style={{paddingTop: 0, paddingBottom: 0, marginBottom: 0, marginTop: 0}}>
+                                style={{marginTop: 15, paddingTop: 0, marginBottom: 0, paddingBottom: 0}}>
+                        <Box display="flex" justifyContent="center">
                             <b><FontAwesomeIcon style={{marginRight: 5, color: "#F88"}} icon={faInfoCircle}/>
                             Explicación</b>
                         </Box>
