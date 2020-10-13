@@ -32,8 +32,7 @@ import Radio from "@material-ui/core/Radio";
 
 const url_facena = "http://exa.unne.edu.ar/";
 const url_cima = "http://www.cima.fcen.uba.ar/index.php";
-const url_unne = "https://www.unne.edu.ar/";
-const url_imt = "https://www.imt-atlantique.fr/";
+const url_imit = "https://imit.conicet.gov.ar/";
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -121,7 +120,7 @@ const App = observer((props: any) => {
       }
   };
 
-  const handleChartTypeClick = (value: string) => {
+  const handleChartTypeClick = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
       store.setSelectedChart(value);
   };
 
@@ -233,7 +232,16 @@ const App = observer((props: any) => {
 
         chartsMenu = <>
             <Paper className={classes.paper}>
-                <MenuList>
+        <RadioGroup aria-label="gender" name="gender1" value={store.selectedChart} onChange={handleChartTypeClick}>
+            <FormControlLabel value="cases" control={<Radio />} label="Casos" />
+            <FormControlLabel value="actives" control={<Radio />} label="Casos activos" />
+            <FormControlLabel value="deads" control={<Radio />} label="Fallecidos" />
+            <FormControlLabel value="r" control={<Radio />} label="R(t) estimado" />
+          </RadioGroup>
+            </Paper>
+        </>;
+
+/*                        <MenuList>
                   <MenuItem onClick={() => handleChartTypeClick("cases")}
                             selected={store.selectedChart==="cases"}>Casos</MenuItem>
                   <MenuItem onClick={() => handleChartTypeClick("actives")}
@@ -243,9 +251,7 @@ const App = observer((props: any) => {
                   <MenuItem onClick={() => handleChartTypeClick("r")}
                             selected={store.selectedChart==="r"}>R(t) estimado</MenuItem>
                 </MenuList>
-            </Paper>
-        </>;
-
+*/
 
   } else {
       charts = <Grid container>
@@ -270,7 +276,16 @@ const App = observer((props: any) => {
             spacing={2}>
           <Grid container style={{marginTop: 3, paddingBottom: 0, marginBottom: 0}}
                 justify="center" alignItems="stretch">
-              <Grid item xs={3}>
+              <Grid item xs={3} style={{paddingRight: 25, marginTop: 15, paddingBottom: 0, marginBottom: 0}}>
+                <a href={url_facena} target="_blank" rel="noopener noreferrer" style={{paddingLeft: 15}} >
+                    <img alt="FaCENA" src="recor-facena.png" className={classes.largeLogo}/>
+                </a>
+                <a href={url_cima} target="_blank" rel="noopener noreferrer" style={{paddingLeft: 15}} >
+                    <img alt="CIMA-UBA-CONICET" src="logo_cima.png"  className={classes.largeLogo}/>
+                </a>
+                <a href={url_imit} target="_blank" rel="noopener noreferrer" style={{paddingLeft: 15}} >
+                    <img alt="IMIT-UNNE-CONICET" src="logo_imit.jpg" className={classes.largeLogo}/>
+                </a>
               </Grid>
               <Grid item xs={6}>
                   <Box >
@@ -316,24 +331,7 @@ const App = observer((props: any) => {
                               <h5>&nbsp;{`Fecha de asimilación: ${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`}</h5>
                               <h6>El sistema es puramente experimental. Por ser totalmente automático no se controlan ni realizan evaluaciones diarias de los resultados. Quienes desarrollamos este proyecto no nos responsabilizamos por la mala interpretación o uso de la información que se está publicando en el sitio.</h6>
                           </Grid>
-                          <Grid item xs={4}
-                              container
-                              direction="row"
-                              justify="flex-end"
-                              alignItems="center"
-                                style={{paddingRight: 25, marginTop: 15, paddingBottom: 0, marginBottom: 0}}>
-                                <a href={url_facena} target="_blank" rel="noopener noreferrer"style={{paddingLeft: 15}} >
-                                    <img alt="FaCENA" src="recor-facena.png" className={classes.largeLogo}/>
-                                </a>
-                                <a href={url_cima} target="_blank" rel="noopener noreferrer" style={{paddingLeft: 15}} >
-                                    <img alt="CIMA" src="logo_cima.png"  className={classes.largeLogo}/>
-                                </a>
-                                <a href={url_unne} target="_blank" rel="noopener noreferrer" style={{paddingLeft: 15}} >
-                                    <img alt="UNNE" src="logo_unne.png" className={classes.largeLogo}/>
-                                </a>
-                                <a href={url_imt} target="_blank" rel="noopener noreferrer" style={{paddingLeft: 15}}>
-                                    <img alt="IMT Atlantique" src="imt-atlantique.png" className={classes.largeLogo}/>
-                                </a>
+                          <Grid item xs={4}>
                           </Grid>
                       </Grid>
                   </Grid>

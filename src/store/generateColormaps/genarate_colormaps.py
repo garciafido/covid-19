@@ -1,5 +1,6 @@
 import json
 import numpy as np
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 
@@ -36,5 +37,29 @@ def generate_colormaps():
     }
 
 
+colormap = [
+    "#FFFFFF",
+    "#F3E08C",
+    "#FAC55F",
+    "#FAA930",
+    "#FBA953",
+    "#F96A00",
+    "#F34E00",
+    "#E32F00",
+    "#D00A00",
+]
+
+def sample():
+    fig, ax = plt.subplots(figsize=(6, 1))
+    fig.subplots_adjust(bottom=0.5)
+
+    cmap = mpl.colors.ListedColormap(colormap)
+    ax.tick_params(size=0)
+
+    cb2 = mpl.colorbar.ColorbarBase(ax, cmap=cmap, orientation='horizontal')
+    cb2.set_ticks([])
+    fig.savefig("colormap.svg")
+
 if __name__ == "__main__":
-    print(json.dumps(generate_colormaps(), indent=2))
+    #print(json.dumps(generate_colormaps(), indent=2))
+    sample()

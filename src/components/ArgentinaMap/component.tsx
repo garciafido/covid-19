@@ -1,7 +1,8 @@
 import React from 'react';
-import Argentina from './argentina_politico';
+import Argentina from './argentinaPolitico';
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
+import Colormap from "./colormap";
 
 const ArgentinaMap = (props: any) => {
     const seaColor = "#0aa8f1";
@@ -15,10 +16,11 @@ const ArgentinaMap = (props: any) => {
     return <div className="ArgentinaMap" style={{cursor: 'pointer'}}>
                 <Paper  style={{ backgroundColor:'#C7BDC6',}}>
         <Grid container>
-            <Grid item xs={12}>
-                    <h3>{`${chartsNames[props.store.selectedChart]} ${lDate[2]}-${lDate[1]}-${lDate[0].substring(2,4)}`}</h3>
+            <Grid item xs={12} >
+                    <h3 style={{marginBottom: 0, paddingBottom: 2, marginTop: 0, paddingTop: 3}}>{`${chartsNames[props.store.selectedChart]} ${lDate[2]}-${lDate[1]}-${lDate[0].substring(2,4)}`}</h3>
             </Grid>
             <Grid item xs={12}>
+                <Colormap />
                 <Argentina
                     width={props.width}
                     height={props.height}

@@ -2,12 +2,13 @@ import {action, observable, configure} from "mobx";
 import 'mobx-react-lite/batchingForReactDom';
 import {flowed} from "./storeUtils";
 import {buildActivesByDate, buildCasesByDate, buildDeadsByDate, buildRByDate} from "./buildIndexes";
+import {getColorScale} from "./colorScale";
 
 configure({ enforceActions: "observed" });
 
 let covidDataUrl = ((window as any).COVID_DATA_URL);
-covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
-//covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data_test.json';
+//covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
+covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data_test.json';
 
 const gray = "#C7BDC6";
 
@@ -23,12 +24,12 @@ const colormap = [
     "#D00A00",
 ]
 
-function getColor(scale: number[], value: number) {
+function getColorFromScale(scale: number[], value: number) {
     let index: number = 0;
     for (; index < scale.length; index++) {
         if (scale[index] > value) break;
     }
-    return colormap[index <= 7 ? index : 8];
+    return colormap[index > scale.length-1 ? scale.length-1 : index];
 }
 
 class CovidData {
@@ -38,6 +39,7 @@ class CovidData {
     @observable current: any = {};
     @observable currentLocation = "Argentina";
     @observable currentMode = "monitoreo";
+    @observable currentScale: any = [];
 
     @observable selectedDate: string = '';
     @observable assimilationDate: string = '';
@@ -50,6 +52,7 @@ class CovidData {
     @observable deadsByDate: any = {};
 
     @observable errorMessage: any = '';
+
 
     generateDailyData() {
         const getDaily = (actual: any, previous: any) => {
@@ -192,6 +195,7 @@ class CovidData {
             this.activesByDate = buildActivesByDate(this.data);
             this.deadsByDate = buildDeadsByDate(this.data);
             this.state = "done";
+            this.changeCurrentScale();
         } catch(error) {
             this.state = "error";
             this.errorMessage = error;
@@ -205,61 +209,74 @@ class CovidData {
         }
         if (this.selectedDate && this.data[this.currentMode].hasOwnProperty(provincia)) {
             if (this.selectedChart === 'r') {
-                let r = this.rByDate[provincia].values[this.selectedDate];
-                if (r === undefined) {
+                let value = this.rByDate[provincia].values[this.selectedDate];
+                if (value === undefined) {
                     return gray;
                 } else {
-                    const minR = 0.6;
-                    const maxR = 2.0;
-                    if (r < minR) {
-                        return colormap[0]
-                    } else if (r > maxR){
-                        return colormap[colormap.length-1]
-                    }
-                    const factor = (maxR-minR) / (colormap.length-2);
-                    const index = Math.trunc((r-minR) / factor) + 1;
-                    return colormap[index];
+                    return getColorFromScale(this.currentScale, value);
                 }
             } else if (this.selectedChart === 'cases') {
                 const value = this.casesByDate[provincia].values[this.selectedDate];
-                const scale = [100, 250, 500, 1000, 2500, 5000, 10000, 25000, 50000];
-                return getColor(scale, value);
+                return getColorFromScale(this.currentScale, value);
             } else if (this.selectedChart === 'deads') {
                 const value = this.deadsByDate[provincia].values[this.selectedDate];
-                const scale = [5, 10, 25, 50, 100, 250, 500, 1000, 2500];
-                return getColor(scale, value);
+                return getColorFromScale(this.currentScale, value);
             } else if (this.selectedChart === 'actives') {
                 const value = this.activesByDate[provincia].values[this.selectedDate];
-                const scale = [10, 25, 50, 100, 250, 500, 1000, 2500, 5000];
-                return getColor(scale, value);
+                return getColorFromScale(this.currentScale, value);
             } else {
                 return gray;
             }
         } else {
             return gray;
         }
-   }
+    }
 
-   @action.bound
+    @action.bound
     setCurrentLocation(location: string) {
         this.currentLocation = location;
         this.current = this.data[this.currentMode][location];
     }
 
-   @action.bound
+    @action.bound
+    changeCurrentScale() {
+        if (this.selectedChart === 'r') {
+            const factor = (2.0-0.6) / (colormap.length-2);
+            this.currentScale = [];
+            for (let i=0; i < colormap.length-1; i++) {
+                const value = ((i-1) * factor) + 0.6;
+                this.currentScale.push(Math.ceil(value*10.0)/10.0);
+            }
+            this.currentScale.push(2.0);
+        } else if (this.selectedChart === 'cases') {
+            const maxScale = Math.max(this.casesByDate.max, this.casesByDate.maxPrediccion);
+            this.currentScale = getColorScale(100,maxScale, 8, false);
+        } else if (this.selectedChart === 'deads') {
+            const maxScale = Math.max(this.deadsByDate.max, this.deadsByDate.maxPrediccion);
+            this.currentScale = getColorScale(5,maxScale, 8, false);
+        } else if (this.selectedChart === 'actives') {
+            const maxScale = Math.max(this.activesByDate.max, this.activesByDate.maxPrediccion);
+            this.currentScale = getColorScale(10, maxScale, 8, false);
+        }
+    }
+
+    @action.bound
     setCurrentMode(mode: string) {
         this.currentMode = mode;
         this.current = this.data[mode][this.currentLocation];
+        this.changeCurrentScale();
     }
 
     @action.bound
     setSelectedChart(chart: string) {
         this.selectedChart = chart;
+        this.changeCurrentScale();
     }
 
     @action.bound
     setChartPerDay(perDay: boolean) {
         this.chartPerDay = perDay;
+        this.changeCurrentScale();
     }
 
     @action.bound
