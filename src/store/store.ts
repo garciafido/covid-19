@@ -216,11 +216,21 @@ class CovidData {
                     return getColorFromScale(this.currentScale, value);
                 }
             } else if (this.selectedChart === 'cases') {
-                const value = this.casesByDate[provincia].values[this.selectedDate];
-                return getColorFromScale(this.currentScale, value);
+                if (this.chartPerDay) {
+                    const value = this.casesByDate[provincia].dailyValues[this.selectedDate];
+                    return getColorFromScale(this.currentScale, value);
+                } else {
+                    const value = this.casesByDate[provincia].values[this.selectedDate];
+                    return getColorFromScale(this.currentScale, value);
+                }
             } else if (this.selectedChart === 'deads') {
-                const value = this.deadsByDate[provincia].values[this.selectedDate];
-                return getColorFromScale(this.currentScale, value);
+                if (this.chartPerDay) {
+                    const value = this.deadsByDate[provincia].dailyValues[this.selectedDate];
+                    return getColorFromScale(this.currentScale, value);
+                } else {
+                    const value = this.deadsByDate[provincia].values[this.selectedDate];
+                    return getColorFromScale(this.currentScale, value);
+                }
             } else if (this.selectedChart === 'actives') {
                 const value = this.activesByDate[provincia].values[this.selectedDate];
                 return getColorFromScale(this.currentScale, value);
@@ -249,11 +259,21 @@ class CovidData {
             }
             this.currentScale.push(2.0);
         } else if (this.selectedChart === 'cases') {
-            const maxScale = Math.max(this.casesByDate.max, this.casesByDate.maxPrediccion);
-            this.currentScale = getColorScale(100,maxScale, 8, false);
+            if (this.chartPerDay) {
+                const maxScale = Math.max(this.casesByDate.maxDaily, this.casesByDate.maxPrediccionDaily);
+                this.currentScale = getColorScale(1, maxScale, 8, false);
+            } else {
+                const maxScale = Math.max(this.casesByDate.max, this.casesByDate.maxPrediccion);
+                this.currentScale = getColorScale(100, maxScale, 8, false);
+            }
         } else if (this.selectedChart === 'deads') {
-            const maxScale = Math.max(this.deadsByDate.max, this.deadsByDate.maxPrediccion);
-            this.currentScale = getColorScale(5,maxScale, 8, false);
+            if (this.chartPerDay) {
+                const maxScale = Math.max(this.deadsByDate.maxDaily, this.deadsByDate.maxPrediccionDaily);
+                this.currentScale = getColorScale(1, maxScale, 8, false);
+            } else {
+                const maxScale = Math.max(this.deadsByDate.max, this.deadsByDate.maxPrediccion);
+                this.currentScale = getColorScale(5, maxScale, 8, false);
+            }
         } else if (this.selectedChart === 'actives') {
             const maxScale = Math.max(this.activesByDate.max, this.activesByDate.maxPrediccion);
             this.currentScale = getColorScale(10, maxScale, 8, false);
