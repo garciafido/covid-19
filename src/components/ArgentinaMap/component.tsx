@@ -17,7 +17,7 @@ const ArgentinaMap = (props: any) => {
       <Paper  style={{ backgroundColor:'#C7BDC6',}}>
         <Grid container>
             <Grid item xs={12} >
-                    <h5 style={{marginBottom: 0, paddingBottom: 2, marginTop: 0, paddingTop: 3}}>{`${lDate[2]}-${lDate[1]}-${lDate[0].substring(2, 4)}: ${chartsNames[props.store.selectedChart]}`}</h5>
+                    <h5 style={{marginBottom: 0, paddingBottom: 2, marginTop: 0, paddingTop: 3}}>{`${lDate[2]}/${lDate[1]}/${lDate[0].substring(2, 4)}: ${chartsNames[props.store.selectedChart]}`}</h5>
             </Grid>
             <Grid item xs={12}>
                 <Colormap values={props.store.currentScale}/>

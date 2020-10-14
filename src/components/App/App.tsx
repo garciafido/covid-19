@@ -254,7 +254,7 @@ const App = observer((props: any) => {
             <Paper className={classes.paper}>
         <RadioGroup aria-label="gender" name="gender1" value={store.selectedChart} onChange={handleChartTypeClick}>
             <FormControlLabel value="cases" control={<Radio />} label="Casos" />
-            <FormControlLabel value="actives" control={<Radio />} label="Casos activos" />
+            <FormControlLabel value="actives" control={<Radio />} label="Activos" />
             <FormControlLabel value="deads" control={<Radio />} label="Fallecidos" />
             <FormControlLabel value="r" control={<Radio />} label="R(t) estimado" />
           </RadioGroup>
