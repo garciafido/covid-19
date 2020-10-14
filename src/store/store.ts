@@ -40,6 +40,7 @@ class CovidData {
     @observable currentLocation = "Argentina";
     @observable currentMode = "monitoreo";
     @observable currentScale: any = [];
+    @observable paletteDate: string = '';
 
     @observable selectedDate: string = '';
     @observable assimilationDate: string = '';
@@ -246,6 +247,18 @@ class CovidData {
     setCurrentLocation(location: string) {
         this.currentLocation = location;
         this.current = this.data[this.currentMode][location];
+    }
+
+    @action.bound
+    setDefaultPaletteDate() {
+        this.paletteDate = "";
+        this.changeCurrentScale();
+    }
+
+    @action.bound
+    setPaletteSelectedDate() {
+        this.paletteDate = this.selectedDate;
+        this.changeCurrentScale();
     }
 
     @action.bound

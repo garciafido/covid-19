@@ -3,6 +3,7 @@ import Argentina from './argentinaPolitico';
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Colormap from "./colormap";
+import {Button} from "@material-ui/core";
 
 const ArgentinaMap = (props: any) => {
     const seaColor = "#0aa8f1";
@@ -13,14 +14,15 @@ const ArgentinaMap = (props: any) => {
         cases: props.store.chartPerDay ? 'Casos por día' : 'Casos acumulados',
     };
     const lDate = props.store.selectedDate.split('-');
+    const shortDate = `${lDate[2]}/${lDate[1]}/${lDate[0].substring(2, 4)}`;
+    const backgroundColor = "#FFFFFF"; //'#C7BDC6';
     return <div className="ArgentinaMap" style={{cursor: 'pointer'}}>
-      <Paper  style={{ backgroundColor:'#C7BDC6',}}>
+      <Paper  style={{ backgroundColor: backgroundColor}}>
         <Grid container>
             <Grid item xs={12} >
-                    <h5 style={{marginBottom: 0, paddingBottom: 2, marginTop: 0, paddingTop: 3}}>{`${lDate[2]}/${lDate[1]}/${lDate[0].substring(2, 4)}: ${chartsNames[props.store.selectedChart]}`}</h5>
+                    <h4 style={{marginBottom: 0, paddingBottom: 2, marginTop: 0, paddingTop: 3}}>{`${shortDate}: ${chartsNames[props.store.selectedChart]}`}</h4>
             </Grid>
             <Grid item xs={12}>
-                <Colormap values={props.store.currentScale}/>
                 <Argentina
                     width={props.width}
                     height={props.height}
@@ -28,6 +30,23 @@ const ArgentinaMap = (props: any) => {
                     clicked={(provincia) => props.store.setCurrentLocation(provincia)}
                     out={"#C7BDC6"}
                     sea={seaColor}/>
+                <Grid container xs={12}>
+                    <Colormap values={props.store.currentScale}/>
+                </Grid>
+                <Grid container xs={12}>
+                    <Grid item xs={7} justify="flex-start" direction="row" >
+                        <Button
+                            onClick={() => props.store.setPaletteSelectedDate()}
+                            style={{marginLeft: 2, marginTop: 0, paddingTop: 0, marginBottom: 0, paddingBottom: 0, fontSize: '7pt'}}
+                            size="small" color="primary">Autoajustar paleta al {shortDate}</Button>
+                    </Grid>
+                    <Grid item xs={5} justify="flex-end" direction="row-reverse" >
+                        <Button
+                            onClick={() => props.store.setDefaultPaletteDate()}
+                            style={{marginRight: 0, paddingRight: 2, marginTop: 0, paddingTop: 0, marginBottom: 0, paddingBottom: 0, fontSize: '7pt'}}
+                            size="small" color="primary">Paleta por defecto</Button>
+                    </Grid>
+                </Grid>
             </Grid>
         </Grid>
       </Paper>

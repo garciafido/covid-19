@@ -28,7 +28,6 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
 
 const url_facena = "http://exa.unne.edu.ar/";
 const url_cima = "http://www.cima.fcen.uba.ar/index.php";
@@ -240,9 +239,7 @@ const App = observer((props: any) => {
               <Grid container>
                 <Grid item alignItems='center' alignContent='center'
                       style={{paddingBottom: 0, marginBottom: 0}} xs={12}>
-                    <Paper>
                       <h4 style={{paddingBottom: 10, marginBottom: 0}}>{`${title} en ${provinciaLabel}`}</h4>
-                    </Paper>
                 </Grid>
                 <Grid item xs={12}>
                     {chart}
