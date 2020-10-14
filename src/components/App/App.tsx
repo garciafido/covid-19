@@ -28,6 +28,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
 
 const url_facena = "http://exa.unne.edu.ar/";
 const url_cima = "http://www.cima.fcen.uba.ar/index.php";
@@ -138,20 +139,18 @@ const App = observer((props: any) => {
   if (store.current) {
           let minMax;
           let data;
-          let provincia = store.currentLocation;
+          let provinciaLabel = store.currentLocation;
           let chartPerDay = false;
           const lDate = store.selectedDate.split('-');
-          const sortDate = `${lDate[2]}-${lDate[1]}-${lDate[0].substring(2,4)}`;
+          const shortDate = `${lDate[2]}/${lDate[1]}/${lDate[0]}`;
           if (store.currentLocation === "Tierra del Fuego") {
-              provincia = "Tierra del Fuego, Malvinas y Antártida"
+              provinciaLabel = "Tierra del Fuego, Malvinas y Antártida"
           }
           if (store.selectedChart === "actives") {
             title = "Casos activos";
             minMax = store.current.minMaxActives;
             data = store.current.actives;
-            if (provincia !== "Argentina") {
-                currentValue = `(${sortDate}: ${Math.trunc(store.getColorValue(provincia).value)} por millón)`;
-            }
+            currentValue = `${shortDate}: ${Math.trunc(store.getColorValue(store.currentLocation).value)} ${title} por millón`;
           }
           else if (store.selectedChart === "cases") {
             if (store.chartPerDay) {
@@ -164,38 +163,36 @@ const App = observer((props: any) => {
                 data = store.current.cases;
             }
             chartPerDay = true;
-            if (provincia !== "Argentina") {
-                currentValue = `(${sortDate}: ${Math.trunc(store.getColorValue(provincia).value)} por millón)`;
-            }
+            currentValue = `${shortDate}: ${Math.trunc(store.getColorValue(store.currentLocation).value)} ${title} por millón`;
           }
           else if (store.selectedChart === "deads") {
             if (store.chartPerDay) {
                 minMax = store.current.minMaxDailyDeads;
                 data = store.current.dailyDeads;
-                title = "Cantidad de fallecimientos diarios";
+                title = "Fallecimientos diarios";
             } else {
                 minMax = store.current.minMaxDeaths;
                 data = store.current.deads;
-                title = "Cantidad de fallecimientos acumulados";
+                title = "Fallecimientos acumulados";
             }
-            if (provincia !== "Argentina") {
-                currentValue = `(${sortDate}: ${Math.trunc(store.getColorValue(provincia).value)} por millón)`;
-            }
+            currentValue = `${shortDate}: ${Math.trunc(store.getColorValue(store.currentLocation).value)} ${title} por millón`;
             chartPerDay = true;
           }
           else if (store.selectedChart === "r") {
             title = "R(t) estimado";
             minMax = [0, store.current.minMaxR[1]];
             data = store.current.r;
-            if (provincia !== "Argentina") {
-                currentValue = `(${sortDate}: ${Math.trunc(store.getColorValue(provincia).value*10.0) / 10.0})`;
-            }
+            currentValue = `${shortDate}: ${Math.trunc(store.getColorValue(store.currentLocation).value*10.0) / 10.0} ${title}`;
           }
           explainTitle = title;
 
-          const radioPerDay = chartPerDay ? <RadioGroup row aria-label="position" value={store.chartPerDay ? "daily" : "accumulated"} onChange={handleRadioChange}>
-                    <FormControlLabel value="accumulated" control={<Radio size="small" />} label="Acumulado" />
-                    <FormControlLabel value="daily" control={<Radio size="small" />} label="Diario" />
+          const radioPerDay = chartPerDay ? <RadioGroup row aria-label="position"
+                                                        value={store.chartPerDay ? "daily" : "accumulated"}
+                                                        onChange={handleRadioChange}>
+                    <FormControlLabel value="accumulated"
+                                      control={<Radio size="small" />} label="Acumulado" />
+                    <FormControlLabel value="daily"
+                                      control={<Radio size="small" />} label="Por día" />
                 </RadioGroup> : <div/>;
 
           const chart = <>
@@ -206,16 +203,18 @@ const App = observer((props: any) => {
                 <Grid xs={4}>
                     {radioPerDay}
                 </Grid>
-                <Grid xs={4}>
-                    <h6 style={{marginTop: 25, paddingTop: 0, marginBottom: 0, paddingBottom: 0}}>{currentValue}</h6>
+                <Grid xs={5}>
+                    <div style={{marginTop: 28, paddingTop: 0, marginBottom: 0, paddingBottom: 0, fontSize: '8pt'}}>
+                        {currentValue}
+                    </div>
                 </Grid>
-                <Grid xs={3}>
+                <Grid xs={2}>
                     <MuiThemeProvider theme={theme}>
                         <Button size="small" color="primary" onClick={handleClickExplain}
-                                style={{marginTop: 15, paddingTop: 0, marginBottom: 0, paddingBottom: 0}}>
+                                style={{marginTop: 25, paddingTop: 0, marginBottom: 0, paddingBottom: 0, fontSize: '9pt'}}>
                         <Box display="flex" justifyContent="center">
-                            <b><FontAwesomeIcon style={{marginRight: 5, color: "#F88"}} icon={faInfoCircle}/>
-                            Explicación</b>
+                            <span><FontAwesomeIcon style={{marginRight: 5, color: "#F88"}} icon={faInfoCircle}/>
+                            Explicación</span>
                         </Box>
                         </Button>
                     </MuiThemeProvider>
@@ -241,7 +240,9 @@ const App = observer((props: any) => {
               <Grid container>
                 <Grid item alignItems='center' alignContent='center'
                       style={{paddingBottom: 0, marginBottom: 0}} xs={12}>
-                      <h4 style={{paddingBottom: 0, marginBottom: 0}}>{`${title} en ${provincia}`}</h4>
+                    <Paper>
+                      <h4 style={{paddingBottom: 10, marginBottom: 0}}>{`${title} en ${provinciaLabel}`}</h4>
+                    </Paper>
                 </Grid>
                 <Grid item xs={12}>
                     {chart}
@@ -336,7 +337,7 @@ const App = observer((props: any) => {
                           <Grid item xs={9} alignContent={"flex-start"}>
                             <Typography align="left" variant="body2" gutterBottom color="textSecondary">
                                 <Box p={1}>
-                                  <h4>{`Fecha de asimilación: ${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`}</h4>
+                                  <h4 style={{paddingBottom:0, marginBottom: 3, paddingTop:0, marginTop: 3}}>{`Fecha de asimilación: ${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`}</h4>
                                   El sistema es puramente experimental. Por ser totalmente automático no se controlan ni realizan evaluaciones diarias de los resultados. Quienes desarrollamos este proyecto no nos responsabilizamos por la mala interpretación o uso de la información que se está publicando en el sitio.
                                 </Box>
                             </Typography>
