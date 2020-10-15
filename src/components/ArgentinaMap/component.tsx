@@ -6,6 +6,8 @@ import Colormap from "./colormap";
 import {Button} from "@material-ui/core";
 
 const ArgentinaMap = (props: any) => {
+    const [height, setHeight] = React.useState(Math.trunc(window.innerHeight / 1.39) + 'px');
+    const [paletteHeight, setPaletteHeight] = React.useState(Math.trunc(window.innerHeight / 27) + 'px');
     const seaColor = "#0aa8f1";
     const chartsNames: any = {
         r: 'R(t)',
@@ -25,15 +27,18 @@ const ArgentinaMap = (props: any) => {
             <Grid item xs={12}>
                 <Argentina
                     width={props.width}
-                    height={props.height}
+                    height={height}
                     getColor={(provincia) => props.store.getColorValue(provincia).color}
                     clicked={(provincia) => props.store.setCurrentLocation(provincia)}
                     out={"#C7BDC6"}
                     sea={seaColor}/>
                 <Grid container xs={12}>
-                    <Colormap values={props.store.currentScale}/>
-                </Grid>
-                <Grid container xs={12}>
+                    <Grid item  xs={12}>
+                        <Colormap
+                            width={props.width}
+                            height={paletteHeight}
+                            values={props.store.currentScale}/>
+                    </Grid>
                     <Grid item xs={7} justify="flex-start" direction="row" >
                         <Button
                             onClick={() => props.store.setPaletteSelectedDate()}

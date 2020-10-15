@@ -2,11 +2,13 @@ import * as React from "react";
 
 type ColormapProps = {
  values: any
+  width: string,
+  height: string
 }
 
 function SvgColormap(props: ColormapProps) {
   return (
-    <svg viewBox="45 8 346 29" width={346} height={29} {...props}>
+    <svg viewBox="45 8 346 29" {...props}>
 <g id="figure_1">
   <g id="patch_1">
    <path d="M 0 72
