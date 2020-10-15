@@ -7,8 +7,8 @@ import {getColorScale} from "./colorScale";
 configure({ enforceActions: "observed" });
 
 let covidDataUrl = ((window as any).COVID_DATA_URL);
-//covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
-covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data_test.json';
+covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
+//covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data_test.json';
 
 const gray = "#C7BDC6";
 
@@ -31,6 +31,9 @@ function getColorFromScale(scale: number[], value: number) {
     }
     return colormap[index > scale.length-1 ? scale.length-1 : index];
 }
+
+const logarithmicLimit = 500;
+const scaleParts = colormap.length - 1;
 
 class CovidData {
     @observable state: string = 'pending';
@@ -272,24 +275,58 @@ class CovidData {
             }
             this.currentScale.push(2.0);
         } else if (this.selectedChart === 'cases') {
+            let maxScale;
+            let minScale = 0;
+            let isLog;
             if (this.chartPerDay) {
-                const maxScale = Math.max(this.casesByDate.maxDaily, this.casesByDate.maxPrediccionDaily);
-                this.currentScale = getColorScale(1, maxScale, 8, false);
+                if (this.paletteDate) {
+                    maxScale = this.casesByDate.maxByDate[this.paletteDate].maxDaily;
+                } else {
+                    maxScale = Math.max(this.casesByDate.maxDaily, this.casesByDate.maxPrediccionDaily);
+                }
             } else {
-                const maxScale = Math.max(this.casesByDate.max, this.casesByDate.maxPrediccion);
-                this.currentScale = getColorScale(100, maxScale, 8, false);
+                minScale = 100;
+                if (this.paletteDate) {
+                    maxScale = this.casesByDate.maxByDate[this.paletteDate].max;
+                } else {
+                    maxScale = Math.max(this.casesByDate.max, this.casesByDate.maxPrediccion);
+                }
             }
+            isLog = maxScale-minScale > logarithmicLimit;
+            minScale = minScale + scaleParts >= maxScale ? 0 : minScale
+            this.currentScale = getColorScale(minScale, maxScale, scaleParts, isLog);
         } else if (this.selectedChart === 'deads') {
+            let maxScale;
+            let minScale = 0;
+            let isLog;
             if (this.chartPerDay) {
-                const maxScale = Math.max(this.deadsByDate.maxDaily, this.deadsByDate.maxPrediccionDaily);
-                this.currentScale = getColorScale(1, maxScale, 8, false);
+                if (this.paletteDate) {
+                    maxScale = this.deadsByDate.maxByDate[this.paletteDate].max;
+                } else {
+                    maxScale = Math.max(this.deadsByDate.maxDaily, this.deadsByDate.maxPrediccionDaily);
+                }
             } else {
-                const maxScale = Math.max(this.deadsByDate.max, this.deadsByDate.maxPrediccion);
-                this.currentScale = getColorScale(5, maxScale, 8, false);
+                minScale = 5;
+                if (this.paletteDate) {
+                    maxScale = this.deadsByDate.maxByDate[this.paletteDate].max;
+                } else {
+                    maxScale = Math.max(this.deadsByDate.max, this.deadsByDate.maxPrediccion);
+                }
             }
+            isLog = maxScale-minScale > logarithmicLimit;
+            minScale = minScale + scaleParts >= maxScale ? 0 : minScale
+            this.currentScale = getColorScale(minScale, maxScale, scaleParts, isLog);
         } else if (this.selectedChart === 'actives') {
-            const maxScale = Math.max(this.activesByDate.max, this.activesByDate.maxPrediccion);
-            this.currentScale = getColorScale(10, maxScale, 8, false);
+            let maxScale;
+            let minScale = 10;
+            if (this.paletteDate) {
+                maxScale = this.activesByDate.maxByDate[this.paletteDate].max;
+            } else {
+                maxScale = Math.max(this.activesByDate.max, this.activesByDate.maxPrediccion);
+            }
+            const isLog = maxScale-minScale > logarithmicLimit;
+            minScale = minScale + scaleParts >= maxScale ? 0 : minScale
+            this.currentScale = getColorScale(minScale, maxScale, scaleParts, isLog);
         }
     }
 

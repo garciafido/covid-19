@@ -29,7 +29,8 @@ const population: {[key: string]: number} = {
 
 
 const buildByDate = (data: any, field: string, perMIllion: boolean) =>  {
-    const indexed: any = {};
+    const maxByDate: any = {};
+    const indexed: any = {maxByDate: maxByDate};
     let min = 100000000000;
     let max = -100000000000;
     let minDaily = 100000000000;
@@ -43,6 +44,15 @@ const buildByDate = (data: any, field: string, perMIllion: boolean) =>  {
         for (let i=0; i < items.length; i++) {
             const value = perMIllion ?  1.e6 * items[i].mean / population[key] : items[i].mean;
             const dailyValue = value - previous;
+            if (!(items[i].date in maxByDate)) {
+                maxByDate[items[i].date] = {max: -100000000000, maxDaily: -100000000000};
+            }
+            if (maxByDate[items[i].date].max < value) {
+                maxByDate[items[i].date].max = value;
+            }
+            if (maxByDate[items[i].date].maxDaily < dailyValue) {
+                maxByDate[items[i].date].maxDaily = dailyValue;
+            }
             if (value < min) {
                 min = value;
             }

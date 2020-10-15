@@ -7,6 +7,13 @@ const range = (start: number, stop: number, step: number) => {
 };
 
 export const getColorScale = (minScale: number, maxScale: number, nScale: number, isLinear: boolean = true): any => {
+    if (maxScale-minScale <= nScale + 1) {
+        const result = [];
+        for (let i = 0; i <= nScale; i += 1) {
+            result.push(i);
+        }
+        return result;
+    }
     // @author: jruiz
     // Primero autocorregimos el maximo de la escala para llevarlo a un valor user friendly
     const scalingFactor = (10 ** Math.round(Math.log10(maxScale / nScale))) / 5.0;
