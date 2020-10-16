@@ -6,8 +6,26 @@ import Colormap from "./colormap";
 import {Button} from "@material-ui/core";
 
 const ArgentinaMap = (props: any) => {
-    const [height, setHeight] = React.useState(Math.trunc(window.innerHeight / 1.39) + 'px');
-    const [paletteHeight, setPaletteHeight] = React.useState(Math.trunc(window.innerHeight / 27) + 'px');
+    const [dimensions, setDimensions] = React.useState({
+        height: window.innerHeight,
+        width: window.innerWidth,
+        factor: window.innerWidth/window.innerHeight
+    });
+    /*
+    const handleResize = () => {
+      setDimensions({
+        height: window.innerHeight,
+        width: window.innerWidth,
+        factor: window.innerWidth/window.innerHeight
+      })
+    };
+    React.useEffect(() => {
+          window.addEventListener('resize', handleResize);
+          return () => {
+            window.removeEventListener('resize', handleResize);
+            };
+     });
+    */
     const seaColor = "#0aa8f1";
     const chartsNames: any = {
         r: 'R(t)',
@@ -18,6 +36,14 @@ const ArgentinaMap = (props: any) => {
     const lDate = props.store.selectedDate.split('-');
     const shortDate = `${lDate[2]}/${lDate[1]}/${lDate[0].substring(2, 4)}`;
     const backgroundColor = "#FFFFFF"; //'#C7BDC6';
+
+    console.log(dimensions.factor);
+    if (dimensions.factor < 1.9) {
+        dimensions.height = dimensions.width / 1.9;
+    }
+    const height = Math.trunc(dimensions.height / 1.39) + 'px';
+    const paletteHeight = Math.trunc(dimensions.height / 27) + 'px';
+
     return <div className="ArgentinaMap" style={{cursor: 'pointer'}}>
       <Paper  style={{ backgroundColor: backgroundColor}}>
         <Grid container>
