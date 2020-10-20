@@ -23,6 +23,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Paper from "@material-ui/core/Paper";
 import {ChartExplanation} from "./ChartExplanation";
+import {ChartMapExplanation} from "./ChartMapExplanation";
 import {DialogContent} from "@material-ui/core";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -31,8 +32,8 @@ import Typography from "@material-ui/core/Typography";
 
 const url_facena = "http://exa.unne.edu.ar/";
 const url_cima = "http://www.cima.fcen.uba.ar/index.php";
+const url_unne = "https://www.unne.edu.ar/";
 const url_imit = "https://imit.conicet.gov.ar/";
-
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -78,6 +79,7 @@ const App = observer((props: any) => {
   const chartHeight = 200;
   const [open, setOpen] = React.useState(false);
   const [explain, setExplain] = React.useState(false);
+  const [mapExplain, setMapExplain] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -93,6 +95,14 @@ const App = observer((props: any) => {
 
   const handleCloseExplain = () => {
     setExplain(false);
+  };
+
+  const handleClickMapExplain = () => {
+    setMapExplain(true);
+  };
+
+  const handleCloseMapExplain = () => {
+    setMapExplain(false);
   };
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: any): void => {
@@ -134,6 +144,7 @@ const App = observer((props: any) => {
   let chartsMenu;
   let title;
   let explainTitle;
+  let explainMapTitle = "Mapa de Argentina";
   let currentValue = "";
   if (store.current) {
           let minMax;
@@ -144,6 +155,8 @@ const App = observer((props: any) => {
           const shortDate = `${lDate[2]}/${lDate[1]}/${lDate[0]}`;
           if (store.currentLocation === "Tierra del Fuego") {
               provinciaLabel = "Tierra del Fuego, Malvinas y Antártida"
+          } else if (store.currentLocation === "Buenos Aires") {
+              provinciaLabel = "Buenos Aires (sin G.B.A.)"
           }
           if (store.selectedChart === "actives") {
             title = "Casos activos";
@@ -288,7 +301,10 @@ const App = observer((props: any) => {
                     <img alt="CIMA-UBA-CONICET" src="logo_cima.png"  className={classes.largeLogo}/>
                 </a>
                 <a href={url_imit} target="_blank" rel="noopener noreferrer" style={{paddingLeft: 15}} >
-                    <img alt="IMIT-UNNE-CONICET" src="logo_imit.jpg" className={classes.largeLogo}/>
+                    <img alt="IMIT-CONICET" src="logo_imit.png" className={classes.largeLogo}/>
+                </a>
+                <a href={url_unne} target="_blank" rel="noopener noreferrer" style={{paddingLeft: 15}} >
+                    <img alt="IMIT-CONICET" src="logo_unne.png" className={classes.largeLogo}/>
                 </a>
               </Grid>
               <Grid item xs={6}>
@@ -316,7 +332,7 @@ const App = observer((props: any) => {
             <Grid container>
               <Grid item xs={3}>
                 <Box className={classes.box}>
-                  <ArgentinaMapMenu store={store} />
+                  <ArgentinaMapMenu store={store} handleClickExplain={handleClickMapExplain} />
                 </Box>
               </Grid>
               <Grid item xs={9}>
@@ -354,6 +370,13 @@ const App = observer((props: any) => {
               <DialogTitle id="simple-dialog-title">{explainTitle}</DialogTitle>
             <DialogContent>
                 <ChartExplanation explanation={store.selectedChart} mode={store.currentMode}/>
+            </DialogContent>
+        </Dialog>
+        <Dialog onClose={handleCloseMapExplain} aria-labelledby="simple-dialog-title"
+                open={mapExplain} maxWidth={"sm"} fullWidth={false}>
+              <DialogTitle id="simple-dialog-title">{explainMapTitle}</DialogTitle>
+            <DialogContent>
+                <ChartMapExplanation explanation={store.selectedChart} mode={store.currentMode}/>
             </DialogContent>
         </Dialog>
       </Grid>

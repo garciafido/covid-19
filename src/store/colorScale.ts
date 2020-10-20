@@ -14,11 +14,11 @@ export const getColorScale = (minScale: number, maxScale: number, nScale: number
         }
         return result;
     }
+    minScale = minScale === 0 ? 1 : minScale;
     // @author: jruiz
     // Primero autocorregimos el maximo de la escala para llevarlo a un valor user friendly
     const scalingFactor = (10 ** Math.round(Math.log10(maxScale / nScale))) / 5.0;
     maxScale = Math.ceil(maxScale / scalingFactor) * scalingFactor;
-    minScale = minScale === 0 ? 1 : minScale;
 
     let scale;
     if (!isLinear) {

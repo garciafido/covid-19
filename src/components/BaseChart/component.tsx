@@ -166,7 +166,6 @@ const BaseChart = (props: any) => {
           {observation}
           {constantLine}
 
-
         </ComposedChart>
     </ResponsiveContainer>
   </>

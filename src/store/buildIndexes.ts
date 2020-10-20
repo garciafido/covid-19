@@ -30,7 +30,8 @@ const population: {[key: string]: number} = {
 
 const buildByDate = (data: any, field: string, perMIllion: boolean) =>  {
     const maxByDate: any = {};
-    const indexed: any = {maxByDate: maxByDate};
+    const minMaxPredictionByDate: any = {};
+    const indexed: any = {maxByDate: maxByDate, minMaxPredictionByDate: minMaxPredictionByDate};
     let min = 100000000000;
     let max = -100000000000;
     let minDaily = 100000000000;
@@ -38,14 +39,15 @@ const buildByDate = (data: any, field: string, perMIllion: boolean) =>  {
 
     for (const key of Object.keys(data.monitoreo)) {
         indexed[key] = {values: {}, dailyValues: {}, min: 100000000000, max: -100000000000,
-            minDaily: 100000000000, maxDaily: -100000000000};
+            minDaily: 100000000000, maxDaily: -100000000000,
+            minPrediccionDaily: 100000000000, maxPrediccionDaily: -100000000000};
         const items = data.monitoreo[key][field];
         let previous = 0;
         for (let i=0; i < items.length; i++) {
             const value = perMIllion ?  1.e6 * items[i].mean / population[key] : items[i].mean;
             const dailyValue = value - previous;
             if (!(items[i].date in maxByDate)) {
-                maxByDate[items[i].date] = {max: -100000000000, maxDaily: -100000000000};
+                maxByDate[items[i].date] = {max: -100000000000, maxDaily: -100000000000, minPrediccionDaily: 100000000000, maxPrediccionDaily: -100000000000};
             }
             if (maxByDate[items[i].date].max < value) {
                 maxByDate[items[i].date].max = value;
@@ -83,8 +85,23 @@ const buildByDate = (data: any, field: string, perMIllion: boolean) =>  {
             const items = data.prediccion[key][field];
             let previous = 0;
             for (let i=0; i < items.length; i++) {
-                const value = perMIllion ?  1.e6 * items[i].mean / population[key] : items[i].mean;
+                const value = perMIllion ? 1.e6 * items[i].mean / population[key] : items[i].mean;
                 const dailyValue = value - previous;
+                if (!(items[i].date in minMaxPredictionByDate)) {
+                    minMaxPredictionByDate[items[i].date] = {minPrediccion: 100000000000, maxPrediccion: -100000000000, minPrediccionDaily: 100000000000, maxPrediccionDaily: -100000000000};
+                }
+                if (minMaxPredictionByDate[items[i].date].maxPrediccion < value) {
+                    minMaxPredictionByDate[items[i].date].maxPrediccion = value;
+                }
+                if (minMaxPredictionByDate[items[i].date].minPrediccion > value) {
+                    minMaxPredictionByDate[items[i].date].minPrediccion = value;
+                }
+                if (minMaxPredictionByDate[items[i].date].maxPrediccionDaily < dailyValue) {
+                    minMaxPredictionByDate[items[i].date].maxPrediccionDaily = dailyValue;
+                }
+                if (minMaxPredictionByDate[items[i].date].minPrediccionDaily > dailyValue) {
+                    minMaxPredictionByDate[items[i].date].minPrediccionDaily = dailyValue;
+                }
                 if (value < minPrediccion) {
                     minPrediccion = value;
                 }
@@ -98,7 +115,6 @@ const buildByDate = (data: any, field: string, perMIllion: boolean) =>  {
                     if (i > 0 && dailyValue > maxPrediccionDaily) {
                         maxPrediccionDaily = dailyValue;
                     }
-
                 }
                 indexed[key].values[items[i].date] = value;
                 if (i > 0)

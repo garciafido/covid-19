@@ -7,8 +7,8 @@ import {getColorScale} from "./colorScale";
 configure({ enforceActions: "observed" });
 
 let covidDataUrl = ((window as any).COVID_DATA_URL);
-covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
-//covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data_test.json';
+//covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
+covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data_test.json';
 
 const gray = "#C7BDC6";
 
@@ -56,7 +56,6 @@ class CovidData {
     @observable deadsByDate: any = {};
 
     @observable errorMessage: any = '';
-
 
     generateDailyData() {
         const getDaily = (actual: any, previous: any) => {
@@ -212,8 +211,9 @@ class CovidData {
             return {color: gray, value: undefined};
         }
         if (this.selectedDate && this.data[this.currentMode].hasOwnProperty(provincia)) {
+            let value;
             if (this.selectedChart === 'r') {
-                let value = this.rByDate[provincia].values[this.selectedDate];
+                value = this.rByDate[provincia].values[this.selectedDate];
                 if (value === undefined) {
                     return {color: gray, value: value};
                 } else {
@@ -221,20 +221,18 @@ class CovidData {
                 }
             } else if (this.selectedChart === 'cases') {
                 if (this.chartPerDay) {
-                    const value = this.casesByDate[provincia].dailyValues[this.selectedDate];
-                    return {color: getColorFromScale(this.currentScale, value), value: value};
+                    value = this.casesByDate[provincia].dailyValues[this.selectedDate];
                 } else {
-                    const value = this.casesByDate[provincia].values[this.selectedDate];
-                    return {color: getColorFromScale(this.currentScale, value), value: value};
+                    value = this.casesByDate[provincia].values[this.selectedDate];
                 }
+                return {color: getColorFromScale(this.currentScale, value), value: value};
             } else if (this.selectedChart === 'deads') {
                 if (this.chartPerDay) {
-                    const value = this.deadsByDate[provincia].dailyValues[this.selectedDate];
-                    return {color: getColorFromScale(this.currentScale, value), value: value};
+                    value = this.deadsByDate[provincia].dailyValues[this.selectedDate];
                 } else {
-                    const value = this.deadsByDate[provincia].values[this.selectedDate];
-                    return {color: getColorFromScale(this.currentScale, value), value: value};
+                    value = this.deadsByDate[provincia].values[this.selectedDate];
                 }
+                return {color: getColorFromScale(this.currentScale, value), value: value};
             } else if (this.selectedChart === 'actives') {
                 const value = this.activesByDate[provincia].values[this.selectedDate];
                     return {color: getColorFromScale(this.currentScale, value), value: value};
@@ -280,16 +278,36 @@ class CovidData {
             let isLog;
             if (this.chartPerDay) {
                 if (this.paletteDate) {
-                    maxScale = this.casesByDate.maxByDate[this.paletteDate].maxDaily;
+                    if (this.currentMode === "monitoreo") {
+                        maxScale = this.casesByDate.maxByDate[this.paletteDate].maxDaily;
+                    } else {
+                        maxScale = this.casesByDate.minMaxPredictionByDate[this.paletteDate].maxPrediccionDaily;
+                        minScale = this.casesByDate.minMaxPredictionByDate[this.paletteDate].minPrediccionDaily;
+                    }
                 } else {
-                    maxScale = Math.max(this.casesByDate.maxDaily, this.casesByDate.maxPrediccionDaily);
+                    if (this.currentMode === "monitoreo") {
+                        maxScale = this.casesByDate.maxDaily;
+                    } else {
+                        maxScale = this.casesByDate.maxPrediccionDaily;
+                        minScale = this.casesByDate.minPrediccionDaily;
+                    }
                 }
             } else {
                 minScale = 100;
                 if (this.paletteDate) {
-                    maxScale = this.casesByDate.maxByDate[this.paletteDate].max;
+                    if (this.currentMode === "monitoreo") {
+                        maxScale = this.casesByDate.maxByDate[this.paletteDate].max;
+                    } else {
+                        maxScale = this.casesByDate.minMaxPredictionByDate[this.paletteDate].maxPrediccion;
+                        minScale = this.casesByDate.minMaxPredictionByDate[this.paletteDate].minPrediccion;
+                    }
                 } else {
-                    maxScale = Math.max(this.casesByDate.max, this.casesByDate.maxPrediccion);
+                    if (this.currentMode === "monitoreo") {
+                        maxScale = this.casesByDate.max;
+                    } else {
+                        maxScale = this.casesByDate.maxPrediccion;
+                        minScale = this.casesByDate.minPrediccion;
+                    }
                 }
             }
             isLog = maxScale-minScale > logarithmicLimit;
@@ -301,16 +319,36 @@ class CovidData {
             let isLog;
             if (this.chartPerDay) {
                 if (this.paletteDate) {
-                    maxScale = this.deadsByDate.maxByDate[this.paletteDate].max;
+                    if (this.currentMode === "monitoreo") {
+                        maxScale = this.deadsByDate.maxByDate[this.paletteDate].max;
+                    } else {
+                        maxScale = this.deadsByDate.minMaxPredictionByDate[this.paletteDate].maxPrediccionDaily;
+                        minScale = this.deadsByDate.minMaxPredictionByDate[this.paletteDate].minPrediccionDaily;
+                    }
                 } else {
-                    maxScale = Math.max(this.deadsByDate.maxDaily, this.deadsByDate.maxPrediccionDaily);
+                    if (this.currentMode === "monitoreo") {
+                        maxScale = this.deadsByDate.maxDaily;
+                    } else {
+                        maxScale = this.deadsByDate.maxPrediccionDaily;
+                        minScale = this.deadsByDate.minPrediccionDaily;
+                    }
                 }
             } else {
                 minScale = 5;
                 if (this.paletteDate) {
-                    maxScale = this.deadsByDate.maxByDate[this.paletteDate].max;
+                    if (this.currentMode === "monitoreo") {
+                        maxScale = this.deadsByDate.maxByDate[this.paletteDate].max;
+                    } else {
+                        maxScale = this.deadsByDate.minMaxPredictionByDate[this.paletteDate].maxPrediccion;
+                        minScale = this.deadsByDate.minMaxPredictionByDate[this.paletteDate].minPrediccion;
+                    }
                 } else {
-                    maxScale = Math.max(this.deadsByDate.max, this.deadsByDate.maxPrediccion);
+                    if (this.currentMode === "monitoreo") {
+                        maxScale = this.deadsByDate.max;
+                    } else {
+                        maxScale = this.deadsByDate.maxPrediccion;
+                        minScale = this.deadsByDate.minPrediccion;
+                    }
                 }
             }
             isLog = maxScale-minScale > logarithmicLimit;
@@ -320,9 +358,19 @@ class CovidData {
             let maxScale;
             let minScale = 10;
             if (this.paletteDate) {
-                maxScale = this.activesByDate.maxByDate[this.paletteDate].max;
+                if (this.currentMode === "monitoreo") {
+                    maxScale = this.activesByDate.maxByDate[this.paletteDate].max;
+                } else {
+                    maxScale = this.activesByDate.minMaxPredictionByDate[this.paletteDate].maxPrediccion;
+                    minScale = this.activesByDate.minMaxPredictionByDate[this.paletteDate].minPrediccion;
+                }
             } else {
-                maxScale = Math.max(this.activesByDate.max, this.activesByDate.maxPrediccion);
+                if (this.currentMode === "monitoreo") {
+                    maxScale = this.activesByDate.max;
+                } else {
+                    maxScale = this.activesByDate.maxPrediccion;
+                    minScale = this.activesByDate.minPrediccion;
+                }
             }
             const isLog = maxScale-minScale > logarithmicLimit;
             minScale = minScale + scaleParts >= maxScale ? 0 : minScale

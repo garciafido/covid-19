@@ -10,6 +10,7 @@ def filenames(posfix=''):
     return [
         ['Argentina', 'arg{}.csv'.format(posfix)],
         ['Buenos Aires', 'baires{}.csv'.format(posfix)],
+        ['AMBA', 'amba{}.csv'.format(posfix)],
         ['CABA', 'caba{}.csv'.format(posfix)],
         ['Catamarca', 'catamarca{}.csv'.format(posfix)],
         ['Chaco', 'chaco{}.csv'.format(posfix)],
