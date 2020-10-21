@@ -30,8 +30,7 @@ const population: {[key: string]: number} = {
 
 const buildByDate = (data: any, field: string, perMIllion: boolean) =>  {
     const maxByDate: any = {};
-    const minMaxPredictionByDate: any = {};
-    const indexed: any = {maxByDate: maxByDate, minMaxPredictionByDate: minMaxPredictionByDate};
+    const indexed: any = {maxByDate: maxByDate};
     let min = 100000000000;
     let max = -100000000000;
     let minDaily = 100000000000;
@@ -47,13 +46,19 @@ const buildByDate = (data: any, field: string, perMIllion: boolean) =>  {
             const value = perMIllion ?  1.e6 * items[i].mean / population[key] : items[i].mean;
             const dailyValue = value - previous;
             if (!(items[i].date in maxByDate)) {
-                maxByDate[items[i].date] = {max: -100000000000, maxDaily: -100000000000, minPrediccionDaily: 100000000000, maxPrediccionDaily: -100000000000};
+                maxByDate[items[i].date] = {max: -100000000000, maxDaily: -100000000000, min: -100000000000, minDaily: -100000000000};
             }
             if (maxByDate[items[i].date].max < value) {
                 maxByDate[items[i].date].max = value;
             }
+            if (maxByDate[items[i].date].min > value) {
+                maxByDate[items[i].date].min = value;
+            }
             if (maxByDate[items[i].date].maxDaily < dailyValue) {
                 maxByDate[items[i].date].maxDaily = dailyValue;
+            }
+            if (maxByDate[items[i].date].minDaily > dailyValue) {
+                maxByDate[items[i].date].minDaily = dailyValue;
             }
             if (value < min) {
                 min = value;
@@ -87,20 +92,20 @@ const buildByDate = (data: any, field: string, perMIllion: boolean) =>  {
             for (let i=0; i < items.length; i++) {
                 const value = perMIllion ? 1.e6 * items[i].mean / population[key] : items[i].mean;
                 const dailyValue = value - previous;
-                if (!(items[i].date in minMaxPredictionByDate)) {
-                    minMaxPredictionByDate[items[i].date] = {minPrediccion: 100000000000, maxPrediccion: -100000000000, minPrediccionDaily: 100000000000, maxPrediccionDaily: -100000000000};
+                if (!(items[i].date in maxByDate)) {
+                    maxByDate[items[i].date] = {min: 100000000000, max: -100000000000, minDaily: 100000000000, maxDaily: -100000000000};
                 }
-                if (minMaxPredictionByDate[items[i].date].maxPrediccion < value) {
-                    minMaxPredictionByDate[items[i].date].maxPrediccion = value;
+                if (maxByDate[items[i].date].max < value) {
+                    maxByDate[items[i].date].max = value;
                 }
-                if (minMaxPredictionByDate[items[i].date].minPrediccion > value) {
-                    minMaxPredictionByDate[items[i].date].minPrediccion = value;
+                if (maxByDate[items[i].date].min > value) {
+                    maxByDate[items[i].date].min = value;
                 }
-                if (minMaxPredictionByDate[items[i].date].maxPrediccionDaily < dailyValue) {
-                    minMaxPredictionByDate[items[i].date].maxPrediccionDaily = dailyValue;
+                if (maxByDate[items[i].date].maxDaily < dailyValue) {
+                    maxByDate[items[i].date].maxDaily = dailyValue;
                 }
-                if (minMaxPredictionByDate[items[i].date].minPrediccionDaily > dailyValue) {
-                    minMaxPredictionByDate[items[i].date].minPrediccionDaily = dailyValue;
+                if (maxByDate[items[i].date].minDaily > dailyValue) {
+                    maxByDate[items[i].date].minDaily = dailyValue;
                 }
                 if (value < minPrediccion) {
                     minPrediccion = value;
@@ -126,12 +131,12 @@ const buildByDate = (data: any, field: string, perMIllion: boolean) =>  {
 
     indexed.min = min < 0 ? 0 : min;
     indexed.max = max;
-    indexed.minPrediccion = minPrediccion < 0 ? 0 : minPrediccion;
-    indexed.maxPrediccion = maxPrediccion;
+    indexed.minPrediction = minPrediccion < 0 ? 0 : minPrediccion;
+    indexed.maxPrediction = maxPrediccion;
     indexed.minDaily = minDaily < 0 ? 0 : minDaily;
     indexed.maxDaily = maxDaily;
-    indexed.minPrediccionDaily = minPrediccionDaily < 0 ? 0 : minPrediccionDaily;
-    indexed.maxPrediccionDaily = maxPrediccionDaily;
+    indexed.minPredictionDaily = minPrediccionDaily < 0 ? 0 : minPrediccionDaily;
+    indexed.maxPredictionDaily = maxPrediccionDaily;
     return indexed;
 }
 

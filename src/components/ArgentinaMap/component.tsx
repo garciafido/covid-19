@@ -69,7 +69,6 @@ const ArgentinaMap = (props: any) => {
     const shortDate = `${lDate[2]}/${lDate[1]}/${lDate[0].substring(2, 4)}`;
     const backgroundColor = "#FFFFFF"; //'#C7BDC6';
 
-    console.log(dimensions.factor);
     if (dimensions.factor < 1.9) {
         dimensions.height = dimensions.width / 1.9;
     }
