@@ -57,6 +57,27 @@ class CovidData {
 
     @observable errorMessage: any = '';
 
+    getCurrentValue() {
+        if (this.selectedChart === 'r') {
+            return this.rByDate[this.currentLocation].originalValues[this.selectedDate];
+        } else if (this.selectedChart === 'cases') {
+            if (this.chartPerDay) {
+                return this.casesByDate[this.currentLocation].originalDailyValues[this.selectedDate];
+            } else {
+                return this.casesByDate[this.currentLocation].originalValues[this.selectedDate];
+            }
+        } else if (this.selectedChart === 'actives') {
+            return this.activesByDate[this.currentLocation].originalValues[this.selectedDate];
+        } else if (this.selectedChart === 'deads') {
+            if (this.chartPerDay) {
+                return this.deadsByDate[this.currentLocation].originalDailyValues[this.selectedDate];
+            } else {
+                return this.deadsByDate[this.currentLocation].originalValues[this.selectedDate];
+            }
+        }
+        return 0;
+    }
+
     generateDailyData() {
         const getDaily = (actual: any, previous: any) => {
             const withObservation = 'observation' in actual;
@@ -247,7 +268,7 @@ class CovidData {
     @action.bound
     setCurrentLocation(location: string) {
         this.currentLocation = location;
-        this.current = this.data[this.currentMode][location];
+        this.current = this.data[this.currentMode][this.currentLocation];
     }
 
     @action.bound
@@ -371,7 +392,7 @@ class CovidData {
     @action.bound
     setCurrentMode(mode: string) {
         this.currentMode = mode;
-        this.current = this.data[mode][this.currentLocation];
+        this.current = this.data[this.currentMode][this.currentLocation];
         this.changeCurrentScale();
     }
 

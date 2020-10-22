@@ -145,14 +145,17 @@ const App = observer((props: any) => {
   let title;
   let explainTitle;
   let explainMapTitle = "Mapa de Argentina";
-  let currentValue = "";
+  let currentValuePerMillion = "";
+  let currentValue;
+  let provinciaLabel = store.currentLocation;
+  let shortDate: string = "";
   if (store.current) {
           let minMax;
           let data;
-          let provinciaLabel = store.currentLocation;
           let chartPerDay = false;
           const lDate = store.selectedDate.split('-');
-          const shortDate = `${lDate[2]}/${lDate[1]}/${lDate[0]}`;
+          shortDate = `${lDate[2]}/${lDate[1]}/${lDate[0]}`;
+          currentValue = Math.trunc(store.getCurrentValue()*10)/10;
           if (store.currentLocation === "Tierra del Fuego") {
               provinciaLabel = "Tierra del Fuego, Malvinas y Antártida"
           } else if (store.currentLocation === "Buenos Aires") {
@@ -162,7 +165,7 @@ const App = observer((props: any) => {
             title = "Casos activos";
             minMax = store.current.minMaxActives;
             data = store.current.actives;
-            currentValue = `${shortDate}: ${Math.trunc(store.getColorValue(store.currentLocation).value)} ${title} por millón`;
+            currentValuePerMillion = `${Math.trunc(store.getColorValue(store.currentLocation).value*10)/10}/millón`;
           }
           else if (store.selectedChart === "cases") {
             if (store.chartPerDay) {
@@ -175,7 +178,7 @@ const App = observer((props: any) => {
                 data = store.current.cases;
             }
             chartPerDay = true;
-            currentValue = `${shortDate}: ${Math.trunc(store.getColorValue(store.currentLocation).value)} ${title} por millón`;
+            currentValuePerMillion = `${Math.trunc(store.getColorValue(store.currentLocation).value*10)/10}/millón`;
           }
           else if (store.selectedChart === "deads") {
             if (store.chartPerDay) {
@@ -187,14 +190,14 @@ const App = observer((props: any) => {
                 data = store.current.deads;
                 title = "Fallecimientos acumulados";
             }
-            currentValue = `${shortDate}: ${Math.trunc(store.getColorValue(store.currentLocation).value)} ${title} por millón`;
+            currentValuePerMillion = `${Math.trunc(store.getColorValue(store.currentLocation).value*10)/10}/millón`;
             chartPerDay = true;
           }
           else if (store.selectedChart === "r") {
             title = "R(t) estimado";
             minMax = [0, store.current.minMaxR[1]];
             data = store.current.r;
-            currentValue = `${shortDate}: ${Math.trunc(store.getColorValue(store.currentLocation).value*10.0) / 10.0} ${title}`;
+            currentValuePerMillion = "";
           }
           explainTitle = title;
 
@@ -216,9 +219,6 @@ const App = observer((props: any) => {
                     {radioPerDay}
                 </Grid>
                 <Grid xs={5}>
-                    <div style={{marginTop: 28, paddingTop: 0, marginBottom: 0, paddingBottom: 0, fontSize: '8pt'}}>
-                        {currentValue}
-                    </div>
                 </Grid>
                 <Grid xs={2}>
                     <MuiThemeProvider theme={theme}>
@@ -341,7 +341,24 @@ const App = observer((props: any) => {
                         {charts}
                       </Grid>
                       <Grid item xs={2}>
-                          {chartsMenu}
+                          <Grid container>
+                              <Grid item xs={12}>
+                                {chartsMenu}
+                              </Grid>
+                              <Grid container justify="flex-start" alignItems='flex-start' alignContent='flex-start' style={{paddingBottom: 0, marginBottom: 0}} xs={12}>
+                                <Typography align="left">
+                                    <h4 style={{paddingBottom: 10, marginBottom: 0}}>{`${title} en ${provinciaLabel} el ${shortDate}`}</h4>
+                                </Typography>
+                                <Typography align="left" variant="body2" gutterBottom color="textSecondary">
+                                  <Box>
+                                <h2>{currentValue}</h2>
+                                  </Box>
+                                  <Box>
+                                <h2>{currentValuePerMillion}</h2>
+                                </Box>
+                                </Typography>
+                              </Grid>
+                          </Grid>
                       </Grid>
                       <Grid container>
                           <Grid item xs={1}>
