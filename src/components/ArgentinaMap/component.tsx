@@ -8,6 +8,7 @@ import {createMuiTheme, MuiThemeProvider} from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faInfoCircle} from "@fortawesome/free-solid-svg-icons";
+import Typography from "@material-ui/core/Typography";
 
 
 const defaultTheme = createMuiTheme();
@@ -79,12 +80,15 @@ const ArgentinaMap = (props: any) => {
         <Paper style={{backgroundColor: backgroundColor}}>
             <Grid container>
                 <Grid item xs={12}>
+                    <Typography align="left">
                     <h4 style={{
+                        marginLeft: 15,
                         marginBottom: 0,
                         paddingBottom: 2,
                         marginTop: 0,
                         paddingTop: 3
                     }}>{`${shortDate}: ${chartsNames[props.store.selectedChart]}`}</h4>
+                    </Typography>
                 </Grid>
                 <Grid container justify="flex-end">
                     <MuiThemeProvider theme={theme}>

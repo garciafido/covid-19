@@ -250,9 +250,15 @@ const App = observer((props: any) => {
 
         charts = <>
               <Grid container>
-                <Grid item alignItems='center' alignContent='center'
-                      style={{paddingBottom: 0, marginBottom: 0}} xs={12}>
+                <Grid container alignItems='center' alignContent='center'
+                      style={{paddingBottom: 0, marginBottom: 0, marginLeft: 35}} xs={12}>
+                    <Grid item xs={1}>
+                    </Grid>
+                    <Grid item xs={11}>
+                    <Typography align="left">
                       <h4 style={{paddingBottom: 10, marginBottom: 0}}>{`${title} en ${provinciaLabel}`}</h4>
+                    </Typography>
+                    </Grid>
                 </Grid>
                 <Grid item xs={12}>
                     {chart}
@@ -349,7 +355,7 @@ const App = observer((props: any) => {
                                 <Typography align="left">
                                   <h4 style={{marginRight: 5, paddingBottom: 10, marginBottom: 0}}>{`${title} en ${provinciaLabel} el ${shortDate}`}</h4>
                                 </Typography>
-                                <Typography align="left" variant="body2" gutterBottom color="textSecondary">
+                                <Typography align="left" variant="body2" gutterBottom>
                                    <Box>
                                      <h2>{currentValue}</h2>
                                   </Box>
@@ -362,7 +368,6 @@ const App = observer((props: any) => {
                       </Grid>
                       <Grid container>
                           <Grid item xs={1}>
-
                           </Grid>
                           <Grid item xs={9} alignContent={"flex-start"}>
                             <Typography align="left" variant="body2" gutterBottom color="textSecondary">
