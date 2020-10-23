@@ -87,7 +87,7 @@ const ArgentinaMap = (props: any) => {
                         paddingBottom: 2,
                         marginTop: 0,
                         paddingTop: 3
-                    }}>{`${shortDate}: ${chartsNames[props.store.selectedChart]}`}</h4>
+                    }}>{`${shortDate}: ${chartsNames[props.store.selectedChart]} / millón`}</h4>
                     </Typography>
                 </Grid>
                 <Grid container justify="flex-end">

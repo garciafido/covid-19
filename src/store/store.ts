@@ -327,6 +327,9 @@ class CovidData {
                     }
                 }
             }
+            if (minScale < 0) {
+                minScale = 0;
+            }
             isLog = maxScale-minScale > logarithmicLimit;
             minScale = minScale + scaleParts >= maxScale ? 0 : minScale;
             this.currentScale = getColorScale(minScale, maxScale, scaleParts, isLog);
@@ -364,6 +367,9 @@ class CovidData {
                     }
                 }
             }
+            if (minScale < 0) {
+                minScale = 0;
+            }
             isLog = maxScale-minScale > logarithmicLimit;
             minScale = minScale + scaleParts >= maxScale ? 0 : minScale;
             this.currentScale = getColorScale(minScale, maxScale, scaleParts, isLog);
@@ -382,6 +388,9 @@ class CovidData {
                     maxScale = this.activesByDate.maxPrediction;
                     minScale = this.activesByDate.minPrediction;
                 }
+            }
+            if (minScale < 0) {
+                minScale = 0;
             }
             const isLog = maxScale-minScale > logarithmicLimit;
             minScale = minScale + scaleParts >= maxScale ? 0 : minScale
