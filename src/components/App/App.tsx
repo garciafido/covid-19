@@ -165,7 +165,7 @@ const App = observer((props: any) => {
             title = "Casos activos";
             minMax = store.current.minMaxActives;
             data = store.current.actives;
-            currentValuePerMillion = `${Math.trunc(store.getColorValue(store.currentLocation).value*10)/10}/millón`;
+            currentValuePerMillion = `${Math.trunc(store.getColorValue(store.currentLocation).value*10)/10} / millón`;
           }
           else if (store.selectedChart === "cases") {
             if (store.chartPerDay) {
@@ -178,7 +178,7 @@ const App = observer((props: any) => {
                 data = store.current.cases;
             }
             chartPerDay = true;
-            currentValuePerMillion = `${Math.trunc(store.getColorValue(store.currentLocation).value*10)/10}/millón`;
+            currentValuePerMillion = `${Math.trunc(store.getColorValue(store.currentLocation).value*10)/10} / millón`;
           }
           else if (store.selectedChart === "deads") {
             if (store.chartPerDay) {
@@ -190,7 +190,7 @@ const App = observer((props: any) => {
                 data = store.current.deads;
                 title = "Fallecimientos acumulados";
             }
-            currentValuePerMillion = `${Math.trunc(store.getColorValue(store.currentLocation).value*10)/10}/millón`;
+            currentValuePerMillion = `${Math.trunc(store.getColorValue(store.currentLocation).value*10)/10} / millón`;
             chartPerDay = true;
           }
           else if (store.selectedChart === "r") {
