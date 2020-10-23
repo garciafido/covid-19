@@ -1,6 +1,7 @@
 const population: {[key: string]: number} = {
     'Argentina': 40117096.,
     'Buenos Aires':  5708369.,
+    'AMBA': 14800000.,
     'CABA': 2890151.,
     'Catamarca':  367828.,
     'Chaco':  1055259.,

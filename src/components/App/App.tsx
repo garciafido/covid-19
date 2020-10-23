@@ -202,11 +202,14 @@ const App = observer((props: any) => {
           explainTitle = title;
 
           const radioPerDay = chartPerDay ? <RadioGroup row aria-label="position"
+                                                        style={{height:31, marginBottom: 0, paddingBottom: 0}}
                                                         value={store.chartPerDay ? "daily" : "accumulated"}
                                                         onChange={handleRadioChange}>
                     <FormControlLabel value="accumulated"
+                                      style={{marginBottom: 0, paddingBottom: 0}}
                                       control={<Radio size="small" />} label="Acumulado" />
                     <FormControlLabel value="daily"
+                                      style={{marginBottom: 0, paddingBottom: 0}}
                                       control={<Radio size="small" />} label="Por día" />
                 </RadioGroup> : <div/>;
 
@@ -223,7 +226,7 @@ const App = observer((props: any) => {
                 <Grid xs={2}>
                     <MuiThemeProvider theme={theme}>
                         <Button size="small" color="primary" onClick={handleClickExplain}
-                                style={{marginTop: 25, paddingTop: 0, marginBottom: 0, paddingBottom: 0, fontSize: '9pt'}}>
+                                style={{marginTop: 10, paddingTop: 0, marginBottom: 0, paddingBottom: 0, fontSize: '9pt'}}>
                         <Box display="flex" justifyContent="center">
                             <span><FontAwesomeIcon style={{marginRight: 5, color: "#F88"}} icon={faInfoCircle}/>
                             Explicación</span>
@@ -256,7 +259,8 @@ const App = observer((props: any) => {
                     </Grid>
                     <Grid item xs={11}>
                     <Typography align="left">
-                      <h4 style={{paddingBottom: 10, marginBottom: 0}}>{`${title} en ${provinciaLabel}`}</h4>
+                      <h2 style={{paddingTop: 0, marginTop: 5, paddingBottom: 0, marginBottom: 0}}>{`${provinciaLabel}`}</h2>
+                      <h4 style={{paddingTop: 0, marginTop: 0, paddingBottom: 0, marginBottom: 0}}>{`${title}`}</h4>
                     </Typography>
                     </Grid>
                 </Grid>
