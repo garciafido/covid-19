@@ -51,7 +51,9 @@ const buildByDate = (data: any, field: string, perMIllion: boolean) =>  {
             const originalDailyValue = originalValue - originalPrevious;
             const dailyValue = value - previous;
             if (!(items[i].date in maxByDate)) {
-                maxByDate[items[i].date] = {max: -100000000000, maxDaily: -100000000000, min: -100000000000, minDaily: -100000000000};
+                maxByDate[items[i].date] = {
+                    max: -100000000000, maxDaily: -100000000000,
+                    min: -100000000000, minDaily: -100000000000};
             }
             if (maxByDate[items[i].date].max < value) {
                 maxByDate[items[i].date].max = value;
@@ -97,8 +99,11 @@ const buildByDate = (data: any, field: string, perMIllion: boolean) =>  {
         if (data.prediccion[key]) {
             const items = data.prediccion[key][field];
             let previous = 0;
+            let originalPrevious = 0;
             for (let i=0; i < items.length; i++) {
-                const value = perMIllion ? 1.e6 * items[i].mean / population[key] : items[i].mean;
+                const originalValue = items[i].mean;
+                const value = perMIllion ? 1.e6 * originalValue / population[key] : originalValue;
+                const originalDailyValue = originalValue - originalPrevious;
                 const dailyValue = value - previous;
                 if (!(items[i].date in maxByDate)) {
                     maxByDate[items[i].date] = {min: 100000000000, max: -100000000000, minDaily: 100000000000, maxDaily: -100000000000};
@@ -129,10 +134,17 @@ const buildByDate = (data: any, field: string, perMIllion: boolean) =>  {
                         maxPrediccionDaily = dailyValue;
                     }
                 }
+
+            previous = value;
+
                 indexed[key].values[items[i].date] = value;
-                if (i > 0)
+                indexed[key].originalValues[items[i].date] = originalValue;
+                if (i > 0) {
                     indexed[key].dailyValues[items[i].date] = dailyValue;
+                    indexed[key].originalDailyValues[items[i].date] = originalDailyValue;
+                }
                 previous = value;
+                originalPrevious = originalValue;
             }
         }
     }

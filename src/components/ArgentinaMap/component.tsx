@@ -86,14 +86,14 @@ const ArgentinaMap = (props: any) => {
                         paddingTop: 3
                     }}>{`${shortDate}: ${chartsNames[props.store.selectedChart]}`}</h4>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid container justify="flex-end">
                     <MuiThemeProvider theme={theme}>
                         <Button size="small" color="primary" onClick={props.handleClickExplain}
-                                style={{marginTop: 0, paddingTop: 0, marginBottom: 0, paddingBottom: 0, fontSize: '9pt'}}>
-                        <Box display="flex" justifyContent="center">
-                            <span><FontAwesomeIcon style={{marginRight: 5, color: "#F88"}} icon={faInfoCircle}/>
-                            Explicación</span>
-                        </Box>
+                                style={{marginRight: 15, marginTop: 0, paddingTop: 0, marginBottom: 0, paddingBottom: 0, fontSize: '9pt'}}>
+                            <Box flexDirection="row">
+                                <span><FontAwesomeIcon style={{marginRight: 5, color: "#F88"}} icon={faInfoCircle}/>
+                                Explicación</span>
+                            </Box>
                         </Button>
                     </MuiThemeProvider>
                 </Grid>

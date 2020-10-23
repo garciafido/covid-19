@@ -347,15 +347,15 @@ const App = observer((props: any) => {
                               </Grid>
                               <Grid container justify="flex-start" alignItems='flex-start' alignContent='flex-start' style={{paddingBottom: 0, marginBottom: 0}} xs={12}>
                                 <Typography align="left">
-                                    <h4 style={{paddingBottom: 10, marginBottom: 0}}>{`${title} en ${provinciaLabel} el ${shortDate}`}</h4>
+                                  <h4 style={{marginRight: 5, paddingBottom: 10, marginBottom: 0}}>{`${title} en ${provinciaLabel} el ${shortDate}`}</h4>
                                 </Typography>
                                 <Typography align="left" variant="body2" gutterBottom color="textSecondary">
-                                  <Box>
-                                <h2>{currentValue}</h2>
+                                   <Box>
+                                     <h2>{currentValue}</h2>
                                   </Box>
                                   <Box>
-                                <h2>{currentValuePerMillion}</h2>
-                                </Box>
+                                    <h2>{currentValuePerMillion}</h2>
+                                  </Box>
                                 </Typography>
                               </Grid>
                           </Grid>

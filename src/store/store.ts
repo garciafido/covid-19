@@ -359,13 +359,13 @@ class CovidData {
                     if (this.currentMode === "monitoreo") {
                         maxScale = this.deadsByDate.max;
                     } else {
-                        minScale = this.deadsByDate.maxPrediction;
+                        maxScale = this.deadsByDate.maxPrediction;
                         minScale = this.deadsByDate.minPrediction;
                     }
                 }
             }
             isLog = maxScale-minScale > logarithmicLimit;
-            minScale = minScale + scaleParts >= maxScale ? 0 : minScale
+            minScale = minScale + scaleParts >= maxScale ? 0 : minScale;
             this.currentScale = getColorScale(minScale, maxScale, scaleParts, isLog);
         } else if (this.selectedChart === 'actives') {
             let maxScale;
