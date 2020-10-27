@@ -5,7 +5,7 @@ import {
     YAxis,
     CartesianGrid,
     Tooltip,
-    Legend, ResponsiveContainer, Area, ComposedChart
+    Legend, ResponsiveContainer, Area, ComposedChart, ReferenceArea
 } from 'recharts';
 
 function patch(data: any,
@@ -127,6 +127,13 @@ const BaseChart = (props: any) => {
               activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
       : <div/>;
 
+  const referenceVerticalLine = props.referenceValue ?
+      <ReferenceArea x1={data[0].show_date} x2={props.referenceValue}
+                     y1={props.minMax[0]} y2={props.minMax[1]}
+                     label={props.referenceLabel}
+                     stroke="" strokeOpacity={0.3} />
+      : <div/>;
+
   return <>
     <ResponsiveContainer minWidth={props.width} aspect={2} minHeight={props.height}>
         <ComposedChart
@@ -165,6 +172,7 @@ const BaseChart = (props: any) => {
 
           {observation}
           {constantLine}
+          {referenceVerticalLine}
 
         </ComposedChart>
     </ResponsiveContainer>

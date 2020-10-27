@@ -75,6 +75,7 @@ const ArgentinaMap = (props: any) => {
     }
     const height = Math.trunc(dimensions.height / 1.39) + 'px';
     const paletteHeight = Math.trunc(dimensions.height / 27) + 'px';
+    const porMillon =  props.store.selectedChart === "r" ? "" : " / millón";
 
     return <div className="ArgentinaMap" style={{cursor: 'pointer'}}>
         <Paper style={{backgroundColor: backgroundColor}}>
@@ -87,7 +88,7 @@ const ArgentinaMap = (props: any) => {
                         paddingBottom: 2,
                         marginTop: 0,
                         paddingTop: 3
-                    }}>{`${shortDate}: ${chartsNames[props.store.selectedChart]} / millón`}</h4>
+                    }}>{`${shortDate}: ${chartsNames[props.store.selectedChart]} ${porMillon}`}</h4>
                     </Typography>
                 </Grid>
                 <Grid container justify="flex-end">
@@ -105,6 +106,7 @@ const ArgentinaMap = (props: any) => {
                     <Argentina
                         width={props.width}
                         height={height}
+                        selected={props.store.currentLocation}
                         getColor={(provincia) => props.store.getColorValue(provincia).color}
                         clicked={(provincia) => props.store.setCurrentLocation(provincia)}
                         out={"#C7BDC6"}

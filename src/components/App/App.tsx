@@ -73,6 +73,11 @@ const theme = createMuiTheme({
   }
 });
 
+function numberWithCommas(x: number | undefined) {
+    if (x === undefined) return "";
+    return (x as number).toString().replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
 const App = observer((props: any) => {
   const classes = useStyles();
   const chartWidth = 300;
@@ -145,10 +150,12 @@ const App = observer((props: any) => {
   let title;
   let explainTitle;
   let explainMapTitle = "Mapa de Argentina";
-  let currentValuePerMillion = "";
-  let currentValue;
+  let currentValuePerMillion: number | undefined = undefined;
+  let currentValue: number | undefined = undefined;
   let provinciaLabel = store.currentLocation;
   let shortDate: string = "";
+  let referenceValue: string = "";
+  let referenceLabel: string = "";
   if (store.current) {
           let minMax;
           let data;
@@ -156,6 +163,11 @@ const App = observer((props: any) => {
           const lDate = store.selectedDate.split('-');
           shortDate = `${lDate[2]}/${lDate[1]}/${lDate[0]}`;
           currentValue = Math.trunc(store.getCurrentValue()*10)/10;
+          if (store.currentMode === "prediccion") {
+            referenceValue = `${assimilationDate[2]}/${assimilationDate[1]}`;
+            referenceLabel = `${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`
+          }
+
           if (store.currentLocation === "Tierra del Fuego") {
               provinciaLabel = "Tierra del Fuego, Malvinas y Antártida"
           } else if (store.currentLocation === "Buenos Aires") {
@@ -165,7 +177,7 @@ const App = observer((props: any) => {
             title = "Casos activos";
             minMax = store.current.minMaxActives;
             data = store.current.actives;
-            currentValuePerMillion = `${Math.trunc(store.getColorValue(store.currentLocation).value*10)/10} / millón`;
+            currentValuePerMillion = Math.trunc(store.getColorValue(store.currentLocation).value*10)/10;
           }
           else if (store.selectedChart === "cases") {
             if (store.chartPerDay) {
@@ -178,7 +190,7 @@ const App = observer((props: any) => {
                 data = store.current.cases;
             }
             chartPerDay = true;
-            currentValuePerMillion = `${Math.trunc(store.getColorValue(store.currentLocation).value*10)/10} / millón`;
+            currentValuePerMillion = Math.trunc(store.getColorValue(store.currentLocation).value*10)/10;
           }
           else if (store.selectedChart === "deads") {
             if (store.chartPerDay) {
@@ -190,14 +202,13 @@ const App = observer((props: any) => {
                 data = store.current.deads;
                 title = "Fallecimientos acumulados";
             }
-            currentValuePerMillion = `${Math.trunc(store.getColorValue(store.currentLocation).value*10)/10} / millón`;
+            currentValuePerMillion = Math.trunc(store.getColorValue(store.currentLocation).value*10)/10;
             chartPerDay = true;
           }
           else if (store.selectedChart === "r") {
             title = "R(t) estimado";
             minMax = [0, store.current.minMaxR[1]];
             data = store.current.r;
-            currentValuePerMillion = "";
           }
           explainTitle = title;
 
@@ -241,6 +252,8 @@ const App = observer((props: any) => {
                               data={data}
                               yLabel={title}
                               mode={store.currentMode}
+                              referenceValue={referenceValue}
+                              referenceLabel={referenceLabel}
                               constantLine={store.selectedChart==="r" ? 1 : undefined}
                               constantLabel={store.selectedChart==="r" ? "R(t)=1" : undefined}
                               onClick={(event: any) => handleChartClick({...event, chart: store.selectedChart})}
@@ -355,29 +368,31 @@ const App = observer((props: any) => {
                               <Grid item xs={12}>
                                 {chartsMenu}
                               </Grid>
-                              <Grid container justify="flex-start" alignItems='flex-start' alignContent='flex-start' style={{paddingBottom: 0, marginBottom: 0}} xs={12}>
-                                <Typography align="left">
-                                  <h4 style={{marginRight: 5, paddingBottom: 10, marginBottom: 0}}>{`${title} en ${provinciaLabel} el ${shortDate}`}</h4>
-                                </Typography>
-                                <Typography align="left" variant="body2" gutterBottom>
-                                   <Box>
-                                     <h2>{currentValue}</h2>
-                                  </Box>
-                                  <Box>
-                                    <h2>{currentValuePerMillion}</h2>
-                                  </Box>
-                                </Typography>
-                              </Grid>
                           </Grid>
                       </Grid>
                       <Grid container>
+                          <Grid item xs={1}>
+                          </Grid>
+                          <Grid container
+                                justify="flex-start" alignItems='flex-start' alignContent='flex-start'
+                                style={{paddingBottom: 0, marginBottom: 0, paddingTop: 0, marginTop: 0}} xs={9}>
+                            <Typography align="left">
+                              <h2 style={{paddingBottom: 0, marginBottom: 0, paddingTop: 0, marginTop: 0}}>
+                                  {`${shortDate}:  ${numberWithCommas(currentValue)} ${currentValuePerMillion ? "(" + numberWithCommas(currentValuePerMillion) + " / millón)" : ""}`}
+                              </h2>
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={2}>
+                          </Grid>
                           <Grid item xs={1}>
                           </Grid>
                           <Grid item xs={9} alignContent={"flex-start"}>
                             <Typography align="left" variant="body2" gutterBottom color="textSecondary">
                                 <Box p={1}>
                                   <h4 style={{paddingBottom:0, marginBottom: 3, paddingTop:0, marginTop: 3}}>{`Fecha de asimilación: ${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`}</h4>
+
                                   El sistema es puramente experimental. Por ser totalmente automático no se controlan ni realizan evaluaciones diarias de los resultados. Quienes desarrollamos este proyecto no nos responsabilizamos por la mala interpretación o uso de la información que se está publicando en el sitio.
+
                                 </Box>
                             </Typography>
                           </Grid>

@@ -99,9 +99,9 @@ const buildByDate = (data: any, field: string, perMIllion: boolean) =>  {
     for (const key of Object.keys(data.prediccion)) {
         if (data.prediccion[key]) {
             const items = data.prediccion[key][field];
-            let previous = 0;
-            let originalPrevious = 0;
-            for (let i=0; i < items.length; i++) {
+            let previous = indexed[key].values[items[0].date];
+            let originalPrevious = indexed[key].originalValues[items[0].date];
+            for (let i=1; i < items.length; i++) {
                 const originalValue = items[i].mean;
                 const value = perMIllion ? 1.e6 * originalValue / population[key] : originalValue;
                 const originalDailyValue = originalValue - originalPrevious;
