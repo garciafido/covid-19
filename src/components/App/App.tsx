@@ -34,6 +34,7 @@ const url_facena = "http://exa.unne.edu.ar/";
 const url_cima = "http://www.cima.fcen.uba.ar/index.php";
 const url_unne = "https://www.unne.edu.ar/";
 const url_imit = "https://imit.conicet.gov.ar/";
+const url_datos = "http://datos.salud.gob.ar/dataset/covid-19-casos-registrados-en-la-republica-argentina";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -253,7 +254,7 @@ const App = observer((props: any) => {
                               yLabel={title}
                               mode={store.currentMode}
                               referenceValue={referenceValue}
-                              referenceLabel={referenceLabel}
+                              referenceLabel={"Datos incompletos"}
                               constantLine={store.selectedChart==="r" ? 1 : undefined}
                               constantLabel={store.selectedChart==="r" ? "R(t)=1" : undefined}
                               onClick={(event: any) => handleChartClick({...event, chart: store.selectedChart})}
@@ -391,7 +392,20 @@ const App = observer((props: any) => {
                                 <Box p={1}>
                                   <h4 style={{paddingBottom:0, marginBottom: 3, paddingTop:0, marginTop: 3}}>{`Fecha de asimilación: ${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`}</h4>
 
-                                  El sistema es puramente experimental. Por ser totalmente automático no se controlan ni realizan evaluaciones diarias de los resultados. Quienes desarrollamos este proyecto no nos responsabilizamos por la mala interpretación o uso de la información que se está publicando en el sitio.
+                                  Este es un sistema experimental que se alimenta de los datos publicados diariamente
+                                    por el Ministerio de Salud de la Nación a través del sistema
+                                    &nbsp;
+                                    <a href={url_datos} target="_blank" rel="noopener noreferrer">
+                                         SNVS (Sistema Nacional de Vigilancia de la Salud)
+                                    </a>
+                                    &nbsp;
+                                    y no cuenta con supervisión humana.
+                                    Es por esta razón que las instituciones y los investigadores que participan de este
+                                    proyecto no se responsabilizan ni por las malas interpretaciones que estos productos
+                                    pueden causar ni por la ausencia o no actualización de la información distribuida
+                                    en este sitio. Las instituciones e investigadores participantes entienden que
+                                    más allá de las dificultades mencionadas, el potencial benéfico de la información
+                                    provista por este sistema justifica el hacerla pública.
 
                                 </Box>
                             </Typography>
