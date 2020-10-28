@@ -45,6 +45,11 @@ function patch(data: any,
 }
 
 const BaseChart = (props: any) => {
+  const [dimensions, setDimensions] = React.useState({
+        height: window.innerHeight,
+        width: window.innerWidth,
+        factor: window.innerWidth / window.innerHeight
+  });
   const logarithmic = (props.minMax[1] - props.minMax[0]) > 5000;
   const minValue = Math.max(1, props.minMax[0]);
   const yAxis = logarithmic ?
@@ -143,6 +148,7 @@ const BaseChart = (props: any) => {
             top: 5, right: 10, left: 40, bottom: 5,
           }}
         >
+          {referenceVerticalLine}
           <CartesianGrid strokeDasharray="3 3" />
           <Tooltip formatter={(value, name, payload, index) => {
             if (Array.isArray(value)) {
@@ -172,7 +178,6 @@ const BaseChart = (props: any) => {
 
           {observation}
           {constantLine}
-          {referenceVerticalLine}
 
         </ComposedChart>
     </ResponsiveContainer>

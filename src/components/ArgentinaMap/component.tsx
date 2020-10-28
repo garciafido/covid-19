@@ -42,7 +42,6 @@ const ArgentinaMap = (props: any) => {
         factor: window.innerWidth / window.innerHeight
     });
 
-    /*
     const debouncedHandleResize = debounce(() => {
         setDimensions({
             height: window.innerHeight,
@@ -57,7 +56,6 @@ const ArgentinaMap = (props: any) => {
             window.removeEventListener('resize', debouncedHandleResize);
         };
     });
-    */
 
     const seaColor = "#0aa8f1";
     const chartsNames: any = {

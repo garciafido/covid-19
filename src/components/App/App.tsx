@@ -254,7 +254,7 @@ const App = observer((props: any) => {
                               yLabel={title}
                               mode={store.currentMode}
                               referenceValue={referenceValue}
-                              referenceLabel={"Datos incompletos"}
+                              referenceLabel={`${referenceLabel} (*)`}
                               constantLine={store.selectedChart==="r" ? 1 : undefined}
                               constantLabel={store.selectedChart==="r" ? "R(t)=1" : undefined}
                               onClick={(event: any) => handleChartClick({...event, chart: store.selectedChart})}
@@ -300,6 +300,11 @@ const App = observer((props: any) => {
                       <h2>{'No hay datos disponibles de '} {modeName} para {store.currentLocation}</h2>
                   </Grid>
                </Grid>
+  }
+
+  let footnote: string = "";
+  if (referenceValue) {
+      footnote = "(*)  Debido a que no se terminan de cargar los casos de los últimos 5 días en la base de datos del SNVS, no se puede hacer el análisis hasta el día de hoy. Por esta razón  las predicciones se inician 5 días antes a la fecha de hoy, por un plazo de 30 días.";
   }
 
   return (
@@ -374,14 +379,39 @@ const App = observer((props: any) => {
                       <Grid container>
                           <Grid item xs={1}>
                           </Grid>
+                          <Grid item xs={9}>
+                          <Typography align="left" variant="body2" gutterBottom color="textSecondary">
+                              <Box p={1}>
+                                <h4 style={{paddingBottom:0, marginBottom: 0, paddingTop:0, marginTop: 0}}>{`Fecha de asimilación: ${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`}</h4>
+                              </Box>
+                          </Typography>
+                          </Grid>
+                          <Grid item xs={2}>
+                          </Grid>
+
+                          <Grid item xs={1}>
+                          </Grid>
+                          <Grid item xs={9}>
+                          <Typography align="left" variant="body2" gutterBottom color="textSecondary">
+                                <Box p={1}>
+                                    <h5 style={{paddingBottom:0, marginBottom: 0, paddingTop:0, marginTop: 0}}>{footnote}</h5>
+                                </Box>
+                          </Typography>
+                          </Grid>
+                          <Grid item xs={2}>
+                          </Grid>
+                          <Grid item xs={1}>
+                          </Grid>
                           <Grid container
                                 justify="flex-start" alignItems='flex-start' alignContent='flex-start'
                                 style={{paddingBottom: 0, marginBottom: 0, paddingTop: 0, marginTop: 0}} xs={9}>
+                                <Box p={1}>
                             <Typography align="left">
                               <h2 style={{paddingBottom: 0, marginBottom: 0, paddingTop: 0, marginTop: 0}}>
                                   {`${shortDate}:  ${numberWithCommas(currentValue)} ${currentValuePerMillion ? "(" + numberWithCommas(currentValuePerMillion) + " / millón)" : ""}`}
                               </h2>
                             </Typography>
+                                </Box>
                           </Grid>
                           <Grid item xs={2}>
                           </Grid>
@@ -390,8 +420,6 @@ const App = observer((props: any) => {
                           <Grid item xs={9} alignContent={"flex-start"}>
                             <Typography align="left" variant="body2" gutterBottom color="textSecondary">
                                 <Box p={1}>
-                                  <h4 style={{paddingBottom:0, marginBottom: 3, paddingTop:0, marginTop: 3}}>{`Fecha de asimilación: ${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`}</h4>
-
                                   Este es un sistema experimental que se alimenta de los datos publicados diariamente
                                     por el Ministerio de Salud de la Nación a través del sistema
                                     &nbsp;
