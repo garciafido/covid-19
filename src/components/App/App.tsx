@@ -29,6 +29,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import Typography from "@material-ui/core/Typography";
+import DialogActions from "@material-ui/core/DialogActions";
 
 const url_facena = "http://exa.unne.edu.ar/";
 const url_cima = "http://www.cima.fcen.uba.ar/index.php";
@@ -156,17 +157,18 @@ const App = observer((props: any) => {
   let provinciaLabel = store.currentLocation;
   let shortDate: string = "";
   let referenceValue: string = "";
-  let referenceLabel: string = "";
+  let referenceLabel: string = "Hoy (*)";
   if (store.current) {
           let minMax;
           let data;
           let chartPerDay = false;
+          const today = new Date();
           const lDate = store.selectedDate.split('-');
           shortDate = `${lDate[2]}/${lDate[1]}/${lDate[0]}`;
           currentValue = Math.trunc(store.getCurrentValue()*10)/10;
           if (store.currentMode === "prediccion") {
-            referenceValue = `${assimilationDate[2]}/${assimilationDate[1]}`;
-            referenceLabel = `${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`
+            referenceValue = `${today.getDate().toString().padStart(2,"0")}/${(today.getMonth()+1).toString().padStart(2,"0")}`;
+            console.log(referenceValue);
           }
 
           if (store.currentLocation === "Tierra del Fuego") {
@@ -254,7 +256,7 @@ const App = observer((props: any) => {
                               yLabel={title}
                               mode={store.currentMode}
                               referenceValue={referenceValue}
-                              referenceLabel={`${referenceLabel} (*)`}
+                              referenceLabel={referenceLabel}
                               constantLine={store.selectedChart==="r" ? 1 : undefined}
                               constantLabel={store.selectedChart==="r" ? "R(t)=1" : undefined}
                               onClick={(event: any) => handleChartClick({...event, chart: store.selectedChart})}
@@ -446,7 +448,14 @@ const App = observer((props: any) => {
           </Grid>
         <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} maxWidth={"md"} fullWidth={true}>
               <DialogTitle id="simple-dialog-title">Acerca del proyecto</DialogTitle>
-            <ProjectInfo />
+            <DialogContent>
+                <ProjectInfo />
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                    Cerrar
+                </Button>
+            </DialogActions>
         </Dialog>
         <Dialog onClose={handleCloseExplain} aria-labelledby="simple-dialog-title"
                 open={explain} maxWidth={"sm"} fullWidth={false}>
@@ -454,6 +463,11 @@ const App = observer((props: any) => {
             <DialogContent>
                 <ChartExplanation explanation={store.selectedChart} mode={store.currentMode}/>
             </DialogContent>
+            <DialogActions>
+                <Button onClick={handleCloseExplain} color="primary">
+                    Cerrar
+                </Button>
+            </DialogActions>
         </Dialog>
         <Dialog onClose={handleCloseMapExplain} aria-labelledby="simple-dialog-title"
                 open={mapExplain} maxWidth={"sm"} fullWidth={false}>
@@ -461,6 +475,11 @@ const App = observer((props: any) => {
             <DialogContent>
                 <ChartMapExplanation explanation={store.selectedChart} mode={store.currentMode}/>
             </DialogContent>
+            <DialogActions>
+                <Button onClick={handleCloseMapExplain} color="primary">
+                    Cerrar
+                </Button>
+            </DialogActions>
         </Dialog>
       </Grid>
       </Grid>

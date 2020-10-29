@@ -97,13 +97,13 @@ const ProjectInfo = (props: any) => {
             Manuel Pulido (Investigador Responsable, UNNE-CONICET)
             </Box>
             <Box p={2} paddingBottom={0} paddingTop={0}>
-            Juan Ruiz (Investigador, UBA-CONICET)
+            Juan Ruiz (CIMA CONICET-UBA, UMI-IFAECI CNRS-UBA-CONICET)
             </Box>
             <Box p={2} paddingBottom={0} paddingTop={0}>
             Santiago Rosa (Pasante graduado. Lic FaMAF, UNCordoba)
             </Box>
             <Box p={2} paddingBottom={0} paddingTop={0}>
-            Fido Garcia (CPA, CIMA-CONICET)
+            Fido García (CIMA CONICET-UBA, UMI-IFAECI CNRS-UBA-CONICET)
             </Box>
             <Box p={2} paddingBottom={0} paddingTop={0}>
             Agustina Quiros (Pasante. Est. Lic. en Sistemas, FaCENA, UNNE)
@@ -121,7 +121,7 @@ const ProjectInfo = (props: any) => {
             Viviana Gutnisky (Laboratorio Central Prov. Corrientes)
             </Box>
             <Box p={2} paddingBottom={0} paddingTop={0}>
-            Natalia Ruiz Dias (Laboratorio Central Prov. Corrientes)
+            Natalia Ruiz Días (Laboratorio Central Prov. Corrientes)
             </Box>
             <Box p={2} paddingBottom={0} paddingTop={2}>
             <Typography align="left" variant="subtitle2" component="h2">
