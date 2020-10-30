@@ -5,8 +5,10 @@ import {
     YAxis,
     CartesianGrid,
     Tooltip,
-    Legend, ResponsiveContainer, Area, ComposedChart, ReferenceArea
+    Legend, ResponsiveContainer, Area, ComposedChart, ReferenceLine, ReferenceArea
 } from 'recharts';
+import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
 
 function patch(data: any,
                withObservation: boolean, withMean2: boolean, withMean3: boolean,
@@ -50,6 +52,25 @@ const BaseChart = (props: any) => {
         width: window.innerWidth,
         factor: window.innerWidth / window.innerHeight
   });
+
+  const getTextDimension = (str: string, size: number): any => {
+        const text = document.createElement("span");
+        document.body.appendChild(text);
+
+        text.style.font = "times new roman";
+        text.style.fontSize = `${size}px`;
+        text.style.height = 'auto';
+        text.style.width = 'auto';
+        text.style.position = 'absolute';
+        text.style.whiteSpace = 'no-wrap';
+        text.innerHTML = str;
+
+        const width = Math.ceil(text.clientWidth);
+        const height = Math.ceil(text.clientHeight);
+        document.body.removeChild(text);
+        return {width, height};
+    }
+
   const logarithmic = (props.minMax[1] - props.minMax[0]) > 5000;
   const minValue = Math.max(1, props.minMax[0]);
   const yAxis = logarithmic ?
@@ -132,12 +153,49 @@ const BaseChart = (props: any) => {
               activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
       : <div/>;
 
-  const referenceVerticalLine = props.referenceValue ?
-      <ReferenceArea x1={data[0].show_date} x2={props.referenceValue}
-                     y1={props.minMax[0]} y2={props.minMax[1]}
-                     label={props.referenceLabel}
-                     stroke="" strokeOpacity={0.3} />
-      : <div/>;
+  let referenceLine = <div/>;
+  let referenceArea = <div/>;
+  if (props.referenceValue) {
+        const CustomLabel = (refProps: any) => {
+            const fontSize = 18;
+            const textDim = getTextDimension(props.referenceLabel, fontSize);
+            const labelHeight = textDim.height;
+            const x = Math.round(refProps.viewBox.x-labelHeight);
+            return (
+                <foreignObject
+                    style={{
+                        width: `${labelHeight}px`,
+                        height: `${refProps.viewBox.height}px`}}
+                    x={x}
+                    y={0}>
+                  <div style={{
+                      transform: `rotate(270deg) translate(-${refProps.viewBox.height}px, -${0}px)`,
+                      transformOrigin: "left top",
+                      height: `${labelHeight}px`,
+                      width: `${refProps.viewBox.height}px`
+                  }}>
+                      <span style={{fontSize: fontSize}}>
+                        {props.referenceLabel}
+                      </span>
+                  </div>
+                </foreignObject>
+            );
+        };
+        referenceArea =
+          <ReferenceArea x1={data[0].show_date}
+                         x2={props.referenceAreaValue}
+                         y1={props.minMax[0]}
+                         y2={props.minMax[1]}
+                         stroke=""
+                         strokeOpacity={0.3}
+          />;
+      referenceLine =
+          <ReferenceLine
+              x={props.referenceValue}
+              label={CustomLabel}
+              strokeWidth={2}
+          />;
+  }
 
   return <>
     <ResponsiveContainer minWidth={props.width} aspect={2} minHeight={props.height}>
@@ -148,7 +206,7 @@ const BaseChart = (props: any) => {
             top: 5, right: 10, left: 40, bottom: 5,
           }}
         >
-          {referenceVerticalLine}
+          {referenceArea}
           <CartesianGrid strokeDasharray="3 3" />
           <Tooltip formatter={(value, name, payload, index) => {
             if (Array.isArray(value)) {
@@ -178,6 +236,7 @@ const BaseChart = (props: any) => {
 
           {observation}
           {constantLine}
+          {referenceLine}
 
         </ComposedChart>
     </ResponsiveContainer>

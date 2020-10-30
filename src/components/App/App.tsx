@@ -156,19 +156,22 @@ const App = observer((props: any) => {
   let currentValue: number | undefined = undefined;
   let provinciaLabel = store.currentLocation;
   let shortDate: string = "";
+  let referenceAreaValue: string = "";
   let referenceValue: string = "";
   let referenceLabel: string = "Hoy (*)";
   if (store.current) {
           let minMax;
           let data;
           let chartPerDay = false;
-          const today = new Date();
           const lDate = store.selectedDate.split('-');
           shortDate = `${lDate[2]}/${lDate[1]}/${lDate[0]}`;
+          const today = new Date();
+          const tomorrow = new Date(today);
+          tomorrow.setDate(tomorrow.getDate() + 1)
           currentValue = Math.trunc(store.getCurrentValue()*10)/10;
           if (store.currentMode === "prediccion") {
+            referenceAreaValue = `${tomorrow.getDate().toString().padStart(2,"0")}/${(tomorrow.getMonth()+1).toString().padStart(2,"0")}`;
             referenceValue = `${today.getDate().toString().padStart(2,"0")}/${(today.getMonth()+1).toString().padStart(2,"0")}`;
-            console.log(referenceValue);
           }
 
           if (store.currentLocation === "Tierra del Fuego") {
@@ -209,7 +212,11 @@ const App = observer((props: any) => {
             chartPerDay = true;
           }
           else if (store.selectedChart === "r") {
-            title = "R(t) estimado";
+            if (store.currentMode === "prediccion") {
+                title = "R(t) proyectado";
+            } else {
+                title = "R(t) estimado";
+            }
             minMax = [0, store.current.minMaxR[1]];
             data = store.current.r;
           }
@@ -256,6 +263,7 @@ const App = observer((props: any) => {
                               yLabel={title}
                               mode={store.currentMode}
                               referenceValue={referenceValue}
+                              referenceAreaValue={referenceAreaValue}
                               referenceLabel={referenceLabel}
                               constantLine={store.selectedChart==="r" ? 1 : undefined}
                               constantLabel={store.selectedChart==="r" ? "R(t)=1" : undefined}
@@ -350,7 +358,7 @@ const App = observer((props: any) => {
               </Grid>
           </Grid>
           <Grid container>
-            <AppBar position="static"  color="default">
+            <AppBar position="static" color="default">
               <Tabs value={store.currentMode}
                     onChange={handleChange}
                     indicatorColor="primary"
@@ -379,17 +387,37 @@ const App = observer((props: any) => {
                           </Grid>
                       </Grid>
                       <Grid container>
+
+                          <Grid item xs={1}>
+                          </Grid>
+                          <Grid container
+                                justify="flex-start" alignItems='flex-start' alignContent='flex-start'
+                                style={{paddingBottom: 0, marginBottom: 0, paddingTop: 0, marginTop: 0}} xs={9}>
+                              <Paper elevation={5}>
+                                <Box p={1}>
+                            <Typography align="left">
+                              <h2 style={{paddingBottom: 0, marginBottom: 0, paddingTop: 0, marginTop: 0}}>
+                                  {`${shortDate}:  ${numberWithCommas(currentValue)} ${currentValuePerMillion ? "(" + numberWithCommas(currentValuePerMillion) + " / millón)" : ""}`}
+                              </h2>
+                            </Typography>
+                                </Box>
+                              </Paper>
+                          </Grid>
+                          <Grid item xs={2}>
+                          </Grid>
+
                           <Grid item xs={1}>
                           </Grid>
                           <Grid item xs={9}>
                           <Typography align="left" variant="body2" gutterBottom color="textSecondary">
-                              <Box p={1}>
-                                <h4 style={{paddingBottom:0, marginBottom: 0, paddingTop:0, marginTop: 0}}>{`Fecha de asimilación: ${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`}</h4>
-                              </Box>
+                                  <Box p={1}>
+                                    <h4 style={{paddingBottom:0, marginBottom: 0, paddingTop:0, marginTop: 0}}>{`Fecha de asimilación: ${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`}</h4>
+                                  </Box>
                           </Typography>
                           </Grid>
                           <Grid item xs={2}>
                           </Grid>
+
 
                           <Grid item xs={1}>
                           </Grid>
@@ -402,21 +430,9 @@ const App = observer((props: any) => {
                           </Grid>
                           <Grid item xs={2}>
                           </Grid>
-                          <Grid item xs={1}>
-                          </Grid>
-                          <Grid container
-                                justify="flex-start" alignItems='flex-start' alignContent='flex-start'
-                                style={{paddingBottom: 0, marginBottom: 0, paddingTop: 0, marginTop: 0}} xs={9}>
-                                <Box p={1}>
-                            <Typography align="left">
-                              <h2 style={{paddingBottom: 0, marginBottom: 0, paddingTop: 0, marginTop: 0}}>
-                                  {`${shortDate}:  ${numberWithCommas(currentValue)} ${currentValuePerMillion ? "(" + numberWithCommas(currentValuePerMillion) + " / millón)" : ""}`}
-                              </h2>
-                            </Typography>
-                                </Box>
-                          </Grid>
-                          <Grid item xs={2}>
-                          </Grid>
+
+
+
                           <Grid item xs={1}>
                           </Grid>
                           <Grid item xs={9} alignContent={"flex-start"}>

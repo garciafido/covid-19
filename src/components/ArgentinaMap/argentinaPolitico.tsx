@@ -479,7 +479,6 @@ function SvgArgentinaPolitico(props: MapProps) {
         <text transform="translate(176.597 866.923)"onMouseDown={(e) => props.clicked("Tierra del Fuego")}>
           {"Tierra del Fuego"}
         </text>
-        <text transform="translate(330.033 379.273)"onMouseDown={(e) => props.clicked("AMBA")}>{"AMBA"}</text>
         <text transform="translate(436.196 549.023)"onMouseDown={(e) => props.clicked("GBA")}>
           {"G.B.A."}
         </text>
@@ -491,7 +490,7 @@ function SvgArgentinaPolitico(props: MapProps) {
       </g>
 
       <g fontFamily="'ArialMT'" fontSize={18}>
-        <text transform="translate(330.033 379.273)"onMouseDown={(e) => props.clicked("AMBA")}>{"AMBA"}</text>
+        <text transform="translate(310.033 382.273)"onMouseDown={(e) => props.clicked("AMBA")}>{"AMBA"}</text>
       </g>
 
     </svg>
