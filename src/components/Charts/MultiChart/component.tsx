@@ -7,70 +7,21 @@ import {
     Tooltip,
     Legend, ResponsiveContainer, Area, ComposedChart, ReferenceLine, ReferenceArea
 } from 'recharts';
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
+import {getTextDimension} from "../common";
 
-function patch(data: any,
-               withObservation: boolean, withMean2: boolean, withMean3: boolean,
-               minValue: number) {
+function patch(data: any, minValue: number) {
   const newData = [];
   for (const row of data) {
     const newRow: any = {};
     newData.push(newRow);
-    if (withObservation) {
-        newRow["observation"] = row.observation >= minValue ? row.observation : minValue;
-    }
     newRow.show_date = row.show_date;
     newRow.date = row.date;
     newRow.mean = row.mean < minValue ? minValue : row.mean;
-    newRow.ensemble = [
-          row.ensemble[0] < minValue ? minValue : row.ensemble[0],
-          row.ensemble[1] < minValue ? minValue : row.ensemble[1],
-      ];
-    if (withMean2) {
-      newRow.mean2 = row.mean2 < minValue ? minValue : row.mean2;
-      newRow.ensemble2 = [
-            row.ensemble2[0] < minValue ? minValue : row.ensemble2[0],
-            row.ensemble2[1] < minValue ? minValue : row.ensemble2[1],
-        ];
-    }
-
-    if (withMean3) {
-      newRow.mean3 = row.mean3 < minValue ? minValue : row.mean3;
-      newRow.ensemble3 = [
-            row.ensemble3[0] < minValue ? minValue : row.ensemble3[0],
-            row.ensemble3[1] < minValue ? minValue : row.ensemble3[1],
-        ];
-    }
   }
   return newData;
 }
 
-const BaseChart = (props: any) => {
-  const [dimensions, setDimensions] = React.useState({
-        height: window.innerHeight,
-        width: window.innerWidth,
-        factor: window.innerWidth / window.innerHeight
-  });
-
-  const getTextDimension = (str: string, size: number): any => {
-        const text = document.createElement("span");
-        document.body.appendChild(text);
-
-        text.style.font = "times new roman";
-        text.style.fontSize = `${size}px`;
-        text.style.height = 'auto';
-        text.style.width = 'auto';
-        text.style.position = 'absolute';
-        text.style.whiteSpace = 'no-wrap';
-        text.innerHTML = str;
-
-        const width = Math.ceil(text.clientWidth);
-        const height = Math.ceil(text.clientHeight);
-        document.body.removeChild(text);
-        return {width, height};
-    }
-
+const MultiChart = (props: any) => {
   const logarithmic = (props.minMax[1] - props.minMax[0]) > 5000;
   const minValue = Math.max(1, props.minMax[0]);
   const yAxis = logarithmic ?
@@ -96,16 +47,12 @@ const BaseChart = (props: any) => {
 
   let data = props.data;
 
-  const withObservation = 'observation' in data[0];
-  const withMean2 = 'mean2' in data[0];
-  const withMean3 = 'mean3' in data[0];
-
   const red = "#b71c1c";
   const green = "#1abaa8";
   const blue = "#01579b";
 
   if (logarithmic) {
-    data = patch(data, withObservation, withMean2, withMean3, minValue);
+    data = patch(data, minValue);
   }
 
   if (props.constantLine) {
@@ -118,39 +65,6 @@ const BaseChart = (props: any) => {
             activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }}
             dot={false}
       />
-      : <div/>;
-
-  const observation = withObservation ?
-      <Line type="monotone" dataKey="observation" name="Observación" strokeWidth={3}
-            stroke={red} strokeDasharray="3 4 5 2"
-            activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }}
-            dot={false}
-      />
-      : <div/>;
-
-  const mean2 = withMean2 ?
-          <Line type="monotone" dataKey="mean2" name="Optimista" strokeWidth={3}
-                stroke={green} dot={false}
-                activeDot={{r:8, onClick: (payload: any) => {props.onClick(
-                    {type: payload.dataKey, date: props.data[payload.index].date})} }} />
-      : <div/>;
-
-  const ensemble2 = withMean2 ?
-        <Area type="monotone" dataKey="ensemble2" legendType={"none"} name=" " fillOpacity="0.3"
-              fill={green} stroke={green} strokeWidth={0} dot={false}
-              activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
-      : <div/>;
-
-  const mean3 = withMean3 ?
-          <Line type="monotone" dataKey="mean3" name="Pesimista" strokeWidth={3}
-                stroke={red} dot={false}
-                activeDot={{r:8, onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
-      : <div/>;
-
-  const ensemble3 = withMean3 ?
-        <Area type="monotone" dataKey="ensemble3" strokeWidth={0} legendType={"none"} name=" " fillOpacity="0.3"
-              fill={red} stroke={red} dot={false}
-              activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
       : <div/>;
 
   let referenceLine = <div/>;
@@ -222,19 +136,12 @@ const BaseChart = (props: any) => {
           <Tooltip />
           <Legend />
 
-          {ensemble3}
-          <Area type="monotone" dataKey="ensemble" strokeWidth={0} legendType={"none"} name="Desviación estándar" fillOpacity="0.3"
-                fill={blue} stroke={blue} dot={false}
-                activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
-          {ensemble2}
-
-          {mean3}
-          <Line type="monotone" dataKey="mean" name={props.mode === "monitoreo" ? "Media" : "Sin cambios"} strokeWidth={3}
+          <Line type="monotone"
+                dataKey="mean"
+                name={props.mode === "monitoreo" ? "Media" : "Sin cambios"} strokeWidth={3}
                 stroke={blue} dot={false}
                 activeDot={{r:8, onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }} />
-          {mean2}
 
-          {observation}
           {constantLine}
           {referenceLine}
 
@@ -243,4 +150,4 @@ const BaseChart = (props: any) => {
   </>
 };
 
-export { BaseChart };
+export { MultiChart };

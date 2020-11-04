@@ -9,9 +9,10 @@ import Box from "@material-ui/core/Box";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 import Typography from "@material-ui/core/Typography";
+import {CheckBox} from "@material-ui/icons";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 
-
-const defaultTheme = createMuiTheme();
 const theme = createMuiTheme({
   overrides: {
     MuiTooltip: {
@@ -91,6 +92,17 @@ const ArgentinaMap = (props: any) => {
                 </Grid>
                 <Grid container justify="flex-end">
                     <MuiThemeProvider theme={theme}>
+                        <FormControlLabel
+                            style={{marginRight: 15, marginTop: 0, paddingTop: 0, marginBottom: 0, paddingBottom: 0, fontSize: '9pt'}}
+                            control={
+                              <Checkbox
+                                checked={props.store.multiSelect}
+                                onChange={(event) => props.store.setMultiSelect(event.target.checked)}
+                                name="compareCheckBox"
+                                color="primary"
+                              />}
+                            label={"Comparativa"}
+                            />
                         <Button size="small" color="primary" onClick={props.handleClickExplain}
                                 style={{marginRight: 15, marginTop: 0, paddingTop: 0, marginBottom: 0, paddingBottom: 0, fontSize: '9pt'}}>
                             <Box flexDirection="row">
@@ -104,7 +116,7 @@ const ArgentinaMap = (props: any) => {
                     <Argentina
                         width={props.width}
                         height={height}
-                        selected={props.store.currentLocation}
+                        selected={[props.store.currentLocation]}
                         getColor={(provincia) => props.store.getColorValue(provincia).color}
                         clicked={(provincia) => props.store.setCurrentLocation(provincia)}
                         out={"#C7BDC6"}

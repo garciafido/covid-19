@@ -10,7 +10,7 @@ import Button from "@material-ui/core/Button";
 import { store } from '../../store/';
 import { ArgentinaMapMenu } from '../ArgentinaMap';
 import { ProjectInfo } from '../ProjectInfo';
-import { CasesChart } from '../BaseChart';
+import { BaseChartContainer } from '../Charts';
 import {observer} from "mobx-react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'
@@ -258,17 +258,17 @@ const App = observer((props: any) => {
             </Grid>
             <Grid item xs={12}>
             <Box className={classes.box}>
-                  <CasesChart width={chartWidth} height={chartHeight}
-                              data={data}
-                              yLabel={title}
-                              mode={store.currentMode}
-                              referenceValue={referenceValue}
-                              referenceAreaValue={referenceAreaValue}
-                              referenceLabel={referenceLabel}
-                              constantLine={store.selectedChart==="r" ? 1 : undefined}
-                              constantLabel={store.selectedChart==="r" ? "R(t)=1" : undefined}
-                              onClick={(event: any) => handleChartClick({...event, chart: store.selectedChart})}
-                              minMax={minMax}
+                  <BaseChartContainer width={chartWidth} height={chartHeight}
+                                      data={data}
+                                      yLabel={title}
+                                      mode={store.currentMode}
+                                      referenceValue={referenceValue}
+                                      referenceAreaValue={referenceAreaValue}
+                                      referenceLabel={referenceLabel}
+                                      constantLine={store.selectedChart==="r" ? 1 : undefined}
+                                      constantLabel={store.selectedChart==="r" ? "R(t)=1" : undefined}
+                                      onClick={(event: any) => handleChartClick({...event, chart: store.selectedChart})}
+                                      minMax={minMax}
                   />
             </Box>
             </Grid>

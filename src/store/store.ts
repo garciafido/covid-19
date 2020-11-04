@@ -7,8 +7,9 @@ import {getColorScale} from "./colorScale";
 configure({ enforceActions: "observed" });
 
 let covidDataUrl = ((window as any).COVID_DATA_URL);
-covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
-//covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data_test.json';
+//covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
+//covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data_test.json';
+covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data_test.json';
 
 const gray = "#C7BDC6";
 
@@ -41,6 +42,8 @@ class CovidData {
 
     @observable current: any = {};
     @observable currentLocation = "Argentina";
+    @observable selectedLocations: string[] = [];
+    @observable multiSelect = false;
     @observable currentMode = "monitoreo";
     @observable currentScale: any = [];
     @observable paletteDate: string = '';
@@ -265,10 +268,36 @@ class CovidData {
         }
     }
 
+    getMultiData = (): any => {
+        const result: any = {};
+        for (let i=0; i < this.selectedLocations.length; i++) {
+            const location = this.selectedLocations[i];
+            result[location] = this.data[this.currentMode][location];
+        }
+        return result;
+    }
+
     @action.bound
     setCurrentLocation(location: string) {
         this.currentLocation = location;
         this.current = this.data[this.currentMode][this.currentLocation];
+    }
+
+    @action.bound
+    setMultiSelect(value: boolean) {
+        this.multiSelect = value;
+    }
+
+    @action.bound
+    toggleSelectedLocation(location: string) {
+        this.currentLocation = location;
+        this.current = this.data[this.currentMode][this.currentLocation];
+        const index = this.selectedLocations.indexOf(location);
+        if (index >= 0) {
+            delete this.selectedLocations[index];
+        } else {
+            this.selectedLocations.push(location);
+        }
     }
 
     @action.bound
