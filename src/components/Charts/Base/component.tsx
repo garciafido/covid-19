@@ -83,12 +83,8 @@ const BaseChart = (props: any) => {
     data = patch(data, withObservation, withMean2, withMean3, minValue);
   }
 
-  if (props.constantLine) {
-    data.map((v: any) => v["constant"] = props.constantLine);
-  }
-
   const constantLine = props.constantLine ?
-      <Line type="monotone" dataKey="constant" name={props.constantLabel} strokeWidth={1}
+      <Line type="monotone" dataKey={(data) => props.constantLine} name={props.constantLabel} strokeWidth={1}
             stroke="#000000" strokeDasharray="3 4 5 2"
             activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }}
             dot={false}

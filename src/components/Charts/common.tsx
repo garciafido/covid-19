@@ -22,8 +22,8 @@ const getTextDimension = (str: string, size: number): any => {
 const getReferenceArea = (
     referenceValue: any,
     referenceLabel: string,
-    referenceAreaX1: string,
-    referenceAreaX2: string,
+    referenceAreaX1: any,
+    referenceAreaX2: any,
     minMax: any): { referenceLine: any, referenceArea: any } => {
         const CustomLabel = (refProps: any) => {
             const fontSize = 18;

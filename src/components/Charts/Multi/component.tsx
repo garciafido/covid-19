@@ -8,20 +8,8 @@ import {
     Legend, ResponsiveContainer, Area, ComposedChart
 } from 'recharts';
 import {getReferenceArea} from "../common";
+import {store} from "../../../store";
 
-
-function patch(data: any,
-               minValue: number) {
-  const newData = [];
-  for (const row of data) {
-    const newRow: any = {};
-    newData.push(newRow);
-    newRow.show_date = row.show_date;
-    newRow.date = row.date;
-    newRow.mean = row.mean < minValue ? minValue : row.mean;
-  }
-  return newData;
-}
 
 const range = (start: number, stop: number, step: number): number[] => {
     const result = [];
@@ -33,10 +21,10 @@ const range = (start: number, stop: number, step: number): number[] => {
 
 const MultiChart = (props: any) => {
   const logarithmic = (props.minMax[1] - props.minMax[0]) > 5000;
-  const minValue = Math.max(1, props.minMax[0]);
-  const yAxis = logarithmic ?
+  const minMax: [number, number] = [Math.max(logarithmic ? 1 : 0,  props.minMax[0]), props.minMax[1]];
+    const yAxis = logarithmic ?
       <YAxis allowDecimals={false} scale="log"
-             domain={[minValue, props.minMax[1]]}
+             domain={minMax}
              label={{
                angle: -90,
                x:0,
@@ -45,7 +33,7 @@ const MultiChart = (props: any) => {
                offset:0,
                value: props.yLabel}}
       />
-      : <YAxis allowDecimals={false} scale="linear" domain={props.minMax}
+      : <YAxis allowDecimals={false} scale="linear" domain={minMax}
              label={{
                angle: -90,
                x:0,
@@ -63,33 +51,47 @@ const MultiChart = (props: any) => {
       "#9d0719",
   ]
 
-  const getDataValue = (key: string, data: any) => {
-      const values = props.multiData[key][data];
-      return values ? values.mean : undefined;
-  };
-
   const lines = [];
-  let first_show_date;
-  let data1: any = [];
+  let max_length = 0;
+  let xData: any = [];
+  const yData: any = {};
   let index = 0;
   for (let key in props.multiData) {
-      console.log(key);
       let data = props.multiData[key];
-      if (data1.length < props.multiData[key].length) {
-          data1 = range(0, props.multiData[key].length, 1);
+      yData[key] = {};
+      for (let i=0; i < data.length; i++) {
+          yData[key][data[i].show_date] = data[i].mean < minMax[0] ? minMax[0] : data[i].mean;
+          if (xData.indexOf(data[i].date) < 0) {
+            xData.push(data[i].date);
+          }
       }
-      if (logarithmic) {
-          data = patch(data, minValue);
-          props.multiData[key] = data;
+      if (max_length < props.multiData[key].length) {
+          max_length = props.multiData[key].length;
       }
-      first_show_date = data[0].show_date;
       lines.push(
           <Line type="monotone"
-                dataKey={(data) => getDataValue(key, data)} key={key} name={key} strokeWidth={3}
+                dataKey={(data) => yData[key][xData[data]]}
+                key={key} name={key} strokeWidth={3}
                 stroke={colors[index]} dot={false} />
       );
       index++;
   }
+
+  xData.sort();
+  xData = xData.map((val: string) => {
+      const lDate = val.split('-');
+      return `${lDate[2]}/${lDate[1]}`;
+  });
+  const xIndexes: any[] = range(0, xData.length, 1);
+
+  const constantLine = props.constantLine ?
+      <Line type="monotone" dataKey={(data) => props.constantLine} name={props.constantLabel} strokeWidth={1}
+            stroke="#000000" strokeDasharray="3 4 5 2"
+            activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }}
+            dot={false}
+      />
+      : <div/>;
+
 
   let referenceLine = <div/>;
   let referenceArea = <div/>;
@@ -97,9 +99,9 @@ const MultiChart = (props: any) => {
       const lineArea = getReferenceArea(
           props.referenceValue,
           props.referenceLabel,
-          first_show_date,
+          xData[0],
           props.referenceAreaValue,
-          props.minMax);
+          minMax);
       referenceLine = lineArea.referenceLine;
       referenceArea = lineArea.referenceArea;
   }
@@ -107,7 +109,7 @@ const MultiChart = (props: any) => {
   return <>
     <ResponsiveContainer minWidth={props.width} aspect={2} minHeight={props.height}>
         <ComposedChart
-          data={data1}
+          data={xIndexes}
           onClick={payload => {if (payload && payload.activePayload) props.onClick({type: "mean", date: payload.activePayload[0].payload.date})}}
           margin={{
             top: 5, right: 10, left: 40, bottom: 5,
@@ -116,13 +118,14 @@ const MultiChart = (props: any) => {
           {referenceArea}
           <CartesianGrid strokeDasharray="3 3" />
           } />
-          <XAxis dataKey="show_date" minTickGap={30} >
+          <XAxis dataKey={(i: any) => xData[i]} minTickGap={30} >
           </XAxis>
           {yAxis}
           <Tooltip />
           <Legend />
           {lines}
 
+          {constantLine}
           {referenceLine}
         </ComposedChart>
     </ResponsiveContainer>

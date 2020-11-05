@@ -8,9 +8,9 @@ import {store} from "./index";
 configure({ enforceActions: "observed" });
 
 let covidDataUrl = ((window as any).COVID_DATA_URL);
-//covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
+covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
 //covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data_test.json';
-covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data_test.json';
+//covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data_test.json';
 
 const gray = "#C7BDC6";
 
@@ -272,11 +272,11 @@ class CovidData {
     filterDataForChart = (oneLocation: any): { minMax: [number, number], data: any } => {
         let minMax: [number, number] = [0, 0];
         let data: any;
-          if (store.selectedChart === "actives") {
+        if (store.selectedChart === "actives") {
             minMax = oneLocation.minMaxActives;
             data = oneLocation.actives;
-          }
-          else if (store.selectedChart === "cases") {
+        }
+        else if (store.selectedChart === "cases") {
             if (store.chartPerDay) {
                 minMax = oneLocation.minMaxDailyCases;
                 data = oneLocation.dailyCases;
@@ -284,8 +284,8 @@ class CovidData {
                 minMax = oneLocation.minMaxCases;
                 data = oneLocation.cases;
             }
-          }
-          else if (store.selectedChart === "deads") {
+        }
+        else if (store.selectedChart === "deads") {
             if (store.chartPerDay) {
                 minMax = store.current.minMaxDailyDeads;
                 data = oneLocation.dailyDeads;
@@ -293,12 +293,12 @@ class CovidData {
                 minMax = oneLocation.minMaxDeaths;
                 data = oneLocation.deads;
             }
-          }
-          else if (store.selectedChart === "r") {
+        }
+        else if (store.selectedChart === "r") {
             minMax = [0, store.current.minMaxR[1]];
             data = oneLocation.r;
-          }
-          return {minMax, data};
+        }
+        return {minMax, data};
     }
 
     getMultiData = (): any => {
@@ -306,7 +306,8 @@ class CovidData {
         let globalMinMax = [1e10, -1e10];
         for (let i=0; i < this.selectedLocations.length; i++) {
             const location = this.selectedLocations[i];
-            const { minMax, data }: {minMax: [number, number], data: any} = this.filterDataForChart(this.data[this.currentMode][location]);
+            const { minMax, data }: {minMax: [number, number], data: any} =
+                this.filterDataForChart(this.data[this.currentMode][location]);
             globalMinMax = [Math.min(globalMinMax[0], minMax[0]), Math.max(globalMinMax[1], minMax[1])];
             multiData[location] = data;
         }
