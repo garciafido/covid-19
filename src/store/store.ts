@@ -335,7 +335,7 @@ class CovidData {
         const index = this.selectedLocations.indexOf(location);
         if (index >= 0) {
             if (this.selectedLocations.length > 1) {
-                this.selectedLocations.splice(index, index);
+                this.selectedLocations.splice(index, 1);
             }
         } else {
             if (this.selectedLocations.length < 5) {
