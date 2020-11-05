@@ -10,7 +10,8 @@ import Button from "@material-ui/core/Button";
 import { store } from '../../store/';
 import { ArgentinaMapMenu } from '../ArgentinaMap';
 import { ProjectInfo } from '../ProjectInfo';
-import { BaseChartContainer } from '../Charts';
+import {BaseChartContainer} from '../Charts/Base';
+import {MultiChartContainer} from '../Charts/Multi';
 import {observer} from "mobx-react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'
@@ -179,6 +180,7 @@ const App = observer((props: any) => {
           } else if (store.currentLocation === "Buenos Aires") {
               provinciaLabel = "Buenos Aires (sin G.B.A.)"
           }
+
           if (store.selectedChart === "actives") {
             title = "Casos activos";
             minMax = store.current.minMaxActives;
@@ -234,6 +236,39 @@ const App = observer((props: any) => {
                                       control={<Radio size="small" />} label="Por día" />
                 </RadioGroup> : <div/>;
 
+
+          let chartContainer;
+          if (store.multiSelect) {
+              const {multiData, globalMinMax} = store.getMultiData();
+                chartContainer = <MultiChartContainer width={chartWidth} height={chartHeight}
+                                      multiData={multiData}
+                                      yLabel={title}
+                                      mode={store.currentMode}
+                                      referenceValue={referenceValue}
+                                      referenceAreaValue={referenceAreaValue}
+                                      referenceLabel={referenceLabel}
+                                      constantLine={store.selectedChart==="r" ? 1 : undefined}
+                                      constantLabel={store.selectedChart==="r" ? "R(t)=1" : undefined}
+                                      onClick={(event: any) => handleChartClick({...event, chart: store.selectedChart})}
+                                      minMax={globalMinMax}
+                  />;
+          } else {
+                chartContainer = <BaseChartContainer width={chartWidth} height={chartHeight}
+                                      data={data}
+                                      yLabel={title}
+                                      mode={store.currentMode}
+                                      referenceValue={referenceValue}
+                                      referenceAreaValue={referenceAreaValue}
+                                      referenceLabel={referenceLabel}
+                                      constantLine={store.selectedChart==="r" ? 1 : undefined}
+                                      constantLabel={store.selectedChart==="r" ? "R(t)=1" : undefined}
+                                      onClick={(event: any) => handleChartClick({...event, chart: store.selectedChart})}
+                                      minMax={minMax}
+                  />;
+          }
+
+
+
           const chart = <>
             <Grid container>
             <Grid container alignItems="flex-start" direction="row" style={{height: "25%", marginLeft: 35}} xs={12}>
@@ -258,18 +293,7 @@ const App = observer((props: any) => {
             </Grid>
             <Grid item xs={12}>
             <Box className={classes.box}>
-                  <BaseChartContainer width={chartWidth} height={chartHeight}
-                                      data={data}
-                                      yLabel={title}
-                                      mode={store.currentMode}
-                                      referenceValue={referenceValue}
-                                      referenceAreaValue={referenceAreaValue}
-                                      referenceLabel={referenceLabel}
-                                      constantLine={store.selectedChart==="r" ? 1 : undefined}
-                                      constantLabel={store.selectedChart==="r" ? "R(t)=1" : undefined}
-                                      onClick={(event: any) => handleChartClick({...event, chart: store.selectedChart})}
-                                      minMax={minMax}
-                  />
+                { chartContainer }
             </Box>
             </Grid>
           </Grid>
@@ -283,8 +307,10 @@ const App = observer((props: any) => {
                     </Grid>
                     <Grid item xs={11}>
                     <Typography align="left">
-                      <h2 style={{paddingTop: 0, marginTop: 5, paddingBottom: 0, marginBottom: 0}}>{`${provinciaLabel}`}</h2>
-                      <h4 style={{paddingTop: 0, marginTop: 0, paddingBottom: 0, marginBottom: 0}}>{`${title}`}</h4>
+                      <h2 style={{paddingTop: 0, marginTop: 5, paddingBottom: 0, marginBottom: 0}}>
+                          {store.multiSelect ? "Comparativa" : `${provinciaLabel}`}</h2>
+                      <h4 style={{paddingTop: 0, marginTop: 0, paddingBottom: 0, marginBottom: 0}}>
+                          {`${title}`}</h4>
                     </Typography>
                     </Grid>
                 </Grid>
@@ -397,7 +423,7 @@ const App = observer((props: any) => {
                                 <Box p={1}>
                             <Typography align="left">
                               <h2 style={{paddingBottom: 0, marginBottom: 0, paddingTop: 0, marginTop: 0}}>
-                                  {`${shortDate}:  ${numberWithCommas(currentValue)} ${currentValuePerMillion ? "(" + numberWithCommas(currentValuePerMillion) + " / millón)" : ""}`}
+                                  {store.multiSelect ? `${shortDate}: --` : `${shortDate}:  ${numberWithCommas(currentValue)} ${currentValuePerMillion ? "(" + numberWithCommas(currentValuePerMillion) + " / millón)" : ""}`}
                               </h2>
                             </Typography>
                                 </Box>

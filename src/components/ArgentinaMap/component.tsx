@@ -96,6 +96,7 @@ const ArgentinaMap = (props: any) => {
                             style={{marginRight: 15, marginTop: 0, paddingTop: 0, marginBottom: 0, paddingBottom: 0, fontSize: '9pt'}}
                             control={
                               <Checkbox
+                                  style={{marginTop: 0, paddingTop: 0, marginBottom: 0, paddingBottom: 0, fontSize: '9pt'}}
                                 checked={props.store.multiSelect}
                                 onChange={(event) => props.store.setMultiSelect(event.target.checked)}
                                 name="compareCheckBox"
@@ -116,7 +117,7 @@ const ArgentinaMap = (props: any) => {
                     <Argentina
                         width={props.width}
                         height={height}
-                        selected={[props.store.currentLocation]}
+                        selected={props.store.multiSelect ? props.store.selectedLocations : [props.store.currentLocation]}
                         getColor={(provincia) => props.store.getColorValue(provincia).color}
                         clicked={(provincia) => props.store.setCurrentLocation(provincia)}
                         out={"#C7BDC6"}

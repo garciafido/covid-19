@@ -5,9 +5,10 @@ import {
     YAxis,
     CartesianGrid,
     Tooltip,
-    Legend, ResponsiveContainer, Area, ComposedChart, ReferenceLine, ReferenceArea
+    Legend, ResponsiveContainer, Area, ComposedChart
 } from 'recharts';
-import {getTextDimension} from "../common";
+import {getReferenceArea} from "../common";
+
 
 function patch(data: any,
                withObservation: boolean, withMean2: boolean, withMean3: boolean,
@@ -130,45 +131,14 @@ const BaseChart = (props: any) => {
   let referenceLine = <div/>;
   let referenceArea = <div/>;
   if (props.referenceValue) {
-        const CustomLabel = (refProps: any) => {
-            const fontSize = 18;
-            const textDim = getTextDimension(props.referenceLabel, fontSize);
-            const labelHeight = textDim.height;
-            const x = Math.round(refProps.viewBox.x-labelHeight);
-            return (
-                <foreignObject
-                    style={{
-                        width: `${labelHeight}px`,
-                        height: `${refProps.viewBox.height}px`}}
-                    x={x}
-                    y={0}>
-                  <div style={{
-                      transform: `rotate(270deg) translate(-${refProps.viewBox.height}px, -${0}px)`,
-                      transformOrigin: "left top",
-                      height: `${labelHeight}px`,
-                      width: `${refProps.viewBox.height}px`
-                  }}>
-                      <span style={{fontSize: fontSize}}>
-                        {props.referenceLabel}
-                      </span>
-                  </div>
-                </foreignObject>
-            );
-        };
-        referenceArea =
-          <ReferenceArea x1={data[0].show_date}
-                         x2={props.referenceAreaValue}
-                         y1={props.minMax[0]}
-                         y2={props.minMax[1]}
-                         stroke=""
-                         strokeOpacity={0.3}
-          />;
-      referenceLine =
-          <ReferenceLine
-              x={props.referenceValue}
-              label={CustomLabel}
-              strokeWidth={2}
-          />;
+      const lineArea = getReferenceArea(
+          props.referenceValue,
+          props.referenceLabel,
+          data[0].show_date,
+          props.referenceAreaValue,
+          props.minMax);
+      referenceLine = lineArea.referenceLine;
+      referenceArea = lineArea.referenceArea;
   }
 
   return <>
@@ -217,4 +187,4 @@ const BaseChart = (props: any) => {
   </>
 };
 
-export { BaseChart };
+export {BaseChart};

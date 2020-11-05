@@ -3,6 +3,7 @@ import 'mobx-react-lite/batchingForReactDom';
 import {flowed} from "./storeUtils";
 import {buildActivesByDate, buildCasesByDate, buildDeadsByDate, buildRByDate} from "./buildIndexes";
 import {getColorScale} from "./colorScale";
+import {store} from "./index";
 
 configure({ enforceActions: "observed" });
 
@@ -268,35 +269,78 @@ class CovidData {
         }
     }
 
+    filterDataForChart = (oneLocation: any): { minMax: [number, number], data: any } => {
+        let minMax: [number, number] = [0, 0];
+        let data: any;
+          if (store.selectedChart === "actives") {
+            minMax = oneLocation.minMaxActives;
+            data = oneLocation.actives;
+          }
+          else if (store.selectedChart === "cases") {
+            if (store.chartPerDay) {
+                minMax = oneLocation.minMaxDailyCases;
+                data = oneLocation.dailyCases;
+            } else {
+                minMax = oneLocation.minMaxCases;
+                data = oneLocation.cases;
+            }
+          }
+          else if (store.selectedChart === "deads") {
+            if (store.chartPerDay) {
+                minMax = store.current.minMaxDailyDeads;
+                data = oneLocation.dailyDeads;
+            } else {
+                minMax = oneLocation.minMaxDeaths;
+                data = oneLocation.deads;
+            }
+          }
+          else if (store.selectedChart === "r") {
+            minMax = [0, store.current.minMaxR[1]];
+            data = oneLocation.r;
+          }
+          return {minMax, data};
+    }
+
     getMultiData = (): any => {
-        const result: any = {};
+        const multiData: any = {};
+        let globalMinMax = [1e10, -1e10];
         for (let i=0; i < this.selectedLocations.length; i++) {
             const location = this.selectedLocations[i];
-            result[location] = this.data[this.currentMode][location];
+            const { minMax, data }: {minMax: [number, number], data: any} = this.filterDataForChart(this.data[this.currentMode][location]);
+            globalMinMax = [Math.min(globalMinMax[0], minMax[0]), Math.max(globalMinMax[1], minMax[1])];
+            multiData[location] = data;
         }
-        return result;
+        return {multiData, globalMinMax};
     }
 
     @action.bound
     setCurrentLocation(location: string) {
         this.currentLocation = location;
         this.current = this.data[this.currentMode][this.currentLocation];
+        if (this.multiSelect) {
+            this.toggleSelectedLocation(location);
+        }
     }
 
     @action.bound
     setMultiSelect(value: boolean) {
         this.multiSelect = value;
+        if (value) {
+            this.selectedLocations = [this.currentLocation];
+        }
     }
 
     @action.bound
     toggleSelectedLocation(location: string) {
-        this.currentLocation = location;
-        this.current = this.data[this.currentMode][this.currentLocation];
         const index = this.selectedLocations.indexOf(location);
         if (index >= 0) {
-            delete this.selectedLocations[index];
+            if (this.selectedLocations.length > 1) {
+                this.selectedLocations.splice(index, index);
+            }
         } else {
-            this.selectedLocations.push(location);
+            if (this.selectedLocations.length < 5) {
+                this.selectedLocations.push(location);
+            }
         }
     }
 
