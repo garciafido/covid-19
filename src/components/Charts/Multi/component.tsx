@@ -8,7 +8,6 @@ import {
     Legend, ResponsiveContainer, Area, ComposedChart
 } from 'recharts';
 import {getReferenceArea} from "../common";
-import {store} from "../../../store";
 
 
 const range = (start: number, stop: number, step: number): number[] => {
@@ -43,19 +42,12 @@ const MultiChart = (props: any) => {
                value: props.yLabel}}
       />;
 
-  const colors = [
-      "#01579b",
-      "#1abaa8",
-      "#d861dd",
-      "#ead968",
-      "#9d0719",
-  ]
-
   const lines = [];
   let max_length = 0;
   const xDates: any = [];
   const yData: any = {};
   let index = 0;
+
   for (let key in props.multiData) {
       let data = props.multiData[key];
       yData[key] = {};
@@ -76,8 +68,8 @@ const MultiChart = (props: any) => {
                 strokeWidth={3}
                 activeDot={{r:8, onClick: (payload: any) => {props.onClick(
                     {type: payload.dataKey, date: xDates[payload.index]})} }}
-                stroke={colors[index]}
-                fill={colors[index]}
+                stroke={props.multiChartColors[key]}
+                fill={props.multiChartColors[key]}
                 dot={false} />
       );
       index++;
@@ -118,7 +110,6 @@ const MultiChart = (props: any) => {
         <ComposedChart
           data={xIndexes}
           onClick={payload => {if (payload && payload.activePayload) {
-              console.log(payload.activePayload[0]);
               props.onClick({type: "mean", date: xDates[payload.activePayload[0].payload]})
           }}}
           margin={{

@@ -239,10 +239,10 @@ const App = observer((props: any) => {
 
           let chartContainer;
           if (store.multiSelect) {
-              const {multiData, globalMinMax} = store.getMultiData();
                 chartContainer = <MultiChartContainer width={chartWidth} height={chartHeight}
-                                      multiData={multiData}
+                                      multiData={store.multiData}
                                       yLabel={title}
+                                      multiChartColors={store.selectedMultiChartColors}
                                       mode={store.currentMode}
                                       referenceValue={referenceValue}
                                       referenceAreaValue={referenceAreaValue}
@@ -250,7 +250,7 @@ const App = observer((props: any) => {
                                       constantLine={store.selectedChart==="r" ? 1 : undefined}
                                       constantLabel={store.selectedChart==="r" ? "R(t)=1" : undefined}
                                       onClick={(event: any) => handleChartClick({...event, chart: store.selectedChart})}
-                                      minMax={globalMinMax}
+                                      minMax={store.globalMinMax}
                   />;
           } else {
                 chartContainer = <BaseChartContainer width={chartWidth} height={chartHeight}

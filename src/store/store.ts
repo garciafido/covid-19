@@ -26,6 +26,14 @@ const colormap = [
     "#D00A00",
 ]
 
+const multiChartAvailableColors: string[] = [
+  "#01579b",
+  "#1abaa8",
+  "#d861dd",
+  "#ead968",
+  "#9d0719",
+]
+
 function getColorFromScale(scale: number[], value: number) {
     let index: number = 0;
     for (; index < scale.length; index++) {
@@ -44,6 +52,8 @@ class CovidData {
     @observable current: any = {};
     @observable currentLocation = "Argentina";
     @observable selectedLocations: string[] = [];
+    @observable multiData: any;
+    @observable globalMinMax: [number, number] = [0, 0];
     @observable multiSelect = false;
     @observable currentMode = "monitoreo";
     @observable currentScale: any = [];
@@ -60,6 +70,8 @@ class CovidData {
     @observable deadsByDate: any = {};
 
     @observable errorMessage: any = '';
+
+    @observable selectedMultiChartColors: { [key: string]: string } = {};
 
     getCurrentValue() {
         if (this.selectedChart === 'r') {
@@ -80,6 +92,23 @@ class CovidData {
             }
         }
         return 0;
+    }
+
+    prepareMultiChartColors = () => {
+        const availableColors: string[] = multiChartAvailableColors.slice();
+
+        // remove unused locations from lastColors
+        const lastColorsKeys = Object.keys(this.selectedMultiChartColors);
+        const unusedLastProvincias = lastColorsKeys.filter(value => !this.selectedLocations.includes(value));
+        unusedLastProvincias.forEach(e => delete this.selectedMultiChartColors[e]);
+
+        // remove used colors from availableColors
+        const usedColors = Object.values(this.selectedMultiChartColors);
+        usedColors.forEach(e => availableColors.splice(availableColors.indexOf(e), 1))
+
+        // add uncolored locations
+        const uncoloredLocations = this.selectedLocations.filter(value => !(value in this.selectedMultiChartColors));
+        uncoloredLocations.filter(e => this.selectedMultiChartColors[e] = availableColors.shift() as string)
     }
 
     generateDailyData() {
@@ -301,9 +330,9 @@ class CovidData {
         return {minMax, data};
     }
 
-    getMultiData = (): any => {
-        const multiData: any = {};
-        let globalMinMax = [1e10, -1e10];
+    generateMultiData = () => {
+        const multiData: { [id: string]: any } = {};
+        let globalMinMax: [number, number] = [1e10, -1e10];
         for (let i=0; i < this.selectedLocations.length; i++) {
             const location = this.selectedLocations[i];
             const { minMax, data }: {minMax: [number, number], data: any} =
@@ -311,7 +340,9 @@ class CovidData {
             globalMinMax = [Math.min(globalMinMax[0], minMax[0]), Math.max(globalMinMax[1], minMax[1])];
             multiData[location] = data;
         }
-        return {multiData, globalMinMax};
+        this.prepareMultiChartColors();
+        this.multiData = multiData;
+        this.globalMinMax = globalMinMax;
     }
 
     @action.bound
@@ -328,6 +359,7 @@ class CovidData {
         this.multiSelect = value;
         if (value) {
             this.selectedLocations = [this.currentLocation];
+            this.generateMultiData();
         }
     }
 
@@ -342,6 +374,9 @@ class CovidData {
             if (this.selectedLocations.length < 5) {
                 this.selectedLocations.push(location);
             }
+        }
+        if (this.multiSelect) {
+            this.generateMultiData();
         }
     }
 
@@ -477,18 +512,27 @@ class CovidData {
         this.currentMode = mode;
         this.current = this.data[this.currentMode][this.currentLocation];
         this.changeCurrentScale();
+        if (this.multiSelect) {
+            this.generateMultiData();
+        }
     }
 
     @action.bound
     setSelectedChart(chart: string) {
         this.selectedChart = chart;
         this.changeCurrentScale();
+        if (this.multiSelect) {
+            this.generateMultiData();
+        }
     }
 
     @action.bound
     setChartPerDay(perDay: boolean) {
         this.chartPerDay = perDay;
         this.changeCurrentScale();
+        if (this.multiSelect) {
+            this.generateMultiData();
+        }
     }
 
     @action.bound
