@@ -69,12 +69,16 @@ const MultiChart = (props: any) => {
           max_length = props.multiData[key].length;
       }
       lines.push(
-          <Line type="monotone"
+          <Area type="monotone"
                 dataKey={(data) => yData[key][xData[data]]}
-                key={key} name={key} strokeWidth={3}
+                key={key}
+                name={key}
+                strokeWidth={3}
                 activeDot={{r:8, onClick: (payload: any) => {props.onClick(
                     {type: payload.dataKey, date: xDates[payload.index]})} }}
-                stroke={colors[index]} dot={false} />
+                stroke={colors[index]}
+                fill={colors[index]}
+                dot={false} />
       );
       index++;
   }
