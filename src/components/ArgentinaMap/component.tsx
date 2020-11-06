@@ -76,13 +76,44 @@ const ArgentinaMap = (props: any) => {
     const paletteHeight = Math.trunc(dimensions.height / 27) + 'px';
     const porMillon =  props.store.selectedChart === "r" ? "" : " / millón";
 
+    const adjustPalette = props.store.selectedChart !== "r" ? <Grid container>
+        <Grid item xs={7} justify="flex-start" direction="row">
+            <Button
+                onClick={() => props.store.setPaletteSelectedDate()}
+                style={{
+                    marginLeft: 2,
+                    marginTop: 0,
+                    paddingTop: 0,
+                    marginBottom: 0,
+                    paddingBottom: 0,
+                    fontSize: '7pt'
+                }}
+                size="small" color="primary">Autoajustar paleta al {shortDate}</Button>
+        </Grid>
+        <Grid item xs={5} justify="flex-end" direction="row-reverse">
+            <Button
+                onClick={() => props.store.setDefaultPaletteDate()}
+                style={{
+                    marginRight: 0,
+                    paddingRight: 2,
+                    marginTop: 0,
+                    paddingTop: 0,
+                    marginBottom: 0,
+                    paddingBottom: 0,
+                    fontSize: '7pt'
+                }}
+                size="small" color="primary">Paleta por defecto</Button>
+        </Grid>
+    </Grid> : <div/>;
+
+
     return <div className="ArgentinaMap" style={{cursor: 'pointer'}}>
         <Paper style={{backgroundColor: backgroundColor}}>
             <Grid container>
                 <Grid item xs={12}>
                     <Typography align="left">
                     <h4 style={{
-                        marginLeft: 15,
+                        marginLeft: 25,
                         marginBottom: 0,
                         paddingBottom: 2,
                         marginTop: 0,
@@ -90,10 +121,10 @@ const ArgentinaMap = (props: any) => {
                     }}>{`${shortDate}: ${chartsNames[props.store.selectedChart]} ${porMillon}`}</h4>
                     </Typography>
                 </Grid>
-                <Grid container justify="flex-end">
-                    <MuiThemeProvider theme={theme}>
+                <Grid container>
+                    <Grid container xs={6} justify="flex-start">
                         <FormControlLabel
-                            style={{marginRight: 15, marginTop: 0, paddingTop: 0, marginBottom: 0, paddingBottom: 0, fontSize: '9pt'}}
+                            style={{marginLeft: 15, marginTop: 0, paddingTop: 0, marginBottom: 0, paddingBottom: 0, fontSize: '9pt'}}
                             control={
                               <Checkbox
                                   style={{marginTop: 0, paddingTop: 0, marginBottom: 0, paddingBottom: 0, fontSize: '9pt'}}
@@ -104,14 +135,18 @@ const ArgentinaMap = (props: any) => {
                               />}
                             label={"Comparativa"}
                             />
+                    </Grid>
+                    <Grid container xs={6} justify="flex-end" >
+                    <MuiThemeProvider theme={theme}>
                         <Button size="small" color="primary" onClick={props.handleClickExplain}
-                                style={{marginRight: 15, marginTop: 0, paddingTop: 0, marginBottom: 0, paddingBottom: 0, fontSize: '9pt'}}>
+                                style={{marginRight: 25, marginTop: 0, paddingTop: 0, marginBottom: 0, paddingBottom: 0, fontSize: '9pt'}}>
                             <Box flexDirection="row">
                                 <span><FontAwesomeIcon style={{marginRight: 5, color: "#F88"}} icon={faInfoCircle}/>
                                 Explicación</span>
                             </Box>
                         </Button>
                     </MuiThemeProvider>
+                    </Grid>
                 </Grid>
                 <Grid item xs={12}>
                     <Argentina
@@ -129,34 +164,8 @@ const ArgentinaMap = (props: any) => {
                                 height={paletteHeight}
                                 values={props.store.currentScale}/>
                         </Grid>
-                        <Grid item xs={7} justify="flex-start" direction="row">
-                            <Button
-                                onClick={() => props.store.setPaletteSelectedDate()}
-                                style={{
-                                    marginLeft: 2,
-                                    marginTop: 0,
-                                    paddingTop: 0,
-                                    marginBottom: 0,
-                                    paddingBottom: 0,
-                                    fontSize: '7pt'
-                                }}
-                                size="small" color="primary">Autoajustar paleta al {shortDate}</Button>
-                        </Grid>
-                        <Grid item xs={5} justify="flex-end" direction="row-reverse">
-                            <Button
-                                onClick={() => props.store.setDefaultPaletteDate()}
-                                style={{
-                                    marginRight: 0,
-                                    paddingRight: 2,
-                                    marginTop: 0,
-                                    paddingTop: 0,
-                                    marginBottom: 0,
-                                    paddingBottom: 0,
-                                    fontSize: '7pt'
-                                }}
-                                size="small" color="primary">Paleta por defecto</Button>
-                        </Grid>
                     </Grid>
+                    {adjustPalette}
                 </Grid>
             </Grid>
         </Paper>

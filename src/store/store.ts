@@ -8,9 +8,9 @@ import {store} from "./index";
 configure({ enforceActions: "observed" });
 
 let covidDataUrl = ((window as any).COVID_DATA_URL);
-covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
+//covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
 //covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data_test.json';
-//covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data_test.json';
+covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data_test.json';
 
 const gray = "#C7BDC6";
 

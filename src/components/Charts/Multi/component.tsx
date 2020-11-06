@@ -53,7 +53,7 @@ const MultiChart = (props: any) => {
 
   const lines = [];
   let max_length = 0;
-  let xData: any = [];
+  const xDates: any = [];
   const yData: any = {};
   let index = 0;
   for (let key in props.multiData) {
@@ -61,8 +61,8 @@ const MultiChart = (props: any) => {
       yData[key] = {};
       for (let i=0; i < data.length; i++) {
           yData[key][data[i].show_date] = data[i].mean < minMax[0] ? minMax[0] : data[i].mean;
-          if (xData.indexOf(data[i].date) < 0) {
-            xData.push(data[i].date);
+          if (xDates.indexOf(data[i].date) < 0) {
+            xDates.push(data[i].date);
           }
       }
       if (max_length < props.multiData[key].length) {
@@ -72,13 +72,15 @@ const MultiChart = (props: any) => {
           <Line type="monotone"
                 dataKey={(data) => yData[key][xData[data]]}
                 key={key} name={key} strokeWidth={3}
+                activeDot={{r:8, onClick: (payload: any) => {props.onClick(
+                    {type: payload.dataKey, date: xDates[payload.index]})} }}
                 stroke={colors[index]} dot={false} />
       );
       index++;
   }
 
-  xData.sort();
-  xData = xData.map((val: string) => {
+  xDates.sort();
+  const xData = xDates.map((val: string) => {
       const lDate = val.split('-');
       return `${lDate[2]}/${lDate[1]}`;
   });
@@ -87,7 +89,8 @@ const MultiChart = (props: any) => {
   const constantLine = props.constantLine ?
       <Line type="monotone" dataKey={(data) => props.constantLine} name={props.constantLabel} strokeWidth={1}
             stroke="#000000" strokeDasharray="3 4 5 2"
-            activeDot={{onClick: (payload: any) => {props.onClick({type: payload.dataKey, date: props.data[payload.index].date})} }}
+            activeDot={{onClick: (payload: any) => {props.onClick(
+                    {type: payload.dataKey, date: xDates[payload.index]})} }}
             dot={false}
       />
       : <div/>;
@@ -110,7 +113,10 @@ const MultiChart = (props: any) => {
     <ResponsiveContainer minWidth={props.width} aspect={2} minHeight={props.height}>
         <ComposedChart
           data={xIndexes}
-          onClick={payload => {if (payload && payload.activePayload) props.onClick({type: "mean", date: payload.activePayload[0].payload.date})}}
+          onClick={payload => {if (payload && payload.activePayload) {
+              console.log(payload.activePayload[0]);
+              props.onClick({type: "mean", date: xDates[payload.activePayload[0].payload]})
+          }}}
           margin={{
             top: 5, right: 10, left: 40, bottom: 5,
           }}
