@@ -8,9 +8,9 @@ import {store} from "./index";
 configure({ enforceActions: "observed" });
 
 let covidDataUrl = ((window as any).COVID_DATA_URL);
-covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
+//covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
 //covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data_test.json';
-//covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data_test.json';
+covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data_test.json';
 
 const gray = "#C7BDC6";
 
@@ -72,6 +72,7 @@ class CovidData {
     @observable errorMessage: any = '';
 
     @observable selectedMultiChartColors: { [key: string]: string } = {};
+    @observable availableColors: string[] = [];
 
     getCurrentValue() {
         if (this.selectedChart === 'r') {
@@ -92,23 +93,6 @@ class CovidData {
             }
         }
         return 0;
-    }
-
-    prepareMultiChartColors = () => {
-        const availableColors: string[] = multiChartAvailableColors.slice();
-
-        // remove unused locations from lastColors
-        const lastColorsKeys = Object.keys(this.selectedMultiChartColors);
-        const unusedLastProvincias = lastColorsKeys.filter(value => !this.selectedLocations.includes(value));
-        unusedLastProvincias.forEach(e => delete this.selectedMultiChartColors[e]);
-
-        // remove used colors from availableColors
-        const usedColors = Object.values(this.selectedMultiChartColors);
-        usedColors.forEach(e => availableColors.splice(availableColors.indexOf(e), 1))
-
-        // add uncolored locations
-        const uncoloredLocations = this.selectedLocations.filter(value => !(value in this.selectedMultiChartColors));
-        uncoloredLocations.filter(e => this.selectedMultiChartColors[e] = availableColors.shift() as string)
     }
 
     generateDailyData() {
@@ -340,7 +324,7 @@ class CovidData {
             globalMinMax = [Math.min(globalMinMax[0], minMax[0]), Math.max(globalMinMax[1], minMax[1])];
             multiData[location] = data;
         }
-        this.prepareMultiChartColors();
+        //this.prepareMultiChartColors();
         this.multiData = multiData;
         this.globalMinMax = globalMinMax;
     }
@@ -354,11 +338,23 @@ class CovidData {
         }
     }
 
+    addLocationMulti(location: string) {
+        if (!(location in this.selectedMultiChartColors)) {
+            this.selectedMultiChartColors[location] = this.availableColors.shift() as string;
+        }
+    }
+
+    removeLocationMult(location: string) {
+        this.availableColors.push(this.selectedMultiChartColors[location]);
+    }
+
     @action.bound
     setMultiSelect(value: boolean) {
         this.multiSelect = value;
         if (value) {
             this.selectedLocations = [this.currentLocation];
+            this.availableColors = multiChartAvailableColors.slice();
+            this.addLocationMulti(this.currentLocation);
             this.generateMultiData();
         }
     }
@@ -369,10 +365,12 @@ class CovidData {
         if (index >= 0) {
             if (this.selectedLocations.length > 1) {
                 this.selectedLocations.splice(index, 1);
+                this.removeLocationMult(location);
             }
         } else {
             if (this.selectedLocations.length < 5) {
                 this.selectedLocations.push(location);
+                this.addLocationMulti(location);
             }
         }
         if (this.multiSelect) {
