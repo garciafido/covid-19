@@ -9,7 +9,6 @@ import {
 } from 'recharts';
 import {getReferenceArea} from "../common";
 
-
 const range = (start: number, stop: number, step: number): number[] => {
     const result = [];
     for (let i = start; step > 0 ? i < stop : i > stop; i += step) {

@@ -324,7 +324,6 @@ class CovidData {
             globalMinMax = [Math.min(globalMinMax[0], minMax[0]), Math.max(globalMinMax[1], minMax[1])];
             multiData[location] = data;
         }
-        //this.prepareMultiChartColors();
         this.multiData = multiData;
         this.globalMinMax = globalMinMax;
     }
@@ -338,24 +337,26 @@ class CovidData {
         }
     }
 
-    addLocationMulti(location: string) {
-        if (!(location in this.selectedMultiChartColors)) {
-            this.selectedMultiChartColors[location] = this.availableColors.shift() as string;
-        }
+    removeMultiLocation = (location: string) => {
+        const index = this.selectedLocations.indexOf(location);
+        this.selectedLocations.splice(index, 1);
+        this.availableColors.push(this.selectedMultiChartColors[location]);
+        this.generateMultiData();
     }
 
-    removeLocationMult(location: string) {
-        this.availableColors.push(this.selectedMultiChartColors[location]);
-    }
+    addMultiLocation = (location: string) => {
+        this.selectedLocations.push(location)
+        this.selectedMultiChartColors[location] = this.availableColors.shift() as string;
+        this.generateMultiData();
+    };
 
     @action.bound
     setMultiSelect(value: boolean) {
         this.multiSelect = value;
         if (value) {
-            this.selectedLocations = [this.currentLocation];
+            this.selectedLocations = [];
             this.availableColors = multiChartAvailableColors.slice();
-            this.addLocationMulti(this.currentLocation);
-            this.generateMultiData();
+            this.addMultiLocation(this.currentLocation);
         }
     }
 
@@ -364,17 +365,12 @@ class CovidData {
         const index = this.selectedLocations.indexOf(location);
         if (index >= 0) {
             if (this.selectedLocations.length > 1) {
-                this.selectedLocations.splice(index, 1);
-                this.removeLocationMult(location);
+                this.removeMultiLocation(location);
             }
         } else {
-            if (this.selectedLocations.length < 5) {
-                this.selectedLocations.push(location);
-                this.addLocationMulti(location);
+            if (this.selectedLocations.length < multiChartAvailableColors.length) {
+                this.addMultiLocation(location);
             }
-        }
-        if (this.multiSelect) {
-            this.generateMultiData();
         }
     }
 
