@@ -196,9 +196,9 @@ const App = observer((props: any) => {
     const fileName = fileNames[location];
     if (store.currentMode === 'monitoreo') {
         currentFilenames.push(`${fileName}.csv`);
-        currentFilenames.push(`${fileName}-val1.csv`);
-        currentFilenames.push(`${fileName}-val2.csv`);
-        currentFilenames.push(`${fileName}-val3.csv`);
+//        currentFilenames.push(`${fileName}-val1.csv`);
+//        currentFilenames.push(`${fileName}-val2.csv`);
+//        currentFilenames.push(`${fileName}-val3.csv`);
     } else {
         currentFilenames.push(`${fileName}-for1.csv`);
         currentFilenames.push(`${fileName}-for2.csv`);
