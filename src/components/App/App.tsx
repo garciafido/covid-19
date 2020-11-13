@@ -13,8 +13,10 @@ import { ProjectInfo } from '../ProjectInfo';
 import {BaseChartContainer} from '../Charts/Base';
 import {MultiChartContainer} from '../Charts/Multi';
 import {observer} from "mobx-react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import fileDownload from 'js-file-download';
+import axios from 'axios';
 
 import {
   createMuiTheme,
@@ -31,6 +33,9 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import Typography from "@material-ui/core/Typography";
 import DialogActions from "@material-ui/core/DialogActions";
+import {fileNames} from "../../store/store";
+import Tooltip from "@material-ui/core/Tooltip";
+import withStyles from "@material-ui/core/styles/withStyles";
 
 const url_facena = "http://exa.unne.edu.ar/";
 const url_cima = "http://www.cima.fcen.uba.ar/index.php";
@@ -65,6 +70,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+const HtmlTooltip = withStyles((theme) => ({
+  tooltip: {
+    backgroundColor: '#f5f5f9',
+    color: 'rgba(0, 0, 0, 0.87)',
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    border: '1px solid #dadde9',
+  },
+}))(Tooltip);
+
 const defaultTheme = createMuiTheme();
 const theme = createMuiTheme({
   overrides: {
@@ -95,6 +110,20 @@ const App = observer((props: any) => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const filesURL = "/data/";
+
+  const handleDownload = (filenames: string[]) => {
+      for (let filename of filenames) {
+          axios.get(`${filesURL}${filename}`, {
+                responseType: 'blob',
+            }).then(res => {
+                fileDownload(res.data, filename);
+            }).catch(err => {
+                console.log(err);
+            });
+      }
   };
 
   const handleClickExplain = () => {
@@ -160,6 +189,23 @@ const App = observer((props: any) => {
   let referenceAreaValue: string = "";
   let referenceValue: string = "";
   let referenceLabel: string = "Hoy (*)";
+
+  const currentFilenames: string[] = [];
+  const locations = store.multiSelect ? store.selectedLocations : [store.currentLocation];
+  for (let location of locations) {
+    const fileName = fileNames[location];
+    if (store.currentMode === 'monitoreo') {
+        currentFilenames.push(`${fileName}.csv`);
+        currentFilenames.push(`${fileName}-val1.csv`);
+        currentFilenames.push(`${fileName}-val2.csv`);
+        currentFilenames.push(`${fileName}-val3.csv`);
+    } else {
+        currentFilenames.push(`${fileName}-for1.csv`);
+        currentFilenames.push(`${fileName}-for2.csv`);
+        currentFilenames.push(`${fileName}-for3.csv`);
+    }
+  }
+
   if (store.current) {
           let minMax;
           let data;
@@ -418,7 +464,8 @@ const App = observer((props: any) => {
                           </Grid>
                           <Grid container
                                 justify="flex-start" alignItems='flex-start' alignContent='flex-start'
-                                style={{paddingBottom: 0, marginBottom: 0, paddingTop: 0, marginTop: 0}} xs={9}>
+                                style={{paddingBottom: 0, marginBottom: 0, paddingTop: 0, marginTop: 0}}
+                                xs={7}>
                               <Paper elevation={5}>
                                 <Box p={1}>
                             <Typography align="left">
@@ -428,6 +475,18 @@ const App = observer((props: any) => {
                             </Typography>
                                 </Box>
                               </Paper>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <HtmlTooltip title={
+                              <React.Fragment>
+                                <Typography color="inherit">Descargar Datos</Typography>
+                                {'Se descargarán los datos utilizados para generar el gráfico actual en formato '}<b>{'CSV'}</b>.
+                              </React.Fragment>
+                              }>
+                              <Button onClick={() => handleDownload(currentFilenames)} color="primary">
+                                Descargar Datos
+                              </Button>
+                            </HtmlTooltip>
                           </Grid>
                           <Grid item xs={2}>
                           </Grid>
@@ -456,7 +515,6 @@ const App = observer((props: any) => {
                           </Grid>
                           <Grid item xs={2}>
                           </Grid>
-
 
 
                           <Grid item xs={1}>

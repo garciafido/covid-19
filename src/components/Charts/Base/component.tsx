@@ -138,7 +138,7 @@ const BaseChart = (props: any) => {
   }
 
   return <>
-    <ResponsiveContainer minWidth={props.width} aspect={2} minHeight={props.height}>
+    <ResponsiveContainer debounce={1020} minWidth={props.width} aspect={2} minHeight={props.height}>
         <ComposedChart
           data={data}
           onClick={payload => {if (payload && payload.activePayload) props.onClick({type: "mean", date: payload.activePayload[0].payload.date})}}

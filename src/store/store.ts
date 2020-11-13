@@ -8,9 +8,9 @@ import {store} from "./index";
 configure({ enforceActions: "observed" });
 
 let covidDataUrl = ((window as any).COVID_DATA_URL);
-//covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
+covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
 //covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data_test.json';
-covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data_test.json';
+//covidDataUrl = covidDataUrl ? covidDataUrl : 'https://garciafido.github.io/sample_data_test.json';
 
 const gray = "#C7BDC6";
 
@@ -33,6 +33,37 @@ const multiChartAvailableColors: string[] = [
   "#ead968",
   "#9d0719",
 ]
+
+export const fileNames: {[id: string]: string} = {
+    'Argentina': "arg",
+    'Buenos Aires':  "baires",
+    'AMBA': "amba",
+    'CABA': "caba",
+    'Catamarca':  "catamarca",
+    'Chaco':  "chaco",
+    'Chubut':  "chubut",
+    'GBA':  "conurbano",
+    'Cordoba':  "cordoba",
+    'Corrientes':  "corrientes",
+    'Entre Rios':  "entrerios",
+    'Formosa': "formosa",
+    'Jujuy':  "jujuy",
+    'La Pampa':  "lapampa",
+    'La Rioja':  "larioja",
+    'Mendoza':  "mendoza",
+    'Misiones':  "misiones",
+    'Neuquen':  "neuquen",
+    'Rio Negro':  "rionegro",
+    'Salta':  "salta",
+    'San Juan':  "sanjuan",
+    'San Luis':  "sanluis",
+    'Santa Fe':  "santafe",
+    'Santiago del Estero': "santiago",
+    'Santa Cruz':  "santacruz",
+    'Tierra del Fuego':  "tfuego",
+    'Tucuman':  "tucuman"
+};
+
 
 function getColorFromScale(scale: number[], value: number) {
     let index: number = 0;

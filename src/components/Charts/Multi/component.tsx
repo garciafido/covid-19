@@ -65,6 +65,7 @@ const MultiChart = (props: any) => {
                 key={key}
                 name={key}
                 strokeWidth={3}
+                fillOpacity={"0.4"}
                 activeDot={{r:8, onClick: (payload: any) => {props.onClick(
                     {type: payload.dataKey, date: xDates[payload.index]})} }}
                 stroke={props.multiChartColors[key]}
@@ -105,7 +106,7 @@ const MultiChart = (props: any) => {
   }
 
   return <>
-    <ResponsiveContainer minWidth={props.width} aspect={2} minHeight={props.height}>
+    <ResponsiveContainer debounce={1020} minWidth={props.width} aspect={2} minHeight={props.height}>
         <ComposedChart
           data={xIndexes}
           onClick={payload => {if (payload && payload.activePayload) {
