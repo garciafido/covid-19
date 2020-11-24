@@ -142,17 +142,17 @@ const App = observer((props: any) => {
     setMapExplain(false);
   };
 
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: any): void => {
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: string): void => {
     store.setCurrentMode(newValue);
   };
 
   const handleRadioChange = (event: any): void => {
-      store.setChartPerDay(event.target.value === "daily");
+    store.setChartPerDay(event.target.value === "daily");
   };
 
   if (store.state === 'pending') {
-      store.fetchData();
-      return <div>Initializing...</div>
+    store.fetchData();
+    return <div>Initializing...</div>
   }
 
   if (store.state === 'error') {
@@ -196,9 +196,6 @@ const App = observer((props: any) => {
     const fileName = fileNames[location];
     if (store.currentMode === 'monitoreo') {
         currentFilenames.push(`${fileName}.csv`);
-//        currentFilenames.push(`${fileName}-val1.csv`);
-//        currentFilenames.push(`${fileName}-val2.csv`);
-//        currentFilenames.push(`${fileName}-val3.csv`);
     } else {
         currentFilenames.push(`${fileName}-for1.csv`);
         currentFilenames.push(`${fileName}-for2.csv`);
@@ -481,6 +478,9 @@ const App = observer((props: any) => {
                               <React.Fragment>
                                 <Typography color="inherit">Descargar Datos</Typography>
                                 {'Se descargarán los datos utilizados para generar el gráfico actual en formato '}<b>{'CSV'}</b>.
+                                <br/>
+                                {'Los datos utilizados en todos los gráficos puede descargarlos desde la sección DESCARGA DE DATOS en '}<b>{'ACERCA DEL PROYECTO'}</b>
+                                {' que se accede desde el enlace que está arriba a la derecha de esta página'}
                               </React.Fragment>
                               }>
                               <Button onClick={() => handleDownload(currentFilenames)} color="primary">
@@ -561,7 +561,7 @@ const App = observer((props: any) => {
                 open={explain} maxWidth={"sm"} fullWidth={false}>
               <DialogTitle id="simple-dialog-title">{explainTitle}</DialogTitle>
             <DialogContent>
-                <ChartExplanation explanation={store.selectedChart} mode={store.currentMode}/>
+                <ChartExplanation multiSelect={store.multiSelect} explanation={store.selectedChart} mode={store.currentMode}/>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCloseExplain} color="primary">

@@ -18,6 +18,9 @@ const ChartMapExplanation = (props: any) => {
             <Typography align="left" variant="body2" gutterBottom color="textSecondary">
             La escala correspondiente de colores de la figura puede ser logarítmica (en caso que el valor máximo de la serie supere 5000 unidades) o lineal.
             </Typography>
+            <Typography align="left" variant="body2" gutterBottom color="textSecondary">
+               {`Activando la función "comparativa" en la esquina superior izquierda se podrá seleccionar más de una provincia, las cuales se mostrarán en la figura de la derecha. Se puede seleccionar hasta un máximo de 5 provincias. Para remover una provincia de la comparativa hacer click nuevamente en el mapa en la provincia correspondiente`}
+            </Typography>
          </>;
 };
 

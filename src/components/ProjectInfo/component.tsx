@@ -3,6 +3,9 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
+import axios from "axios";
+import fileDownload from "js-file-download";
+import Button from "@material-ui/core/Button";
 
 function TabPanel(props: any) {
   const { children, value, index, ...other } = props;
@@ -42,6 +45,19 @@ const ProjectInfo = (props: any) => {
     const url2 = "https://doi.org/10.1101/2020.06.11.20128777";
     const url3 = "http://datos.salud.gob.ar/dataset/covid-19-casos-registrados-en-la-republica-argentina";
 
+    const filesURL = "/data/";
+    const handleDownload = (filenames: string[]) => {
+      for (let filename of filenames) {
+          axios.get(`${filesURL}${filename}`, {
+                responseType: 'blob',
+            }).then(res => {
+                fileDownload(res.data, filename);
+            }).catch(err => {
+                console.log(err);
+            });
+      }
+    };
+
     return (
         <Box p={2}>
           <Tabs value={value}
@@ -51,6 +67,7 @@ const ProjectInfo = (props: any) => {
             <Tab label="Metodología" {...a11yProps(0)} />
             <Tab label="Integrantes" {...a11yProps(1)} />
             <Tab label="Reconocimientos" {...a11yProps(2)} />
+            <Tab label="Descarga de datos" {...a11yProps(3)} />
           </Tabs>
     <TabPanel value={value} index={0}>
         <Typography align="left" variant="body2" gutterBottom color="textSecondary">
@@ -140,30 +157,55 @@ const ProjectInfo = (props: any) => {
         </Typography>
     </TabPanel>
 
-          <TabPanel value={value} index={2}>
-            <Typography align="left" variant="body2" gutterBottom color="textSecondary" style={{whiteSpace: 'pre-line'}}>
-                <Box display="flex"  p={2} paddingBottom={0}>
-                    Este proyecto es posible debido al financiamiento otorgado por la Agencia Nacional de Promocion Cientifica Tecnologica (ANPCyT) a traves del proyecto ORR 01 COVID FEDERAL EX-2020-38902538  ANPCyT. titulado " Sistema de monitoreo y predicción del COVID-19 en la provincia de Corrientes usando asimilación de datos"
-                </Box>
-                <Box display="flex"  p={2} paddingBottom={0} paddingTop={2}>
-                    <b>Unidad Administradora: </b> SGCyT Universidad Nacional del Nordeste
-                </Box>
-                <Box display="flex" p={2} paddingBottom={0}>
-                    <Typography align="left" variant="subtitle2" component="h2">
-                        Instituciones participantes:
-                    </Typography>
-                </Box>
-                <Box display="flex" p={2} paddingBottom={0} paddingTop={0}>
-                    Facultad de Ciencias Exactas y Naturales y Agrimensura (FaCENA, UNNE)
-                </Box>
-                <Box display="flex" p={2} paddingBottom={0} paddingTop={0}>
-                    Centro de Investigacion en el Mar y la Atmosfera CIMA, FCEyN
-                </Box>
-                <Box display="flex" p={2} paddingTop={0}>
-                    A todos estas instituciones agradecemos el apoyo recibido.
-                </Box>
-            </Typography>
-        </TabPanel>
+      <TabPanel value={value} index={2}>
+        <Typography align="left" variant="body2" gutterBottom color="textSecondary" style={{whiteSpace: 'pre-line'}}>
+            <Box display="flex"  p={2} paddingBottom={0}>
+                Este proyecto es posible debido al financiamiento otorgado por la Agencia Nacional de Promocion Cientifica Tecnologica (ANPCyT) a traves del proyecto ORR 01 COVID FEDERAL EX-2020-38902538  ANPCyT. titulado " Sistema de monitoreo y predicción del COVID-19 en la provincia de Corrientes usando asimilación de datos"
+            </Box>
+            <Box display="flex"  p={2} paddingBottom={0} paddingTop={2}>
+                <b>Unidad Administradora: </b> SGCyT Universidad Nacional del Nordeste
+            </Box>
+            <Box display="flex" p={2} paddingBottom={0}>
+                <Typography align="left" variant="subtitle2" component="h2">
+                    Instituciones participantes:
+                </Typography>
+            </Box>
+            <Box display="flex" p={2} paddingBottom={0} paddingTop={0}>
+                Facultad de Ciencias Exactas y Naturales y Agrimensura (FaCENA, UNNE)
+            </Box>
+            <Box display="flex" p={2} paddingBottom={0} paddingTop={0}>
+                Centro de Investigacion en el Mar y la Atmosfera CIMA, FCEyN
+            </Box>
+            <Box display="flex" p={2} paddingTop={0}>
+                A todos estas instituciones agradecemos el apoyo recibido.
+            </Box>
+        </Typography>
+    </TabPanel>
+
+    <TabPanel value={value} index={3}>
+        <Box display="flex" p={2} paddingTop={0}>
+          <Button onClick={() => handleDownload(["casos-acumulados.csv"])} color="primary">
+            Casos acumulados
+          </Button>
+        </Box>
+        <Box display="flex" p={2} paddingTop={0}>
+          <Button onClick={() => handleDownload(["casos-diarias.csv"])} color="primary">
+            Casos diarios
+          </Button>
+        </Box>
+        <Box display="flex" p={2} paddingTop={0}>
+          <Button onClick={() => handleDownload(["muertes-acumulados.csv"])} color="primary">
+            Muertes acumulados
+          </Button>
+        </Box>
+        <Box display="flex" p={2} paddingTop={0}>
+          <Button onClick={() => handleDownload(["muertes-diarias.csv"])} color="primary">
+            Muertes diarias
+          </Button>
+        </Box>
+    </TabPanel>
+
+
     </Box>
   );
 }
