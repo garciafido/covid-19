@@ -496,7 +496,7 @@ const App = observer((props: any) => {
                           <Grid item xs={9}>
                           <Typography align="left" variant="body2" gutterBottom color="textSecondary">
                                   <Box p={1}>
-                                    <h4 style={{paddingBottom:0, marginBottom: 0, paddingTop:0, marginTop: 0}}>{`Fecha de asimilación: ${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`}</h4>
+                                    <h4 style={{paddingBottom:0, marginBottom: 0, paddingTop:0, marginTop: 0}}>{`Fecha de actualización de datos: ${assimilationDate[2]}/${assimilationDate[1]}/${assimilationDate[0]}`}</h4>
                                   </Box>
                           </Typography>
                           </Grid>
