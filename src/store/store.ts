@@ -9,8 +9,8 @@ import fetch from "node-fetch"
 configure({ enforceActions: "observed" });
 
 let covidDataUrl = ((window as any).COVID_DATA_URL);
-// covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
-covidDataUrl = covidDataUrl ? covidDataUrl : 'https://raw.githubusercontent.com/garciafido/covid-19/master/src/store/transformData/sample_data.json';
+covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
+// covidDataUrl = covidDataUrl ? covidDataUrl : 'https://raw.githubusercontent.com/garciafido/covid-19/master/src/store/transformData/sample_data.json';
 
 const gray = "#C7BDC6";
 
