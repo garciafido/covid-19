@@ -4,12 +4,13 @@ import {flowed} from "./storeUtils";
 import {buildActivesByDate, buildCasesByDate, buildDeadsByDate, buildRByDate} from "./buildIndexes";
 import {getColorScale} from "./colorScale";
 import {store} from "./index";
+import fetch from "node-fetch"
 
 configure({ enforceActions: "observed" });
 
 let covidDataUrl = ((window as any).COVID_DATA_URL);
-covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
-//covidDataUrl = covidDataUrl ? covidDataUrl : 'https://raw.githubusercontent.com/garciafido/covid-19/master/src/store/transformData/sample_data.json';
+// covidDataUrl = covidDataUrl ? covidDataUrl : 'sample_data.json';
+covidDataUrl = covidDataUrl ? covidDataUrl : 'https://raw.githubusercontent.com/garciafido/covid-19/master/src/store/transformData/sample_data.json';
 
 const gray = "#C7BDC6";
 
@@ -254,6 +255,9 @@ class CovidData {
         this.data = {};
         this.state = "loading";
         try {
+            const headers = new Headers();
+            headers.append("Content-Type","application/json");
+            headers.append("Content-Encoding","zlib");
             const serverData = yield fetch(covidDataUrl);
             this.data = yield serverData.json();
             this.current = this.data[this.currentMode][this.currentLocation];
