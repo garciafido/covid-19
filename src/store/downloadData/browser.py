@@ -44,7 +44,7 @@ def get_driver(chrome=True, USE_PROXY=None, DISPLAY_WIDTH=2880, DISPLAY_HEIGHT=1
     display.start()
     proxy = None
     if chrome:
-        chrome_driver = ChromeDriverManager().install()
+        chrome_driver = ChromeDriverManager().install()  # MacOS: X11 with xquartz
         driver = webdriver.Chrome(
             chrome_driver,
             chrome_options=get_chrome_options(PROXY=st.PROXY if USE_PROXY else None))
