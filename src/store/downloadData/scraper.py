@@ -34,7 +34,7 @@ def get_tables(url):
             elif data[0][0] == 'Confirmados':
                 all_tables['Totales'] = {'rows': data}
             elif data[0][0] == 'JurisdicciónBuenos Aires':
-                all_tables['PorTexto'] = {
+                all_tables['PorSexo'] = {
                     'header': ['Jurisdicción', 'FEMENINO', 'MASCULINO', 'SIN DATO'],
                     'rows': [
                                 data[0][0].replace('Jurisdicción', ''),
